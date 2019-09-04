@@ -86,6 +86,367 @@
 /************************************************************************/
 /******/ ({
 
+/***/ "./node_modules/arr-filter/index.js":
+/*!******************************************!*\
+  !*** ./node_modules/arr-filter/index.js ***!
+  \******************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+/*!
+ * arr-filter <https://github.com/jonschlinkert/arr-filter>
+ *
+ * Copyright (c) 2014-2015, 2017, Jon Schlinkert.
+ * Released under the MIT License.
+ */
+
+
+
+var makeIterator = __webpack_require__(/*! make-iterator */ "./node_modules/arr-filter/node_modules/make-iterator/index.js");
+
+module.exports = function filter(arr, fn, thisArg) {
+  if (arr == null) {
+    return [];
+  }
+
+  if (typeof fn !== 'function') {
+    throw new TypeError('expected callback to be a function');
+  }
+
+  var iterator = makeIterator(fn, thisArg);
+  var len = arr.length;
+  var res = arr.slice();
+  var i = -1;
+
+  while (len--) {
+    if (!iterator(arr[len], i++)) {
+      res.splice(len, 1);
+    }
+  }
+  return res;
+};
+
+
+
+/***/ }),
+
+/***/ "./node_modules/arr-filter/node_modules/make-iterator/index.js":
+/*!*********************************************************************!*\
+  !*** ./node_modules/arr-filter/node_modules/make-iterator/index.js ***!
+  \*********************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+/*!
+ * make-iterator <https://github.com/jonschlinkert/make-iterator>
+ *
+ * Copyright (c) 2014-2018, Jon Schlinkert.
+ * Released under the MIT License.
+ */
+
+
+
+var typeOf = __webpack_require__(/*! kind-of */ "./node_modules/kind-of/index.js");
+
+module.exports = function makeIterator(target, thisArg) {
+  switch (typeOf(target)) {
+    case 'undefined':
+    case 'null':
+      return noop;
+    case 'function':
+      // function is the first to improve perf (most common case)
+      // also avoid using `Function#call` if not needed, which boosts
+      // perf a lot in some cases
+      return (typeof thisArg !== 'undefined') ? function(val, i, arr) {
+        return target.call(thisArg, val, i, arr);
+      } : target;
+    case 'object':
+      return function(val) {
+        return deepMatches(val, target);
+      };
+    case 'regexp':
+      return function(str) {
+        return target.test(str);
+      };
+    case 'string':
+    case 'number':
+    default: {
+      return prop(target);
+    }
+  }
+};
+
+function containsMatch(array, value) {
+  var len = array.length;
+  var i = -1;
+
+  while (++i < len) {
+    if (deepMatches(array[i], value)) {
+      return true;
+    }
+  }
+  return false;
+}
+
+function matchArray(arr, value) {
+  var len = value.length;
+  var i = -1;
+
+  while (++i < len) {
+    if (!containsMatch(arr, value[i])) {
+      return false;
+    }
+  }
+  return true;
+}
+
+function matchObject(obj, value) {
+  for (var key in value) {
+    if (value.hasOwnProperty(key)) {
+      if (deepMatches(obj[key], value[key]) === false) {
+        return false;
+      }
+    }
+  }
+  return true;
+}
+
+/**
+ * Recursively compare objects
+ */
+
+function deepMatches(val, value) {
+  if (typeOf(val) === 'object') {
+    if (Array.isArray(val) && Array.isArray(value)) {
+      return matchArray(val, value);
+    } else {
+      return matchObject(val, value);
+    }
+  } else {
+    return val === value;
+  }
+}
+
+function prop(name) {
+  return function(obj) {
+    return obj[name];
+  };
+}
+
+function noop(val) {
+  return val;
+}
+
+
+/***/ }),
+
+/***/ "./node_modules/arr-flatten/index.js":
+/*!*******************************************!*\
+  !*** ./node_modules/arr-flatten/index.js ***!
+  \*******************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+/*!
+ * arr-flatten <https://github.com/jonschlinkert/arr-flatten>
+ *
+ * Copyright (c) 2014-2017, Jon Schlinkert.
+ * Released under the MIT License.
+ */
+
+
+
+module.exports = function (arr) {
+  return flat(arr, []);
+};
+
+function flat(arr, res) {
+  var i = 0, cur;
+  var len = arr.length;
+  for (; i < len; i++) {
+    cur = arr[i];
+    Array.isArray(cur) ? flat(cur, res) : res.push(cur);
+  }
+  return res;
+}
+
+
+/***/ }),
+
+/***/ "./node_modules/array-every/index.js":
+/*!*******************************************!*\
+  !*** ./node_modules/array-every/index.js ***!
+  \*******************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+/*!
+ * array-every <https://github.com/jonschlinkert/array-every>
+ *
+ * Copyright (c) 2014 Jon Schlinkert, contributors.
+ * Licensed under the MIT license.
+ */
+
+
+
+var iterator = __webpack_require__(/*! make-iterator */ "./node_modules/make-iterator/index.js");
+
+module.exports = function every(arr, cb, thisArg) {
+  cb = iterator(cb, thisArg);
+  var res = true;
+
+  if (arr == null) return res;
+  var len = arr.length;
+  var i = 0;
+
+  while (len--) {
+    if (!cb(arr[i++], i, arr)) {
+      res = false;
+      break;
+    }
+  }
+
+  return res;
+};
+
+
+/***/ }),
+
+/***/ "./node_modules/array-intersection/index.js":
+/*!**************************************************!*\
+  !*** ./node_modules/array-intersection/index.js ***!
+  \**************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+/*!
+ * array-intersection <https://github.com/jonschlinkert/array-intersection>
+ *
+ * Copyright (c) 2014 Jon Schlinkert, contributors.
+ * Licensed under the MIT License
+ */
+
+
+
+var filter = __webpack_require__(/*! filter-array */ "./node_modules/filter-array/index.js");
+var every = __webpack_require__(/*! array-every */ "./node_modules/array-every/index.js");
+var unique = __webpack_require__(/*! array-unique */ "./node_modules/array-intersection/node_modules/array-unique/index.js");
+var slice = __webpack_require__(/*! array-slice */ "./node_modules/array-slice/index.js");
+var indexOf = __webpack_require__(/*! index-of */ "./node_modules/index-of/index.js");
+
+module.exports = function intersection(arr) {
+  if (arr == null) {
+    return [];
+  }
+
+  if (arguments.length === 1) {
+    return unique(arr);
+  }
+
+  var arrays = slice(arguments, 1);
+
+  return filter(unique(arr), function (ele) {
+    return every(arrays, function (cur) {
+      return indexOf(cur, ele) !== -1;
+    });
+  });
+};
+
+
+/***/ }),
+
+/***/ "./node_modules/array-intersection/node_modules/array-unique/index.js":
+/*!****************************************************************************!*\
+  !*** ./node_modules/array-intersection/node_modules/array-unique/index.js ***!
+  \****************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+/*!
+ * array-unique <https://github.com/jonschlinkert/array-unique>
+ *
+ * Copyright (c) 2014-2015, Jon Schlinkert.
+ * Licensed under the MIT License.
+ */
+
+
+
+module.exports = function unique(arr) {
+  if (!Array.isArray(arr)) {
+    throw new TypeError('array-unique expects an array.');
+  }
+
+  var len = arr.length;
+  var i = -1;
+
+  while (i++ < len) {
+    var j = i + 1;
+
+    for (; j < arr.length; ++j) {
+      if (arr[i] === arr[j]) {
+        arr.splice(j--, 1);
+      }
+    }
+  }
+  return arr;
+};
+
+
+/***/ }),
+
+/***/ "./node_modules/array-slice/index.js":
+/*!*******************************************!*\
+  !*** ./node_modules/array-slice/index.js ***!
+  \*******************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+/*!
+ * array-slice <https://github.com/jonschlinkert/array-slice>
+ *
+ * Copyright (c) 2014-2015, Jon Schlinkert.
+ * Licensed under the MIT License.
+ */
+
+
+
+module.exports = function slice(arr, start, end) {
+  var len = arr.length >>> 0;
+  var range = [];
+
+  start = idx(arr, start);
+  end = idx(arr, end, len);
+
+  while (start < end) {
+    range.push(arr[start++]);
+  }
+  return range;
+};
+
+
+function idx(arr, pos, end) {
+  var len = arr.length >>> 0;
+
+  if (pos == null) {
+    pos = end || 0;
+  } else if (pos < 0) {
+    pos = Math.max(len + pos, 0);
+  } else {
+    pos = Math.min(pos, len);
+  }
+
+  return pos;
+}
+
+/***/ }),
+
 /***/ "./node_modules/axios/index.js":
 /*!*************************************!*\
   !*** ./node_modules/axios/index.js ***!
@@ -1829,6 +2190,96 @@ module.exports = {
 
 /***/ }),
 
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/DataTable.vue?vue&type=script&lang=js&":
+/*!********************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/DataTable.vue?vue&type=script&lang=js& ***!
+  \********************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var vue_tables_2__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue-tables-2 */ "./node_modules/vue-tables-2/compiled/index.js");
+/* harmony import */ var vue_tables_2__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(vue_tables_2__WEBPACK_IMPORTED_MODULE_0__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+Vue.use(vue_tables_2__WEBPACK_IMPORTED_MODULE_0__["ClientTable"]);
+/* harmony default export */ __webpack_exports__["default"] = ({
+  name: 'DataTable',
+  props: {
+    t_title: String
+  },
+  components: {
+    ClientTable: vue_tables_2__WEBPACK_IMPORTED_MODULE_0__["ClientTable"],
+    Event: vue_tables_2__WEBPACK_IMPORTED_MODULE_0__["Event"]
+  },
+  data: function data() {
+    return {
+      columns: ['name', 'code', 'uri'],
+      data: ['VietNam', 1, 'google.com'],
+      // options: {
+      //   headings: {
+      //     name: 'Country Name',
+      //     code: 'Country Code',
+      //     uri: 'View Record'
+      //   },
+      //   sortable: ['name', 'code'],
+      //   filterable: ['name', 'code'],
+      //   sortIcon: { base:'fa', up:'fa-sort-asc', down:'fa-sort-desc', is:'fa-sort' },
+      //   pagination: {
+      //     chunk: 5,
+      //     edge: false,
+      //     nav: 'scroll'
+      //   }
+      // },
+      theme: 'bootstrap4',
+      template: 'default'
+    };
+  }
+});
+
+/***/ }),
+
 /***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/Footer.vue?vue&type=script&lang=js&":
 /*!*****************************************************************************************************************************************************************!*\
   !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/Footer.vue?vue&type=script&lang=js& ***!
@@ -1940,6 +2391,8 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   components: {}
 });
@@ -1981,6 +2434,170 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 /* harmony default export */ __webpack_exports__["default"] = ({});
+
+/***/ }),
+
+/***/ "./node_modules/base64-js/index.js":
+/*!*****************************************!*\
+  !*** ./node_modules/base64-js/index.js ***!
+  \*****************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+exports.byteLength = byteLength
+exports.toByteArray = toByteArray
+exports.fromByteArray = fromByteArray
+
+var lookup = []
+var revLookup = []
+var Arr = typeof Uint8Array !== 'undefined' ? Uint8Array : Array
+
+var code = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/'
+for (var i = 0, len = code.length; i < len; ++i) {
+  lookup[i] = code[i]
+  revLookup[code.charCodeAt(i)] = i
+}
+
+// Support decoding URL-safe base64 strings, as Node.js does.
+// See: https://en.wikipedia.org/wiki/Base64#URL_applications
+revLookup['-'.charCodeAt(0)] = 62
+revLookup['_'.charCodeAt(0)] = 63
+
+function getLens (b64) {
+  var len = b64.length
+
+  if (len % 4 > 0) {
+    throw new Error('Invalid string. Length must be a multiple of 4')
+  }
+
+  // Trim off extra bytes after placeholder bytes are found
+  // See: https://github.com/beatgammit/base64-js/issues/42
+  var validLen = b64.indexOf('=')
+  if (validLen === -1) validLen = len
+
+  var placeHoldersLen = validLen === len
+    ? 0
+    : 4 - (validLen % 4)
+
+  return [validLen, placeHoldersLen]
+}
+
+// base64 is 4/3 + up to two characters of the original data
+function byteLength (b64) {
+  var lens = getLens(b64)
+  var validLen = lens[0]
+  var placeHoldersLen = lens[1]
+  return ((validLen + placeHoldersLen) * 3 / 4) - placeHoldersLen
+}
+
+function _byteLength (b64, validLen, placeHoldersLen) {
+  return ((validLen + placeHoldersLen) * 3 / 4) - placeHoldersLen
+}
+
+function toByteArray (b64) {
+  var tmp
+  var lens = getLens(b64)
+  var validLen = lens[0]
+  var placeHoldersLen = lens[1]
+
+  var arr = new Arr(_byteLength(b64, validLen, placeHoldersLen))
+
+  var curByte = 0
+
+  // if there are placeholders, only get up to the last complete 4 chars
+  var len = placeHoldersLen > 0
+    ? validLen - 4
+    : validLen
+
+  var i
+  for (i = 0; i < len; i += 4) {
+    tmp =
+      (revLookup[b64.charCodeAt(i)] << 18) |
+      (revLookup[b64.charCodeAt(i + 1)] << 12) |
+      (revLookup[b64.charCodeAt(i + 2)] << 6) |
+      revLookup[b64.charCodeAt(i + 3)]
+    arr[curByte++] = (tmp >> 16) & 0xFF
+    arr[curByte++] = (tmp >> 8) & 0xFF
+    arr[curByte++] = tmp & 0xFF
+  }
+
+  if (placeHoldersLen === 2) {
+    tmp =
+      (revLookup[b64.charCodeAt(i)] << 2) |
+      (revLookup[b64.charCodeAt(i + 1)] >> 4)
+    arr[curByte++] = tmp & 0xFF
+  }
+
+  if (placeHoldersLen === 1) {
+    tmp =
+      (revLookup[b64.charCodeAt(i)] << 10) |
+      (revLookup[b64.charCodeAt(i + 1)] << 4) |
+      (revLookup[b64.charCodeAt(i + 2)] >> 2)
+    arr[curByte++] = (tmp >> 8) & 0xFF
+    arr[curByte++] = tmp & 0xFF
+  }
+
+  return arr
+}
+
+function tripletToBase64 (num) {
+  return lookup[num >> 18 & 0x3F] +
+    lookup[num >> 12 & 0x3F] +
+    lookup[num >> 6 & 0x3F] +
+    lookup[num & 0x3F]
+}
+
+function encodeChunk (uint8, start, end) {
+  var tmp
+  var output = []
+  for (var i = start; i < end; i += 3) {
+    tmp =
+      ((uint8[i] << 16) & 0xFF0000) +
+      ((uint8[i + 1] << 8) & 0xFF00) +
+      (uint8[i + 2] & 0xFF)
+    output.push(tripletToBase64(tmp))
+  }
+  return output.join('')
+}
+
+function fromByteArray (uint8) {
+  var tmp
+  var len = uint8.length
+  var extraBytes = len % 3 // if we have 1 byte left, pad 2 bytes
+  var parts = []
+  var maxChunkLength = 16383 // must be multiple of 3
+
+  // go through the array every three bytes, we'll deal with trailing stuff later
+  for (var i = 0, len2 = len - extraBytes; i < len2; i += maxChunkLength) {
+    parts.push(encodeChunk(
+      uint8, i, (i + maxChunkLength) > len2 ? len2 : (i + maxChunkLength)
+    ))
+  }
+
+  // pad the end with zeros, but make sure to not forget the extra bytes
+  if (extraBytes === 1) {
+    tmp = uint8[len - 1]
+    parts.push(
+      lookup[tmp >> 2] +
+      lookup[(tmp << 4) & 0x3F] +
+      '=='
+    )
+  } else if (extraBytes === 2) {
+    tmp = (uint8[len - 2] << 8) + uint8[len - 1]
+    parts.push(
+      lookup[tmp >> 10] +
+      lookup[(tmp >> 4) & 0x3F] +
+      lookup[(tmp << 2) & 0x3F] +
+      '='
+    )
+  }
+
+  return parts.join('')
+}
+
 
 /***/ }),
 
@@ -6429,6 +7046,5965 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./node_modules/buffer/index.js":
+/*!**************************************!*\
+  !*** ./node_modules/buffer/index.js ***!
+  \**************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+/* WEBPACK VAR INJECTION */(function(global) {/*!
+ * The buffer module from node.js, for the browser.
+ *
+ * @author   Feross Aboukhadijeh <feross@feross.org> <http://feross.org>
+ * @license  MIT
+ */
+/* eslint-disable no-proto */
+
+
+
+var base64 = __webpack_require__(/*! base64-js */ "./node_modules/base64-js/index.js")
+var ieee754 = __webpack_require__(/*! ieee754 */ "./node_modules/ieee754/index.js")
+var isArray = __webpack_require__(/*! isarray */ "./node_modules/isarray/index.js")
+
+exports.Buffer = Buffer
+exports.SlowBuffer = SlowBuffer
+exports.INSPECT_MAX_BYTES = 50
+
+/**
+ * If `Buffer.TYPED_ARRAY_SUPPORT`:
+ *   === true    Use Uint8Array implementation (fastest)
+ *   === false   Use Object implementation (most compatible, even IE6)
+ *
+ * Browsers that support typed arrays are IE 10+, Firefox 4+, Chrome 7+, Safari 5.1+,
+ * Opera 11.6+, iOS 4.2+.
+ *
+ * Due to various browser bugs, sometimes the Object implementation will be used even
+ * when the browser supports typed arrays.
+ *
+ * Note:
+ *
+ *   - Firefox 4-29 lacks support for adding new properties to `Uint8Array` instances,
+ *     See: https://bugzilla.mozilla.org/show_bug.cgi?id=695438.
+ *
+ *   - Chrome 9-10 is missing the `TypedArray.prototype.subarray` function.
+ *
+ *   - IE10 has a broken `TypedArray.prototype.subarray` function which returns arrays of
+ *     incorrect length in some situations.
+
+ * We detect these buggy browsers and set `Buffer.TYPED_ARRAY_SUPPORT` to `false` so they
+ * get the Object implementation, which is slower but behaves correctly.
+ */
+Buffer.TYPED_ARRAY_SUPPORT = global.TYPED_ARRAY_SUPPORT !== undefined
+  ? global.TYPED_ARRAY_SUPPORT
+  : typedArraySupport()
+
+/*
+ * Export kMaxLength after typed array support is determined.
+ */
+exports.kMaxLength = kMaxLength()
+
+function typedArraySupport () {
+  try {
+    var arr = new Uint8Array(1)
+    arr.__proto__ = {__proto__: Uint8Array.prototype, foo: function () { return 42 }}
+    return arr.foo() === 42 && // typed array instances can be augmented
+        typeof arr.subarray === 'function' && // chrome 9-10 lack `subarray`
+        arr.subarray(1, 1).byteLength === 0 // ie10 has broken `subarray`
+  } catch (e) {
+    return false
+  }
+}
+
+function kMaxLength () {
+  return Buffer.TYPED_ARRAY_SUPPORT
+    ? 0x7fffffff
+    : 0x3fffffff
+}
+
+function createBuffer (that, length) {
+  if (kMaxLength() < length) {
+    throw new RangeError('Invalid typed array length')
+  }
+  if (Buffer.TYPED_ARRAY_SUPPORT) {
+    // Return an augmented `Uint8Array` instance, for best performance
+    that = new Uint8Array(length)
+    that.__proto__ = Buffer.prototype
+  } else {
+    // Fallback: Return an object instance of the Buffer class
+    if (that === null) {
+      that = new Buffer(length)
+    }
+    that.length = length
+  }
+
+  return that
+}
+
+/**
+ * The Buffer constructor returns instances of `Uint8Array` that have their
+ * prototype changed to `Buffer.prototype`. Furthermore, `Buffer` is a subclass of
+ * `Uint8Array`, so the returned instances will have all the node `Buffer` methods
+ * and the `Uint8Array` methods. Square bracket notation works as expected -- it
+ * returns a single octet.
+ *
+ * The `Uint8Array` prototype remains unmodified.
+ */
+
+function Buffer (arg, encodingOrOffset, length) {
+  if (!Buffer.TYPED_ARRAY_SUPPORT && !(this instanceof Buffer)) {
+    return new Buffer(arg, encodingOrOffset, length)
+  }
+
+  // Common case.
+  if (typeof arg === 'number') {
+    if (typeof encodingOrOffset === 'string') {
+      throw new Error(
+        'If encoding is specified then the first argument must be a string'
+      )
+    }
+    return allocUnsafe(this, arg)
+  }
+  return from(this, arg, encodingOrOffset, length)
+}
+
+Buffer.poolSize = 8192 // not used by this implementation
+
+// TODO: Legacy, not needed anymore. Remove in next major version.
+Buffer._augment = function (arr) {
+  arr.__proto__ = Buffer.prototype
+  return arr
+}
+
+function from (that, value, encodingOrOffset, length) {
+  if (typeof value === 'number') {
+    throw new TypeError('"value" argument must not be a number')
+  }
+
+  if (typeof ArrayBuffer !== 'undefined' && value instanceof ArrayBuffer) {
+    return fromArrayBuffer(that, value, encodingOrOffset, length)
+  }
+
+  if (typeof value === 'string') {
+    return fromString(that, value, encodingOrOffset)
+  }
+
+  return fromObject(that, value)
+}
+
+/**
+ * Functionally equivalent to Buffer(arg, encoding) but throws a TypeError
+ * if value is a number.
+ * Buffer.from(str[, encoding])
+ * Buffer.from(array)
+ * Buffer.from(buffer)
+ * Buffer.from(arrayBuffer[, byteOffset[, length]])
+ **/
+Buffer.from = function (value, encodingOrOffset, length) {
+  return from(null, value, encodingOrOffset, length)
+}
+
+if (Buffer.TYPED_ARRAY_SUPPORT) {
+  Buffer.prototype.__proto__ = Uint8Array.prototype
+  Buffer.__proto__ = Uint8Array
+  if (typeof Symbol !== 'undefined' && Symbol.species &&
+      Buffer[Symbol.species] === Buffer) {
+    // Fix subarray() in ES2016. See: https://github.com/feross/buffer/pull/97
+    Object.defineProperty(Buffer, Symbol.species, {
+      value: null,
+      configurable: true
+    })
+  }
+}
+
+function assertSize (size) {
+  if (typeof size !== 'number') {
+    throw new TypeError('"size" argument must be a number')
+  } else if (size < 0) {
+    throw new RangeError('"size" argument must not be negative')
+  }
+}
+
+function alloc (that, size, fill, encoding) {
+  assertSize(size)
+  if (size <= 0) {
+    return createBuffer(that, size)
+  }
+  if (fill !== undefined) {
+    // Only pay attention to encoding if it's a string. This
+    // prevents accidentally sending in a number that would
+    // be interpretted as a start offset.
+    return typeof encoding === 'string'
+      ? createBuffer(that, size).fill(fill, encoding)
+      : createBuffer(that, size).fill(fill)
+  }
+  return createBuffer(that, size)
+}
+
+/**
+ * Creates a new filled Buffer instance.
+ * alloc(size[, fill[, encoding]])
+ **/
+Buffer.alloc = function (size, fill, encoding) {
+  return alloc(null, size, fill, encoding)
+}
+
+function allocUnsafe (that, size) {
+  assertSize(size)
+  that = createBuffer(that, size < 0 ? 0 : checked(size) | 0)
+  if (!Buffer.TYPED_ARRAY_SUPPORT) {
+    for (var i = 0; i < size; ++i) {
+      that[i] = 0
+    }
+  }
+  return that
+}
+
+/**
+ * Equivalent to Buffer(num), by default creates a non-zero-filled Buffer instance.
+ * */
+Buffer.allocUnsafe = function (size) {
+  return allocUnsafe(null, size)
+}
+/**
+ * Equivalent to SlowBuffer(num), by default creates a non-zero-filled Buffer instance.
+ */
+Buffer.allocUnsafeSlow = function (size) {
+  return allocUnsafe(null, size)
+}
+
+function fromString (that, string, encoding) {
+  if (typeof encoding !== 'string' || encoding === '') {
+    encoding = 'utf8'
+  }
+
+  if (!Buffer.isEncoding(encoding)) {
+    throw new TypeError('"encoding" must be a valid string encoding')
+  }
+
+  var length = byteLength(string, encoding) | 0
+  that = createBuffer(that, length)
+
+  var actual = that.write(string, encoding)
+
+  if (actual !== length) {
+    // Writing a hex string, for example, that contains invalid characters will
+    // cause everything after the first invalid character to be ignored. (e.g.
+    // 'abxxcd' will be treated as 'ab')
+    that = that.slice(0, actual)
+  }
+
+  return that
+}
+
+function fromArrayLike (that, array) {
+  var length = array.length < 0 ? 0 : checked(array.length) | 0
+  that = createBuffer(that, length)
+  for (var i = 0; i < length; i += 1) {
+    that[i] = array[i] & 255
+  }
+  return that
+}
+
+function fromArrayBuffer (that, array, byteOffset, length) {
+  array.byteLength // this throws if `array` is not a valid ArrayBuffer
+
+  if (byteOffset < 0 || array.byteLength < byteOffset) {
+    throw new RangeError('\'offset\' is out of bounds')
+  }
+
+  if (array.byteLength < byteOffset + (length || 0)) {
+    throw new RangeError('\'length\' is out of bounds')
+  }
+
+  if (byteOffset === undefined && length === undefined) {
+    array = new Uint8Array(array)
+  } else if (length === undefined) {
+    array = new Uint8Array(array, byteOffset)
+  } else {
+    array = new Uint8Array(array, byteOffset, length)
+  }
+
+  if (Buffer.TYPED_ARRAY_SUPPORT) {
+    // Return an augmented `Uint8Array` instance, for best performance
+    that = array
+    that.__proto__ = Buffer.prototype
+  } else {
+    // Fallback: Return an object instance of the Buffer class
+    that = fromArrayLike(that, array)
+  }
+  return that
+}
+
+function fromObject (that, obj) {
+  if (Buffer.isBuffer(obj)) {
+    var len = checked(obj.length) | 0
+    that = createBuffer(that, len)
+
+    if (that.length === 0) {
+      return that
+    }
+
+    obj.copy(that, 0, 0, len)
+    return that
+  }
+
+  if (obj) {
+    if ((typeof ArrayBuffer !== 'undefined' &&
+        obj.buffer instanceof ArrayBuffer) || 'length' in obj) {
+      if (typeof obj.length !== 'number' || isnan(obj.length)) {
+        return createBuffer(that, 0)
+      }
+      return fromArrayLike(that, obj)
+    }
+
+    if (obj.type === 'Buffer' && isArray(obj.data)) {
+      return fromArrayLike(that, obj.data)
+    }
+  }
+
+  throw new TypeError('First argument must be a string, Buffer, ArrayBuffer, Array, or array-like object.')
+}
+
+function checked (length) {
+  // Note: cannot use `length < kMaxLength()` here because that fails when
+  // length is NaN (which is otherwise coerced to zero.)
+  if (length >= kMaxLength()) {
+    throw new RangeError('Attempt to allocate Buffer larger than maximum ' +
+                         'size: 0x' + kMaxLength().toString(16) + ' bytes')
+  }
+  return length | 0
+}
+
+function SlowBuffer (length) {
+  if (+length != length) { // eslint-disable-line eqeqeq
+    length = 0
+  }
+  return Buffer.alloc(+length)
+}
+
+Buffer.isBuffer = function isBuffer (b) {
+  return !!(b != null && b._isBuffer)
+}
+
+Buffer.compare = function compare (a, b) {
+  if (!Buffer.isBuffer(a) || !Buffer.isBuffer(b)) {
+    throw new TypeError('Arguments must be Buffers')
+  }
+
+  if (a === b) return 0
+
+  var x = a.length
+  var y = b.length
+
+  for (var i = 0, len = Math.min(x, y); i < len; ++i) {
+    if (a[i] !== b[i]) {
+      x = a[i]
+      y = b[i]
+      break
+    }
+  }
+
+  if (x < y) return -1
+  if (y < x) return 1
+  return 0
+}
+
+Buffer.isEncoding = function isEncoding (encoding) {
+  switch (String(encoding).toLowerCase()) {
+    case 'hex':
+    case 'utf8':
+    case 'utf-8':
+    case 'ascii':
+    case 'latin1':
+    case 'binary':
+    case 'base64':
+    case 'ucs2':
+    case 'ucs-2':
+    case 'utf16le':
+    case 'utf-16le':
+      return true
+    default:
+      return false
+  }
+}
+
+Buffer.concat = function concat (list, length) {
+  if (!isArray(list)) {
+    throw new TypeError('"list" argument must be an Array of Buffers')
+  }
+
+  if (list.length === 0) {
+    return Buffer.alloc(0)
+  }
+
+  var i
+  if (length === undefined) {
+    length = 0
+    for (i = 0; i < list.length; ++i) {
+      length += list[i].length
+    }
+  }
+
+  var buffer = Buffer.allocUnsafe(length)
+  var pos = 0
+  for (i = 0; i < list.length; ++i) {
+    var buf = list[i]
+    if (!Buffer.isBuffer(buf)) {
+      throw new TypeError('"list" argument must be an Array of Buffers')
+    }
+    buf.copy(buffer, pos)
+    pos += buf.length
+  }
+  return buffer
+}
+
+function byteLength (string, encoding) {
+  if (Buffer.isBuffer(string)) {
+    return string.length
+  }
+  if (typeof ArrayBuffer !== 'undefined' && typeof ArrayBuffer.isView === 'function' &&
+      (ArrayBuffer.isView(string) || string instanceof ArrayBuffer)) {
+    return string.byteLength
+  }
+  if (typeof string !== 'string') {
+    string = '' + string
+  }
+
+  var len = string.length
+  if (len === 0) return 0
+
+  // Use a for loop to avoid recursion
+  var loweredCase = false
+  for (;;) {
+    switch (encoding) {
+      case 'ascii':
+      case 'latin1':
+      case 'binary':
+        return len
+      case 'utf8':
+      case 'utf-8':
+      case undefined:
+        return utf8ToBytes(string).length
+      case 'ucs2':
+      case 'ucs-2':
+      case 'utf16le':
+      case 'utf-16le':
+        return len * 2
+      case 'hex':
+        return len >>> 1
+      case 'base64':
+        return base64ToBytes(string).length
+      default:
+        if (loweredCase) return utf8ToBytes(string).length // assume utf8
+        encoding = ('' + encoding).toLowerCase()
+        loweredCase = true
+    }
+  }
+}
+Buffer.byteLength = byteLength
+
+function slowToString (encoding, start, end) {
+  var loweredCase = false
+
+  // No need to verify that "this.length <= MAX_UINT32" since it's a read-only
+  // property of a typed array.
+
+  // This behaves neither like String nor Uint8Array in that we set start/end
+  // to their upper/lower bounds if the value passed is out of range.
+  // undefined is handled specially as per ECMA-262 6th Edition,
+  // Section 13.3.3.7 Runtime Semantics: KeyedBindingInitialization.
+  if (start === undefined || start < 0) {
+    start = 0
+  }
+  // Return early if start > this.length. Done here to prevent potential uint32
+  // coercion fail below.
+  if (start > this.length) {
+    return ''
+  }
+
+  if (end === undefined || end > this.length) {
+    end = this.length
+  }
+
+  if (end <= 0) {
+    return ''
+  }
+
+  // Force coersion to uint32. This will also coerce falsey/NaN values to 0.
+  end >>>= 0
+  start >>>= 0
+
+  if (end <= start) {
+    return ''
+  }
+
+  if (!encoding) encoding = 'utf8'
+
+  while (true) {
+    switch (encoding) {
+      case 'hex':
+        return hexSlice(this, start, end)
+
+      case 'utf8':
+      case 'utf-8':
+        return utf8Slice(this, start, end)
+
+      case 'ascii':
+        return asciiSlice(this, start, end)
+
+      case 'latin1':
+      case 'binary':
+        return latin1Slice(this, start, end)
+
+      case 'base64':
+        return base64Slice(this, start, end)
+
+      case 'ucs2':
+      case 'ucs-2':
+      case 'utf16le':
+      case 'utf-16le':
+        return utf16leSlice(this, start, end)
+
+      default:
+        if (loweredCase) throw new TypeError('Unknown encoding: ' + encoding)
+        encoding = (encoding + '').toLowerCase()
+        loweredCase = true
+    }
+  }
+}
+
+// The property is used by `Buffer.isBuffer` and `is-buffer` (in Safari 5-7) to detect
+// Buffer instances.
+Buffer.prototype._isBuffer = true
+
+function swap (b, n, m) {
+  var i = b[n]
+  b[n] = b[m]
+  b[m] = i
+}
+
+Buffer.prototype.swap16 = function swap16 () {
+  var len = this.length
+  if (len % 2 !== 0) {
+    throw new RangeError('Buffer size must be a multiple of 16-bits')
+  }
+  for (var i = 0; i < len; i += 2) {
+    swap(this, i, i + 1)
+  }
+  return this
+}
+
+Buffer.prototype.swap32 = function swap32 () {
+  var len = this.length
+  if (len % 4 !== 0) {
+    throw new RangeError('Buffer size must be a multiple of 32-bits')
+  }
+  for (var i = 0; i < len; i += 4) {
+    swap(this, i, i + 3)
+    swap(this, i + 1, i + 2)
+  }
+  return this
+}
+
+Buffer.prototype.swap64 = function swap64 () {
+  var len = this.length
+  if (len % 8 !== 0) {
+    throw new RangeError('Buffer size must be a multiple of 64-bits')
+  }
+  for (var i = 0; i < len; i += 8) {
+    swap(this, i, i + 7)
+    swap(this, i + 1, i + 6)
+    swap(this, i + 2, i + 5)
+    swap(this, i + 3, i + 4)
+  }
+  return this
+}
+
+Buffer.prototype.toString = function toString () {
+  var length = this.length | 0
+  if (length === 0) return ''
+  if (arguments.length === 0) return utf8Slice(this, 0, length)
+  return slowToString.apply(this, arguments)
+}
+
+Buffer.prototype.equals = function equals (b) {
+  if (!Buffer.isBuffer(b)) throw new TypeError('Argument must be a Buffer')
+  if (this === b) return true
+  return Buffer.compare(this, b) === 0
+}
+
+Buffer.prototype.inspect = function inspect () {
+  var str = ''
+  var max = exports.INSPECT_MAX_BYTES
+  if (this.length > 0) {
+    str = this.toString('hex', 0, max).match(/.{2}/g).join(' ')
+    if (this.length > max) str += ' ... '
+  }
+  return '<Buffer ' + str + '>'
+}
+
+Buffer.prototype.compare = function compare (target, start, end, thisStart, thisEnd) {
+  if (!Buffer.isBuffer(target)) {
+    throw new TypeError('Argument must be a Buffer')
+  }
+
+  if (start === undefined) {
+    start = 0
+  }
+  if (end === undefined) {
+    end = target ? target.length : 0
+  }
+  if (thisStart === undefined) {
+    thisStart = 0
+  }
+  if (thisEnd === undefined) {
+    thisEnd = this.length
+  }
+
+  if (start < 0 || end > target.length || thisStart < 0 || thisEnd > this.length) {
+    throw new RangeError('out of range index')
+  }
+
+  if (thisStart >= thisEnd && start >= end) {
+    return 0
+  }
+  if (thisStart >= thisEnd) {
+    return -1
+  }
+  if (start >= end) {
+    return 1
+  }
+
+  start >>>= 0
+  end >>>= 0
+  thisStart >>>= 0
+  thisEnd >>>= 0
+
+  if (this === target) return 0
+
+  var x = thisEnd - thisStart
+  var y = end - start
+  var len = Math.min(x, y)
+
+  var thisCopy = this.slice(thisStart, thisEnd)
+  var targetCopy = target.slice(start, end)
+
+  for (var i = 0; i < len; ++i) {
+    if (thisCopy[i] !== targetCopy[i]) {
+      x = thisCopy[i]
+      y = targetCopy[i]
+      break
+    }
+  }
+
+  if (x < y) return -1
+  if (y < x) return 1
+  return 0
+}
+
+// Finds either the first index of `val` in `buffer` at offset >= `byteOffset`,
+// OR the last index of `val` in `buffer` at offset <= `byteOffset`.
+//
+// Arguments:
+// - buffer - a Buffer to search
+// - val - a string, Buffer, or number
+// - byteOffset - an index into `buffer`; will be clamped to an int32
+// - encoding - an optional encoding, relevant is val is a string
+// - dir - true for indexOf, false for lastIndexOf
+function bidirectionalIndexOf (buffer, val, byteOffset, encoding, dir) {
+  // Empty buffer means no match
+  if (buffer.length === 0) return -1
+
+  // Normalize byteOffset
+  if (typeof byteOffset === 'string') {
+    encoding = byteOffset
+    byteOffset = 0
+  } else if (byteOffset > 0x7fffffff) {
+    byteOffset = 0x7fffffff
+  } else if (byteOffset < -0x80000000) {
+    byteOffset = -0x80000000
+  }
+  byteOffset = +byteOffset  // Coerce to Number.
+  if (isNaN(byteOffset)) {
+    // byteOffset: it it's undefined, null, NaN, "foo", etc, search whole buffer
+    byteOffset = dir ? 0 : (buffer.length - 1)
+  }
+
+  // Normalize byteOffset: negative offsets start from the end of the buffer
+  if (byteOffset < 0) byteOffset = buffer.length + byteOffset
+  if (byteOffset >= buffer.length) {
+    if (dir) return -1
+    else byteOffset = buffer.length - 1
+  } else if (byteOffset < 0) {
+    if (dir) byteOffset = 0
+    else return -1
+  }
+
+  // Normalize val
+  if (typeof val === 'string') {
+    val = Buffer.from(val, encoding)
+  }
+
+  // Finally, search either indexOf (if dir is true) or lastIndexOf
+  if (Buffer.isBuffer(val)) {
+    // Special case: looking for empty string/buffer always fails
+    if (val.length === 0) {
+      return -1
+    }
+    return arrayIndexOf(buffer, val, byteOffset, encoding, dir)
+  } else if (typeof val === 'number') {
+    val = val & 0xFF // Search for a byte value [0-255]
+    if (Buffer.TYPED_ARRAY_SUPPORT &&
+        typeof Uint8Array.prototype.indexOf === 'function') {
+      if (dir) {
+        return Uint8Array.prototype.indexOf.call(buffer, val, byteOffset)
+      } else {
+        return Uint8Array.prototype.lastIndexOf.call(buffer, val, byteOffset)
+      }
+    }
+    return arrayIndexOf(buffer, [ val ], byteOffset, encoding, dir)
+  }
+
+  throw new TypeError('val must be string, number or Buffer')
+}
+
+function arrayIndexOf (arr, val, byteOffset, encoding, dir) {
+  var indexSize = 1
+  var arrLength = arr.length
+  var valLength = val.length
+
+  if (encoding !== undefined) {
+    encoding = String(encoding).toLowerCase()
+    if (encoding === 'ucs2' || encoding === 'ucs-2' ||
+        encoding === 'utf16le' || encoding === 'utf-16le') {
+      if (arr.length < 2 || val.length < 2) {
+        return -1
+      }
+      indexSize = 2
+      arrLength /= 2
+      valLength /= 2
+      byteOffset /= 2
+    }
+  }
+
+  function read (buf, i) {
+    if (indexSize === 1) {
+      return buf[i]
+    } else {
+      return buf.readUInt16BE(i * indexSize)
+    }
+  }
+
+  var i
+  if (dir) {
+    var foundIndex = -1
+    for (i = byteOffset; i < arrLength; i++) {
+      if (read(arr, i) === read(val, foundIndex === -1 ? 0 : i - foundIndex)) {
+        if (foundIndex === -1) foundIndex = i
+        if (i - foundIndex + 1 === valLength) return foundIndex * indexSize
+      } else {
+        if (foundIndex !== -1) i -= i - foundIndex
+        foundIndex = -1
+      }
+    }
+  } else {
+    if (byteOffset + valLength > arrLength) byteOffset = arrLength - valLength
+    for (i = byteOffset; i >= 0; i--) {
+      var found = true
+      for (var j = 0; j < valLength; j++) {
+        if (read(arr, i + j) !== read(val, j)) {
+          found = false
+          break
+        }
+      }
+      if (found) return i
+    }
+  }
+
+  return -1
+}
+
+Buffer.prototype.includes = function includes (val, byteOffset, encoding) {
+  return this.indexOf(val, byteOffset, encoding) !== -1
+}
+
+Buffer.prototype.indexOf = function indexOf (val, byteOffset, encoding) {
+  return bidirectionalIndexOf(this, val, byteOffset, encoding, true)
+}
+
+Buffer.prototype.lastIndexOf = function lastIndexOf (val, byteOffset, encoding) {
+  return bidirectionalIndexOf(this, val, byteOffset, encoding, false)
+}
+
+function hexWrite (buf, string, offset, length) {
+  offset = Number(offset) || 0
+  var remaining = buf.length - offset
+  if (!length) {
+    length = remaining
+  } else {
+    length = Number(length)
+    if (length > remaining) {
+      length = remaining
+    }
+  }
+
+  // must be an even number of digits
+  var strLen = string.length
+  if (strLen % 2 !== 0) throw new TypeError('Invalid hex string')
+
+  if (length > strLen / 2) {
+    length = strLen / 2
+  }
+  for (var i = 0; i < length; ++i) {
+    var parsed = parseInt(string.substr(i * 2, 2), 16)
+    if (isNaN(parsed)) return i
+    buf[offset + i] = parsed
+  }
+  return i
+}
+
+function utf8Write (buf, string, offset, length) {
+  return blitBuffer(utf8ToBytes(string, buf.length - offset), buf, offset, length)
+}
+
+function asciiWrite (buf, string, offset, length) {
+  return blitBuffer(asciiToBytes(string), buf, offset, length)
+}
+
+function latin1Write (buf, string, offset, length) {
+  return asciiWrite(buf, string, offset, length)
+}
+
+function base64Write (buf, string, offset, length) {
+  return blitBuffer(base64ToBytes(string), buf, offset, length)
+}
+
+function ucs2Write (buf, string, offset, length) {
+  return blitBuffer(utf16leToBytes(string, buf.length - offset), buf, offset, length)
+}
+
+Buffer.prototype.write = function write (string, offset, length, encoding) {
+  // Buffer#write(string)
+  if (offset === undefined) {
+    encoding = 'utf8'
+    length = this.length
+    offset = 0
+  // Buffer#write(string, encoding)
+  } else if (length === undefined && typeof offset === 'string') {
+    encoding = offset
+    length = this.length
+    offset = 0
+  // Buffer#write(string, offset[, length][, encoding])
+  } else if (isFinite(offset)) {
+    offset = offset | 0
+    if (isFinite(length)) {
+      length = length | 0
+      if (encoding === undefined) encoding = 'utf8'
+    } else {
+      encoding = length
+      length = undefined
+    }
+  // legacy write(string, encoding, offset, length) - remove in v0.13
+  } else {
+    throw new Error(
+      'Buffer.write(string, encoding, offset[, length]) is no longer supported'
+    )
+  }
+
+  var remaining = this.length - offset
+  if (length === undefined || length > remaining) length = remaining
+
+  if ((string.length > 0 && (length < 0 || offset < 0)) || offset > this.length) {
+    throw new RangeError('Attempt to write outside buffer bounds')
+  }
+
+  if (!encoding) encoding = 'utf8'
+
+  var loweredCase = false
+  for (;;) {
+    switch (encoding) {
+      case 'hex':
+        return hexWrite(this, string, offset, length)
+
+      case 'utf8':
+      case 'utf-8':
+        return utf8Write(this, string, offset, length)
+
+      case 'ascii':
+        return asciiWrite(this, string, offset, length)
+
+      case 'latin1':
+      case 'binary':
+        return latin1Write(this, string, offset, length)
+
+      case 'base64':
+        // Warning: maxLength not taken into account in base64Write
+        return base64Write(this, string, offset, length)
+
+      case 'ucs2':
+      case 'ucs-2':
+      case 'utf16le':
+      case 'utf-16le':
+        return ucs2Write(this, string, offset, length)
+
+      default:
+        if (loweredCase) throw new TypeError('Unknown encoding: ' + encoding)
+        encoding = ('' + encoding).toLowerCase()
+        loweredCase = true
+    }
+  }
+}
+
+Buffer.prototype.toJSON = function toJSON () {
+  return {
+    type: 'Buffer',
+    data: Array.prototype.slice.call(this._arr || this, 0)
+  }
+}
+
+function base64Slice (buf, start, end) {
+  if (start === 0 && end === buf.length) {
+    return base64.fromByteArray(buf)
+  } else {
+    return base64.fromByteArray(buf.slice(start, end))
+  }
+}
+
+function utf8Slice (buf, start, end) {
+  end = Math.min(buf.length, end)
+  var res = []
+
+  var i = start
+  while (i < end) {
+    var firstByte = buf[i]
+    var codePoint = null
+    var bytesPerSequence = (firstByte > 0xEF) ? 4
+      : (firstByte > 0xDF) ? 3
+      : (firstByte > 0xBF) ? 2
+      : 1
+
+    if (i + bytesPerSequence <= end) {
+      var secondByte, thirdByte, fourthByte, tempCodePoint
+
+      switch (bytesPerSequence) {
+        case 1:
+          if (firstByte < 0x80) {
+            codePoint = firstByte
+          }
+          break
+        case 2:
+          secondByte = buf[i + 1]
+          if ((secondByte & 0xC0) === 0x80) {
+            tempCodePoint = (firstByte & 0x1F) << 0x6 | (secondByte & 0x3F)
+            if (tempCodePoint > 0x7F) {
+              codePoint = tempCodePoint
+            }
+          }
+          break
+        case 3:
+          secondByte = buf[i + 1]
+          thirdByte = buf[i + 2]
+          if ((secondByte & 0xC0) === 0x80 && (thirdByte & 0xC0) === 0x80) {
+            tempCodePoint = (firstByte & 0xF) << 0xC | (secondByte & 0x3F) << 0x6 | (thirdByte & 0x3F)
+            if (tempCodePoint > 0x7FF && (tempCodePoint < 0xD800 || tempCodePoint > 0xDFFF)) {
+              codePoint = tempCodePoint
+            }
+          }
+          break
+        case 4:
+          secondByte = buf[i + 1]
+          thirdByte = buf[i + 2]
+          fourthByte = buf[i + 3]
+          if ((secondByte & 0xC0) === 0x80 && (thirdByte & 0xC0) === 0x80 && (fourthByte & 0xC0) === 0x80) {
+            tempCodePoint = (firstByte & 0xF) << 0x12 | (secondByte & 0x3F) << 0xC | (thirdByte & 0x3F) << 0x6 | (fourthByte & 0x3F)
+            if (tempCodePoint > 0xFFFF && tempCodePoint < 0x110000) {
+              codePoint = tempCodePoint
+            }
+          }
+      }
+    }
+
+    if (codePoint === null) {
+      // we did not generate a valid codePoint so insert a
+      // replacement char (U+FFFD) and advance only 1 byte
+      codePoint = 0xFFFD
+      bytesPerSequence = 1
+    } else if (codePoint > 0xFFFF) {
+      // encode to utf16 (surrogate pair dance)
+      codePoint -= 0x10000
+      res.push(codePoint >>> 10 & 0x3FF | 0xD800)
+      codePoint = 0xDC00 | codePoint & 0x3FF
+    }
+
+    res.push(codePoint)
+    i += bytesPerSequence
+  }
+
+  return decodeCodePointsArray(res)
+}
+
+// Based on http://stackoverflow.com/a/22747272/680742, the browser with
+// the lowest limit is Chrome, with 0x10000 args.
+// We go 1 magnitude less, for safety
+var MAX_ARGUMENTS_LENGTH = 0x1000
+
+function decodeCodePointsArray (codePoints) {
+  var len = codePoints.length
+  if (len <= MAX_ARGUMENTS_LENGTH) {
+    return String.fromCharCode.apply(String, codePoints) // avoid extra slice()
+  }
+
+  // Decode in chunks to avoid "call stack size exceeded".
+  var res = ''
+  var i = 0
+  while (i < len) {
+    res += String.fromCharCode.apply(
+      String,
+      codePoints.slice(i, i += MAX_ARGUMENTS_LENGTH)
+    )
+  }
+  return res
+}
+
+function asciiSlice (buf, start, end) {
+  var ret = ''
+  end = Math.min(buf.length, end)
+
+  for (var i = start; i < end; ++i) {
+    ret += String.fromCharCode(buf[i] & 0x7F)
+  }
+  return ret
+}
+
+function latin1Slice (buf, start, end) {
+  var ret = ''
+  end = Math.min(buf.length, end)
+
+  for (var i = start; i < end; ++i) {
+    ret += String.fromCharCode(buf[i])
+  }
+  return ret
+}
+
+function hexSlice (buf, start, end) {
+  var len = buf.length
+
+  if (!start || start < 0) start = 0
+  if (!end || end < 0 || end > len) end = len
+
+  var out = ''
+  for (var i = start; i < end; ++i) {
+    out += toHex(buf[i])
+  }
+  return out
+}
+
+function utf16leSlice (buf, start, end) {
+  var bytes = buf.slice(start, end)
+  var res = ''
+  for (var i = 0; i < bytes.length; i += 2) {
+    res += String.fromCharCode(bytes[i] + bytes[i + 1] * 256)
+  }
+  return res
+}
+
+Buffer.prototype.slice = function slice (start, end) {
+  var len = this.length
+  start = ~~start
+  end = end === undefined ? len : ~~end
+
+  if (start < 0) {
+    start += len
+    if (start < 0) start = 0
+  } else if (start > len) {
+    start = len
+  }
+
+  if (end < 0) {
+    end += len
+    if (end < 0) end = 0
+  } else if (end > len) {
+    end = len
+  }
+
+  if (end < start) end = start
+
+  var newBuf
+  if (Buffer.TYPED_ARRAY_SUPPORT) {
+    newBuf = this.subarray(start, end)
+    newBuf.__proto__ = Buffer.prototype
+  } else {
+    var sliceLen = end - start
+    newBuf = new Buffer(sliceLen, undefined)
+    for (var i = 0; i < sliceLen; ++i) {
+      newBuf[i] = this[i + start]
+    }
+  }
+
+  return newBuf
+}
+
+/*
+ * Need to make sure that buffer isn't trying to write out of bounds.
+ */
+function checkOffset (offset, ext, length) {
+  if ((offset % 1) !== 0 || offset < 0) throw new RangeError('offset is not uint')
+  if (offset + ext > length) throw new RangeError('Trying to access beyond buffer length')
+}
+
+Buffer.prototype.readUIntLE = function readUIntLE (offset, byteLength, noAssert) {
+  offset = offset | 0
+  byteLength = byteLength | 0
+  if (!noAssert) checkOffset(offset, byteLength, this.length)
+
+  var val = this[offset]
+  var mul = 1
+  var i = 0
+  while (++i < byteLength && (mul *= 0x100)) {
+    val += this[offset + i] * mul
+  }
+
+  return val
+}
+
+Buffer.prototype.readUIntBE = function readUIntBE (offset, byteLength, noAssert) {
+  offset = offset | 0
+  byteLength = byteLength | 0
+  if (!noAssert) {
+    checkOffset(offset, byteLength, this.length)
+  }
+
+  var val = this[offset + --byteLength]
+  var mul = 1
+  while (byteLength > 0 && (mul *= 0x100)) {
+    val += this[offset + --byteLength] * mul
+  }
+
+  return val
+}
+
+Buffer.prototype.readUInt8 = function readUInt8 (offset, noAssert) {
+  if (!noAssert) checkOffset(offset, 1, this.length)
+  return this[offset]
+}
+
+Buffer.prototype.readUInt16LE = function readUInt16LE (offset, noAssert) {
+  if (!noAssert) checkOffset(offset, 2, this.length)
+  return this[offset] | (this[offset + 1] << 8)
+}
+
+Buffer.prototype.readUInt16BE = function readUInt16BE (offset, noAssert) {
+  if (!noAssert) checkOffset(offset, 2, this.length)
+  return (this[offset] << 8) | this[offset + 1]
+}
+
+Buffer.prototype.readUInt32LE = function readUInt32LE (offset, noAssert) {
+  if (!noAssert) checkOffset(offset, 4, this.length)
+
+  return ((this[offset]) |
+      (this[offset + 1] << 8) |
+      (this[offset + 2] << 16)) +
+      (this[offset + 3] * 0x1000000)
+}
+
+Buffer.prototype.readUInt32BE = function readUInt32BE (offset, noAssert) {
+  if (!noAssert) checkOffset(offset, 4, this.length)
+
+  return (this[offset] * 0x1000000) +
+    ((this[offset + 1] << 16) |
+    (this[offset + 2] << 8) |
+    this[offset + 3])
+}
+
+Buffer.prototype.readIntLE = function readIntLE (offset, byteLength, noAssert) {
+  offset = offset | 0
+  byteLength = byteLength | 0
+  if (!noAssert) checkOffset(offset, byteLength, this.length)
+
+  var val = this[offset]
+  var mul = 1
+  var i = 0
+  while (++i < byteLength && (mul *= 0x100)) {
+    val += this[offset + i] * mul
+  }
+  mul *= 0x80
+
+  if (val >= mul) val -= Math.pow(2, 8 * byteLength)
+
+  return val
+}
+
+Buffer.prototype.readIntBE = function readIntBE (offset, byteLength, noAssert) {
+  offset = offset | 0
+  byteLength = byteLength | 0
+  if (!noAssert) checkOffset(offset, byteLength, this.length)
+
+  var i = byteLength
+  var mul = 1
+  var val = this[offset + --i]
+  while (i > 0 && (mul *= 0x100)) {
+    val += this[offset + --i] * mul
+  }
+  mul *= 0x80
+
+  if (val >= mul) val -= Math.pow(2, 8 * byteLength)
+
+  return val
+}
+
+Buffer.prototype.readInt8 = function readInt8 (offset, noAssert) {
+  if (!noAssert) checkOffset(offset, 1, this.length)
+  if (!(this[offset] & 0x80)) return (this[offset])
+  return ((0xff - this[offset] + 1) * -1)
+}
+
+Buffer.prototype.readInt16LE = function readInt16LE (offset, noAssert) {
+  if (!noAssert) checkOffset(offset, 2, this.length)
+  var val = this[offset] | (this[offset + 1] << 8)
+  return (val & 0x8000) ? val | 0xFFFF0000 : val
+}
+
+Buffer.prototype.readInt16BE = function readInt16BE (offset, noAssert) {
+  if (!noAssert) checkOffset(offset, 2, this.length)
+  var val = this[offset + 1] | (this[offset] << 8)
+  return (val & 0x8000) ? val | 0xFFFF0000 : val
+}
+
+Buffer.prototype.readInt32LE = function readInt32LE (offset, noAssert) {
+  if (!noAssert) checkOffset(offset, 4, this.length)
+
+  return (this[offset]) |
+    (this[offset + 1] << 8) |
+    (this[offset + 2] << 16) |
+    (this[offset + 3] << 24)
+}
+
+Buffer.prototype.readInt32BE = function readInt32BE (offset, noAssert) {
+  if (!noAssert) checkOffset(offset, 4, this.length)
+
+  return (this[offset] << 24) |
+    (this[offset + 1] << 16) |
+    (this[offset + 2] << 8) |
+    (this[offset + 3])
+}
+
+Buffer.prototype.readFloatLE = function readFloatLE (offset, noAssert) {
+  if (!noAssert) checkOffset(offset, 4, this.length)
+  return ieee754.read(this, offset, true, 23, 4)
+}
+
+Buffer.prototype.readFloatBE = function readFloatBE (offset, noAssert) {
+  if (!noAssert) checkOffset(offset, 4, this.length)
+  return ieee754.read(this, offset, false, 23, 4)
+}
+
+Buffer.prototype.readDoubleLE = function readDoubleLE (offset, noAssert) {
+  if (!noAssert) checkOffset(offset, 8, this.length)
+  return ieee754.read(this, offset, true, 52, 8)
+}
+
+Buffer.prototype.readDoubleBE = function readDoubleBE (offset, noAssert) {
+  if (!noAssert) checkOffset(offset, 8, this.length)
+  return ieee754.read(this, offset, false, 52, 8)
+}
+
+function checkInt (buf, value, offset, ext, max, min) {
+  if (!Buffer.isBuffer(buf)) throw new TypeError('"buffer" argument must be a Buffer instance')
+  if (value > max || value < min) throw new RangeError('"value" argument is out of bounds')
+  if (offset + ext > buf.length) throw new RangeError('Index out of range')
+}
+
+Buffer.prototype.writeUIntLE = function writeUIntLE (value, offset, byteLength, noAssert) {
+  value = +value
+  offset = offset | 0
+  byteLength = byteLength | 0
+  if (!noAssert) {
+    var maxBytes = Math.pow(2, 8 * byteLength) - 1
+    checkInt(this, value, offset, byteLength, maxBytes, 0)
+  }
+
+  var mul = 1
+  var i = 0
+  this[offset] = value & 0xFF
+  while (++i < byteLength && (mul *= 0x100)) {
+    this[offset + i] = (value / mul) & 0xFF
+  }
+
+  return offset + byteLength
+}
+
+Buffer.prototype.writeUIntBE = function writeUIntBE (value, offset, byteLength, noAssert) {
+  value = +value
+  offset = offset | 0
+  byteLength = byteLength | 0
+  if (!noAssert) {
+    var maxBytes = Math.pow(2, 8 * byteLength) - 1
+    checkInt(this, value, offset, byteLength, maxBytes, 0)
+  }
+
+  var i = byteLength - 1
+  var mul = 1
+  this[offset + i] = value & 0xFF
+  while (--i >= 0 && (mul *= 0x100)) {
+    this[offset + i] = (value / mul) & 0xFF
+  }
+
+  return offset + byteLength
+}
+
+Buffer.prototype.writeUInt8 = function writeUInt8 (value, offset, noAssert) {
+  value = +value
+  offset = offset | 0
+  if (!noAssert) checkInt(this, value, offset, 1, 0xff, 0)
+  if (!Buffer.TYPED_ARRAY_SUPPORT) value = Math.floor(value)
+  this[offset] = (value & 0xff)
+  return offset + 1
+}
+
+function objectWriteUInt16 (buf, value, offset, littleEndian) {
+  if (value < 0) value = 0xffff + value + 1
+  for (var i = 0, j = Math.min(buf.length - offset, 2); i < j; ++i) {
+    buf[offset + i] = (value & (0xff << (8 * (littleEndian ? i : 1 - i)))) >>>
+      (littleEndian ? i : 1 - i) * 8
+  }
+}
+
+Buffer.prototype.writeUInt16LE = function writeUInt16LE (value, offset, noAssert) {
+  value = +value
+  offset = offset | 0
+  if (!noAssert) checkInt(this, value, offset, 2, 0xffff, 0)
+  if (Buffer.TYPED_ARRAY_SUPPORT) {
+    this[offset] = (value & 0xff)
+    this[offset + 1] = (value >>> 8)
+  } else {
+    objectWriteUInt16(this, value, offset, true)
+  }
+  return offset + 2
+}
+
+Buffer.prototype.writeUInt16BE = function writeUInt16BE (value, offset, noAssert) {
+  value = +value
+  offset = offset | 0
+  if (!noAssert) checkInt(this, value, offset, 2, 0xffff, 0)
+  if (Buffer.TYPED_ARRAY_SUPPORT) {
+    this[offset] = (value >>> 8)
+    this[offset + 1] = (value & 0xff)
+  } else {
+    objectWriteUInt16(this, value, offset, false)
+  }
+  return offset + 2
+}
+
+function objectWriteUInt32 (buf, value, offset, littleEndian) {
+  if (value < 0) value = 0xffffffff + value + 1
+  for (var i = 0, j = Math.min(buf.length - offset, 4); i < j; ++i) {
+    buf[offset + i] = (value >>> (littleEndian ? i : 3 - i) * 8) & 0xff
+  }
+}
+
+Buffer.prototype.writeUInt32LE = function writeUInt32LE (value, offset, noAssert) {
+  value = +value
+  offset = offset | 0
+  if (!noAssert) checkInt(this, value, offset, 4, 0xffffffff, 0)
+  if (Buffer.TYPED_ARRAY_SUPPORT) {
+    this[offset + 3] = (value >>> 24)
+    this[offset + 2] = (value >>> 16)
+    this[offset + 1] = (value >>> 8)
+    this[offset] = (value & 0xff)
+  } else {
+    objectWriteUInt32(this, value, offset, true)
+  }
+  return offset + 4
+}
+
+Buffer.prototype.writeUInt32BE = function writeUInt32BE (value, offset, noAssert) {
+  value = +value
+  offset = offset | 0
+  if (!noAssert) checkInt(this, value, offset, 4, 0xffffffff, 0)
+  if (Buffer.TYPED_ARRAY_SUPPORT) {
+    this[offset] = (value >>> 24)
+    this[offset + 1] = (value >>> 16)
+    this[offset + 2] = (value >>> 8)
+    this[offset + 3] = (value & 0xff)
+  } else {
+    objectWriteUInt32(this, value, offset, false)
+  }
+  return offset + 4
+}
+
+Buffer.prototype.writeIntLE = function writeIntLE (value, offset, byteLength, noAssert) {
+  value = +value
+  offset = offset | 0
+  if (!noAssert) {
+    var limit = Math.pow(2, 8 * byteLength - 1)
+
+    checkInt(this, value, offset, byteLength, limit - 1, -limit)
+  }
+
+  var i = 0
+  var mul = 1
+  var sub = 0
+  this[offset] = value & 0xFF
+  while (++i < byteLength && (mul *= 0x100)) {
+    if (value < 0 && sub === 0 && this[offset + i - 1] !== 0) {
+      sub = 1
+    }
+    this[offset + i] = ((value / mul) >> 0) - sub & 0xFF
+  }
+
+  return offset + byteLength
+}
+
+Buffer.prototype.writeIntBE = function writeIntBE (value, offset, byteLength, noAssert) {
+  value = +value
+  offset = offset | 0
+  if (!noAssert) {
+    var limit = Math.pow(2, 8 * byteLength - 1)
+
+    checkInt(this, value, offset, byteLength, limit - 1, -limit)
+  }
+
+  var i = byteLength - 1
+  var mul = 1
+  var sub = 0
+  this[offset + i] = value & 0xFF
+  while (--i >= 0 && (mul *= 0x100)) {
+    if (value < 0 && sub === 0 && this[offset + i + 1] !== 0) {
+      sub = 1
+    }
+    this[offset + i] = ((value / mul) >> 0) - sub & 0xFF
+  }
+
+  return offset + byteLength
+}
+
+Buffer.prototype.writeInt8 = function writeInt8 (value, offset, noAssert) {
+  value = +value
+  offset = offset | 0
+  if (!noAssert) checkInt(this, value, offset, 1, 0x7f, -0x80)
+  if (!Buffer.TYPED_ARRAY_SUPPORT) value = Math.floor(value)
+  if (value < 0) value = 0xff + value + 1
+  this[offset] = (value & 0xff)
+  return offset + 1
+}
+
+Buffer.prototype.writeInt16LE = function writeInt16LE (value, offset, noAssert) {
+  value = +value
+  offset = offset | 0
+  if (!noAssert) checkInt(this, value, offset, 2, 0x7fff, -0x8000)
+  if (Buffer.TYPED_ARRAY_SUPPORT) {
+    this[offset] = (value & 0xff)
+    this[offset + 1] = (value >>> 8)
+  } else {
+    objectWriteUInt16(this, value, offset, true)
+  }
+  return offset + 2
+}
+
+Buffer.prototype.writeInt16BE = function writeInt16BE (value, offset, noAssert) {
+  value = +value
+  offset = offset | 0
+  if (!noAssert) checkInt(this, value, offset, 2, 0x7fff, -0x8000)
+  if (Buffer.TYPED_ARRAY_SUPPORT) {
+    this[offset] = (value >>> 8)
+    this[offset + 1] = (value & 0xff)
+  } else {
+    objectWriteUInt16(this, value, offset, false)
+  }
+  return offset + 2
+}
+
+Buffer.prototype.writeInt32LE = function writeInt32LE (value, offset, noAssert) {
+  value = +value
+  offset = offset | 0
+  if (!noAssert) checkInt(this, value, offset, 4, 0x7fffffff, -0x80000000)
+  if (Buffer.TYPED_ARRAY_SUPPORT) {
+    this[offset] = (value & 0xff)
+    this[offset + 1] = (value >>> 8)
+    this[offset + 2] = (value >>> 16)
+    this[offset + 3] = (value >>> 24)
+  } else {
+    objectWriteUInt32(this, value, offset, true)
+  }
+  return offset + 4
+}
+
+Buffer.prototype.writeInt32BE = function writeInt32BE (value, offset, noAssert) {
+  value = +value
+  offset = offset | 0
+  if (!noAssert) checkInt(this, value, offset, 4, 0x7fffffff, -0x80000000)
+  if (value < 0) value = 0xffffffff + value + 1
+  if (Buffer.TYPED_ARRAY_SUPPORT) {
+    this[offset] = (value >>> 24)
+    this[offset + 1] = (value >>> 16)
+    this[offset + 2] = (value >>> 8)
+    this[offset + 3] = (value & 0xff)
+  } else {
+    objectWriteUInt32(this, value, offset, false)
+  }
+  return offset + 4
+}
+
+function checkIEEE754 (buf, value, offset, ext, max, min) {
+  if (offset + ext > buf.length) throw new RangeError('Index out of range')
+  if (offset < 0) throw new RangeError('Index out of range')
+}
+
+function writeFloat (buf, value, offset, littleEndian, noAssert) {
+  if (!noAssert) {
+    checkIEEE754(buf, value, offset, 4, 3.4028234663852886e+38, -3.4028234663852886e+38)
+  }
+  ieee754.write(buf, value, offset, littleEndian, 23, 4)
+  return offset + 4
+}
+
+Buffer.prototype.writeFloatLE = function writeFloatLE (value, offset, noAssert) {
+  return writeFloat(this, value, offset, true, noAssert)
+}
+
+Buffer.prototype.writeFloatBE = function writeFloatBE (value, offset, noAssert) {
+  return writeFloat(this, value, offset, false, noAssert)
+}
+
+function writeDouble (buf, value, offset, littleEndian, noAssert) {
+  if (!noAssert) {
+    checkIEEE754(buf, value, offset, 8, 1.7976931348623157E+308, -1.7976931348623157E+308)
+  }
+  ieee754.write(buf, value, offset, littleEndian, 52, 8)
+  return offset + 8
+}
+
+Buffer.prototype.writeDoubleLE = function writeDoubleLE (value, offset, noAssert) {
+  return writeDouble(this, value, offset, true, noAssert)
+}
+
+Buffer.prototype.writeDoubleBE = function writeDoubleBE (value, offset, noAssert) {
+  return writeDouble(this, value, offset, false, noAssert)
+}
+
+// copy(targetBuffer, targetStart=0, sourceStart=0, sourceEnd=buffer.length)
+Buffer.prototype.copy = function copy (target, targetStart, start, end) {
+  if (!start) start = 0
+  if (!end && end !== 0) end = this.length
+  if (targetStart >= target.length) targetStart = target.length
+  if (!targetStart) targetStart = 0
+  if (end > 0 && end < start) end = start
+
+  // Copy 0 bytes; we're done
+  if (end === start) return 0
+  if (target.length === 0 || this.length === 0) return 0
+
+  // Fatal error conditions
+  if (targetStart < 0) {
+    throw new RangeError('targetStart out of bounds')
+  }
+  if (start < 0 || start >= this.length) throw new RangeError('sourceStart out of bounds')
+  if (end < 0) throw new RangeError('sourceEnd out of bounds')
+
+  // Are we oob?
+  if (end > this.length) end = this.length
+  if (target.length - targetStart < end - start) {
+    end = target.length - targetStart + start
+  }
+
+  var len = end - start
+  var i
+
+  if (this === target && start < targetStart && targetStart < end) {
+    // descending copy from end
+    for (i = len - 1; i >= 0; --i) {
+      target[i + targetStart] = this[i + start]
+    }
+  } else if (len < 1000 || !Buffer.TYPED_ARRAY_SUPPORT) {
+    // ascending copy from start
+    for (i = 0; i < len; ++i) {
+      target[i + targetStart] = this[i + start]
+    }
+  } else {
+    Uint8Array.prototype.set.call(
+      target,
+      this.subarray(start, start + len),
+      targetStart
+    )
+  }
+
+  return len
+}
+
+// Usage:
+//    buffer.fill(number[, offset[, end]])
+//    buffer.fill(buffer[, offset[, end]])
+//    buffer.fill(string[, offset[, end]][, encoding])
+Buffer.prototype.fill = function fill (val, start, end, encoding) {
+  // Handle string cases:
+  if (typeof val === 'string') {
+    if (typeof start === 'string') {
+      encoding = start
+      start = 0
+      end = this.length
+    } else if (typeof end === 'string') {
+      encoding = end
+      end = this.length
+    }
+    if (val.length === 1) {
+      var code = val.charCodeAt(0)
+      if (code < 256) {
+        val = code
+      }
+    }
+    if (encoding !== undefined && typeof encoding !== 'string') {
+      throw new TypeError('encoding must be a string')
+    }
+    if (typeof encoding === 'string' && !Buffer.isEncoding(encoding)) {
+      throw new TypeError('Unknown encoding: ' + encoding)
+    }
+  } else if (typeof val === 'number') {
+    val = val & 255
+  }
+
+  // Invalid ranges are not set to a default, so can range check early.
+  if (start < 0 || this.length < start || this.length < end) {
+    throw new RangeError('Out of range index')
+  }
+
+  if (end <= start) {
+    return this
+  }
+
+  start = start >>> 0
+  end = end === undefined ? this.length : end >>> 0
+
+  if (!val) val = 0
+
+  var i
+  if (typeof val === 'number') {
+    for (i = start; i < end; ++i) {
+      this[i] = val
+    }
+  } else {
+    var bytes = Buffer.isBuffer(val)
+      ? val
+      : utf8ToBytes(new Buffer(val, encoding).toString())
+    var len = bytes.length
+    for (i = 0; i < end - start; ++i) {
+      this[i + start] = bytes[i % len]
+    }
+  }
+
+  return this
+}
+
+// HELPER FUNCTIONS
+// ================
+
+var INVALID_BASE64_RE = /[^+\/0-9A-Za-z-_]/g
+
+function base64clean (str) {
+  // Node strips out invalid characters like \n and \t from the string, base64-js does not
+  str = stringtrim(str).replace(INVALID_BASE64_RE, '')
+  // Node converts strings with length < 2 to ''
+  if (str.length < 2) return ''
+  // Node allows for non-padded base64 strings (missing trailing ===), base64-js does not
+  while (str.length % 4 !== 0) {
+    str = str + '='
+  }
+  return str
+}
+
+function stringtrim (str) {
+  if (str.trim) return str.trim()
+  return str.replace(/^\s+|\s+$/g, '')
+}
+
+function toHex (n) {
+  if (n < 16) return '0' + n.toString(16)
+  return n.toString(16)
+}
+
+function utf8ToBytes (string, units) {
+  units = units || Infinity
+  var codePoint
+  var length = string.length
+  var leadSurrogate = null
+  var bytes = []
+
+  for (var i = 0; i < length; ++i) {
+    codePoint = string.charCodeAt(i)
+
+    // is surrogate component
+    if (codePoint > 0xD7FF && codePoint < 0xE000) {
+      // last char was a lead
+      if (!leadSurrogate) {
+        // no lead yet
+        if (codePoint > 0xDBFF) {
+          // unexpected trail
+          if ((units -= 3) > -1) bytes.push(0xEF, 0xBF, 0xBD)
+          continue
+        } else if (i + 1 === length) {
+          // unpaired lead
+          if ((units -= 3) > -1) bytes.push(0xEF, 0xBF, 0xBD)
+          continue
+        }
+
+        // valid lead
+        leadSurrogate = codePoint
+
+        continue
+      }
+
+      // 2 leads in a row
+      if (codePoint < 0xDC00) {
+        if ((units -= 3) > -1) bytes.push(0xEF, 0xBF, 0xBD)
+        leadSurrogate = codePoint
+        continue
+      }
+
+      // valid surrogate pair
+      codePoint = (leadSurrogate - 0xD800 << 10 | codePoint - 0xDC00) + 0x10000
+    } else if (leadSurrogate) {
+      // valid bmp char, but last char was a lead
+      if ((units -= 3) > -1) bytes.push(0xEF, 0xBF, 0xBD)
+    }
+
+    leadSurrogate = null
+
+    // encode utf8
+    if (codePoint < 0x80) {
+      if ((units -= 1) < 0) break
+      bytes.push(codePoint)
+    } else if (codePoint < 0x800) {
+      if ((units -= 2) < 0) break
+      bytes.push(
+        codePoint >> 0x6 | 0xC0,
+        codePoint & 0x3F | 0x80
+      )
+    } else if (codePoint < 0x10000) {
+      if ((units -= 3) < 0) break
+      bytes.push(
+        codePoint >> 0xC | 0xE0,
+        codePoint >> 0x6 & 0x3F | 0x80,
+        codePoint & 0x3F | 0x80
+      )
+    } else if (codePoint < 0x110000) {
+      if ((units -= 4) < 0) break
+      bytes.push(
+        codePoint >> 0x12 | 0xF0,
+        codePoint >> 0xC & 0x3F | 0x80,
+        codePoint >> 0x6 & 0x3F | 0x80,
+        codePoint & 0x3F | 0x80
+      )
+    } else {
+      throw new Error('Invalid code point')
+    }
+  }
+
+  return bytes
+}
+
+function asciiToBytes (str) {
+  var byteArray = []
+  for (var i = 0; i < str.length; ++i) {
+    // Node's code seems to be doing this and not & 0x7F..
+    byteArray.push(str.charCodeAt(i) & 0xFF)
+  }
+  return byteArray
+}
+
+function utf16leToBytes (str, units) {
+  var c, hi, lo
+  var byteArray = []
+  for (var i = 0; i < str.length; ++i) {
+    if ((units -= 2) < 0) break
+
+    c = str.charCodeAt(i)
+    hi = c >> 8
+    lo = c % 256
+    byteArray.push(lo)
+    byteArray.push(hi)
+  }
+
+  return byteArray
+}
+
+function base64ToBytes (str) {
+  return base64.toByteArray(base64clean(str))
+}
+
+function blitBuffer (src, dst, offset, length) {
+  for (var i = 0; i < length; ++i) {
+    if ((i + offset >= dst.length) || (i >= src.length)) break
+    dst[i + offset] = src[i]
+  }
+  return i
+}
+
+function isnan (val) {
+  return val !== val // eslint-disable-line no-self-compare
+}
+
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../webpack/buildin/global.js */ "./node_modules/webpack/buildin/global.js")))
+
+/***/ }),
+
+/***/ "./node_modules/clone/clone.js":
+/*!*************************************!*\
+  !*** ./node_modules/clone/clone.js ***!
+  \*************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+/* WEBPACK VAR INJECTION */(function(Buffer) {var clone = (function() {
+'use strict';
+
+function _instanceof(obj, type) {
+  return type != null && obj instanceof type;
+}
+
+var nativeMap;
+try {
+  nativeMap = Map;
+} catch(_) {
+  // maybe a reference error because no `Map`. Give it a dummy value that no
+  // value will ever be an instanceof.
+  nativeMap = function() {};
+}
+
+var nativeSet;
+try {
+  nativeSet = Set;
+} catch(_) {
+  nativeSet = function() {};
+}
+
+var nativePromise;
+try {
+  nativePromise = Promise;
+} catch(_) {
+  nativePromise = function() {};
+}
+
+/**
+ * Clones (copies) an Object using deep copying.
+ *
+ * This function supports circular references by default, but if you are certain
+ * there are no circular references in your object, you can save some CPU time
+ * by calling clone(obj, false).
+ *
+ * Caution: if `circular` is false and `parent` contains circular references,
+ * your program may enter an infinite loop and crash.
+ *
+ * @param `parent` - the object to be cloned
+ * @param `circular` - set to true if the object to be cloned may contain
+ *    circular references. (optional - true by default)
+ * @param `depth` - set to a number if the object is only to be cloned to
+ *    a particular depth. (optional - defaults to Infinity)
+ * @param `prototype` - sets the prototype to be used when cloning an object.
+ *    (optional - defaults to parent prototype).
+ * @param `includeNonEnumerable` - set to true if the non-enumerable properties
+ *    should be cloned as well. Non-enumerable properties on the prototype
+ *    chain will be ignored. (optional - false by default)
+*/
+function clone(parent, circular, depth, prototype, includeNonEnumerable) {
+  if (typeof circular === 'object') {
+    depth = circular.depth;
+    prototype = circular.prototype;
+    includeNonEnumerable = circular.includeNonEnumerable;
+    circular = circular.circular;
+  }
+  // maintain two arrays for circular references, where corresponding parents
+  // and children have the same index
+  var allParents = [];
+  var allChildren = [];
+
+  var useBuffer = typeof Buffer != 'undefined';
+
+  if (typeof circular == 'undefined')
+    circular = true;
+
+  if (typeof depth == 'undefined')
+    depth = Infinity;
+
+  // recurse this function so we don't reset allParents and allChildren
+  function _clone(parent, depth) {
+    // cloning null always returns null
+    if (parent === null)
+      return null;
+
+    if (depth === 0)
+      return parent;
+
+    var child;
+    var proto;
+    if (typeof parent != 'object') {
+      return parent;
+    }
+
+    if (_instanceof(parent, nativeMap)) {
+      child = new nativeMap();
+    } else if (_instanceof(parent, nativeSet)) {
+      child = new nativeSet();
+    } else if (_instanceof(parent, nativePromise)) {
+      child = new nativePromise(function (resolve, reject) {
+        parent.then(function(value) {
+          resolve(_clone(value, depth - 1));
+        }, function(err) {
+          reject(_clone(err, depth - 1));
+        });
+      });
+    } else if (clone.__isArray(parent)) {
+      child = [];
+    } else if (clone.__isRegExp(parent)) {
+      child = new RegExp(parent.source, __getRegExpFlags(parent));
+      if (parent.lastIndex) child.lastIndex = parent.lastIndex;
+    } else if (clone.__isDate(parent)) {
+      child = new Date(parent.getTime());
+    } else if (useBuffer && Buffer.isBuffer(parent)) {
+      if (Buffer.allocUnsafe) {
+        // Node.js >= 4.5.0
+        child = Buffer.allocUnsafe(parent.length);
+      } else {
+        // Older Node.js versions
+        child = new Buffer(parent.length);
+      }
+      parent.copy(child);
+      return child;
+    } else if (_instanceof(parent, Error)) {
+      child = Object.create(parent);
+    } else {
+      if (typeof prototype == 'undefined') {
+        proto = Object.getPrototypeOf(parent);
+        child = Object.create(proto);
+      }
+      else {
+        child = Object.create(prototype);
+        proto = prototype;
+      }
+    }
+
+    if (circular) {
+      var index = allParents.indexOf(parent);
+
+      if (index != -1) {
+        return allChildren[index];
+      }
+      allParents.push(parent);
+      allChildren.push(child);
+    }
+
+    if (_instanceof(parent, nativeMap)) {
+      parent.forEach(function(value, key) {
+        var keyChild = _clone(key, depth - 1);
+        var valueChild = _clone(value, depth - 1);
+        child.set(keyChild, valueChild);
+      });
+    }
+    if (_instanceof(parent, nativeSet)) {
+      parent.forEach(function(value) {
+        var entryChild = _clone(value, depth - 1);
+        child.add(entryChild);
+      });
+    }
+
+    for (var i in parent) {
+      var attrs;
+      if (proto) {
+        attrs = Object.getOwnPropertyDescriptor(proto, i);
+      }
+
+      if (attrs && attrs.set == null) {
+        continue;
+      }
+      child[i] = _clone(parent[i], depth - 1);
+    }
+
+    if (Object.getOwnPropertySymbols) {
+      var symbols = Object.getOwnPropertySymbols(parent);
+      for (var i = 0; i < symbols.length; i++) {
+        // Don't need to worry about cloning a symbol because it is a primitive,
+        // like a number or string.
+        var symbol = symbols[i];
+        var descriptor = Object.getOwnPropertyDescriptor(parent, symbol);
+        if (descriptor && !descriptor.enumerable && !includeNonEnumerable) {
+          continue;
+        }
+        child[symbol] = _clone(parent[symbol], depth - 1);
+        if (!descriptor.enumerable) {
+          Object.defineProperty(child, symbol, {
+            enumerable: false
+          });
+        }
+      }
+    }
+
+    if (includeNonEnumerable) {
+      var allPropertyNames = Object.getOwnPropertyNames(parent);
+      for (var i = 0; i < allPropertyNames.length; i++) {
+        var propertyName = allPropertyNames[i];
+        var descriptor = Object.getOwnPropertyDescriptor(parent, propertyName);
+        if (descriptor && descriptor.enumerable) {
+          continue;
+        }
+        child[propertyName] = _clone(parent[propertyName], depth - 1);
+        Object.defineProperty(child, propertyName, {
+          enumerable: false
+        });
+      }
+    }
+
+    return child;
+  }
+
+  return _clone(parent, depth);
+}
+
+/**
+ * Simple flat clone using prototype, accepts only objects, usefull for property
+ * override on FLAT configuration object (no nested props).
+ *
+ * USE WITH CAUTION! This may not behave as you wish if you do not know how this
+ * works.
+ */
+clone.clonePrototype = function clonePrototype(parent) {
+  if (parent === null)
+    return null;
+
+  var c = function () {};
+  c.prototype = parent;
+  return new c();
+};
+
+// private utility functions
+
+function __objToStr(o) {
+  return Object.prototype.toString.call(o);
+}
+clone.__objToStr = __objToStr;
+
+function __isDate(o) {
+  return typeof o === 'object' && __objToStr(o) === '[object Date]';
+}
+clone.__isDate = __isDate;
+
+function __isArray(o) {
+  return typeof o === 'object' && __objToStr(o) === '[object Array]';
+}
+clone.__isArray = __isArray;
+
+function __isRegExp(o) {
+  return typeof o === 'object' && __objToStr(o) === '[object RegExp]';
+}
+clone.__isRegExp = __isRegExp;
+
+function __getRegExpFlags(re) {
+  var flags = '';
+  if (re.global) flags += 'g';
+  if (re.ignoreCase) flags += 'i';
+  if (re.multiline) flags += 'm';
+  return flags;
+}
+clone.__getRegExpFlags = __getRegExpFlags;
+
+return clone;
+})();
+
+if ( true && module.exports) {
+  module.exports = clone;
+}
+
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../buffer/index.js */ "./node_modules/buffer/index.js").Buffer))
+
+/***/ }),
+
+/***/ "./node_modules/css-loader/dist/cjs.js!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/sass-loader/dist/cjs.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/DataTable.vue?vue&type=style&index=0&lang=scss&":
+/*!*******************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/css-loader/dist/cjs.js!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--6-2!./node_modules/sass-loader/dist/cjs.js??ref--6-3!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/DataTable.vue?vue&type=style&index=0&lang=scss& ***!
+  \*******************************************************************************************************************************************************************************************************************************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loader/dist/runtime/api.js */ "./node_modules/css-loader/dist/runtime/api.js")(false);
+// Module
+exports.push([module.i, "h2 {\n  display: inline;\n}\n#dataTable {\n  width: 95%;\n  margin: 0 auto;\n}\n#dataTable .VuePagination {\n  text-align: center;\n  justify-content: center;\n}\n#dataTable .vue-title {\n  text-align: center;\n  margin-bottom: 10px;\n}\n#dataTable .VueTables__search-field {\n  display: flex;\n}\n#dataTable .VueTables__search-field input {\n  margin-left: 0.25rem;\n}\n#dataTable .VueTables__limit-field {\n  display: flex;\n}\n#dataTable .VueTables__limit-field select {\n  margin-left: 0.25rem !important;\n}\n#dataTable .VueTables__table th {\n  text-align: center;\n}\n#dataTable .VueTables__child-row-toggler {\n  width: 16px;\n  height: 16px;\n  line-height: 16px;\n  display: block;\n  margin: auto;\n  text-align: center;\n}\n#dataTable .VueTables__child-row-toggler--closed::before {\n  content: \"+\";\n}\n#dataTable .VueTables__child-row-toggler--open::before {\n  content: \"-\";\n}", ""]);
+
+
+/***/ }),
+
+/***/ "./node_modules/css-loader/dist/cjs.js!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/sass-loader/dist/cjs.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/layouts/Home.vue?vue&type=style&index=0&lang=scss&":
+/*!***********************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/css-loader/dist/cjs.js!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--6-2!./node_modules/sass-loader/dist/cjs.js??ref--6-3!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/layouts/Home.vue?vue&type=style&index=0&lang=scss& ***!
+  \***********************************************************************************************************************************************************************************************************************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loader/dist/runtime/api.js */ "./node_modules/css-loader/dist/runtime/api.js")(false);
+// Imports
+var getUrl = __webpack_require__(/*! ../../../node_modules/css-loader/dist/runtime/getUrl.js */ "./node_modules/css-loader/dist/runtime/getUrl.js");
+var ___CSS_LOADER_URL___0___ = getUrl(__webpack_require__(/*! font-awesome/fonts//fontawesome-webfont.eot?v=4.7.0 */ "./node_modules/font-awesome/fonts/fontawesome-webfont.eot?v=4.7.0"));
+var ___CSS_LOADER_URL___1___ = getUrl(__webpack_require__(/*! font-awesome/fonts//fontawesome-webfont.eot */ "./node_modules/font-awesome/fonts/fontawesome-webfont.eot") + "?#iefix&v=4.7.0");
+var ___CSS_LOADER_URL___2___ = getUrl(__webpack_require__(/*! font-awesome/fonts//fontawesome-webfont.woff2?v=4.7.0 */ "./node_modules/font-awesome/fonts/fontawesome-webfont.woff2?v=4.7.0"));
+var ___CSS_LOADER_URL___3___ = getUrl(__webpack_require__(/*! font-awesome/fonts//fontawesome-webfont.woff?v=4.7.0 */ "./node_modules/font-awesome/fonts/fontawesome-webfont.woff?v=4.7.0"));
+var ___CSS_LOADER_URL___4___ = getUrl(__webpack_require__(/*! font-awesome/fonts//fontawesome-webfont.ttf?v=4.7.0 */ "./node_modules/font-awesome/fonts/fontawesome-webfont.ttf?v=4.7.0"));
+var ___CSS_LOADER_URL___5___ = getUrl(__webpack_require__(/*! font-awesome/fonts//fontawesome-webfont.svg?v=4.7.0 */ "./node_modules/font-awesome/fonts/fontawesome-webfont.svg?v=4.7.0") + "#fontawesomeregular");
+var ___CSS_LOADER_URL___6___ = getUrl(__webpack_require__(/*! simple-line-icons/fonts/Simple-Line-Icons.eot?v=2.4.0 */ "./node_modules/simple-line-icons/fonts/Simple-Line-Icons.eot?v=2.4.0"));
+var ___CSS_LOADER_URL___7___ = getUrl(__webpack_require__(/*! simple-line-icons/fonts/Simple-Line-Icons.eot?v=2.4.0 */ "./node_modules/simple-line-icons/fonts/Simple-Line-Icons.eot?v=2.4.0") + "#iefix");
+var ___CSS_LOADER_URL___8___ = getUrl(__webpack_require__(/*! simple-line-icons/fonts/Simple-Line-Icons.woff2?v=2.4.0 */ "./node_modules/simple-line-icons/fonts/Simple-Line-Icons.woff2?v=2.4.0"));
+var ___CSS_LOADER_URL___9___ = getUrl(__webpack_require__(/*! simple-line-icons/fonts/Simple-Line-Icons.ttf?v=2.4.0 */ "./node_modules/simple-line-icons/fonts/Simple-Line-Icons.ttf?v=2.4.0"));
+var ___CSS_LOADER_URL___10___ = getUrl(__webpack_require__(/*! simple-line-icons/fonts/Simple-Line-Icons.woff?v=2.4.0 */ "./node_modules/simple-line-icons/fonts/Simple-Line-Icons.woff?v=2.4.0"));
+var ___CSS_LOADER_URL___11___ = getUrl(__webpack_require__(/*! simple-line-icons/fonts/Simple-Line-Icons.svg?v=2.4.0 */ "./node_modules/simple-line-icons/fonts/Simple-Line-Icons.svg?v=2.4.0") + "#simple-line-icons");
+// Module
+exports.push([module.i, "@charset \"UTF-8\";\n/* Import Font Awesome Icons Set */\n/*!\n *  Font Awesome 4.7.0 by @davegandy - http://fontawesome.io - @fontawesome\n *  License - http://fontawesome.io/license (Font: SIL OFL 1.1, CSS: MIT License)\n */\n/* FONT PATH\n * -------------------------- */\n@font-face {\n  font-family: \"FontAwesome\";\n  src: url(" + ___CSS_LOADER_URL___0___ + ");\n  src: url(" + ___CSS_LOADER_URL___1___ + ") format(\"embedded-opentype\"), url(" + ___CSS_LOADER_URL___2___ + ") format(\"woff2\"), url(" + ___CSS_LOADER_URL___3___ + ") format(\"woff\"), url(" + ___CSS_LOADER_URL___4___ + ") format(\"truetype\"), url(" + ___CSS_LOADER_URL___5___ + ") format(\"svg\");\n  font-weight: normal;\n  font-style: normal;\n}\n.fa {\n  display: inline-block;\n  font: normal normal normal 14px/1 FontAwesome;\n  font-size: inherit;\n  text-rendering: auto;\n  -webkit-font-smoothing: antialiased;\n  -moz-osx-font-smoothing: grayscale;\n}\n\n/* makes the font 33% larger relative to the icon container */\n.fa-lg {\n  font-size: 1.3333333333em;\n  line-height: 0.75em;\n  vertical-align: -15%;\n}\n.fa-2x {\n  font-size: 2em;\n}\n.fa-3x {\n  font-size: 3em;\n}\n.fa-4x {\n  font-size: 4em;\n}\n.fa-5x {\n  font-size: 5em;\n}\n.fa-fw {\n  width: 1.2857142857em;\n  text-align: center;\n}\n.fa-ul {\n  padding-left: 0;\n  margin-left: 2.1428571429em;\n  list-style-type: none;\n}\n.fa-ul > li {\n  position: relative;\n}\n.fa-li {\n  position: absolute;\n  left: -2.1428571429em;\n  width: 2.1428571429em;\n  top: 0.1428571429em;\n  text-align: center;\n}\n.fa-li.fa-lg {\n  left: -1.8571428571em;\n}\n.fa-border {\n  padding: 0.2em 0.25em 0.15em;\n  border: solid 0.08em #eee;\n  border-radius: 0.1em;\n}\n.fa-pull-left {\n  float: left;\n}\n.fa-pull-right {\n  float: right;\n}\n.fa.fa-pull-left {\n  margin-right: 0.3em;\n}\n.fa.fa-pull-right {\n  margin-left: 0.3em;\n}\n\n/* Deprecated as of 4.4.0 */\n.pull-right {\n  float: right;\n}\n.pull-left {\n  float: left;\n}\n.fa.pull-left {\n  margin-right: 0.3em;\n}\n.fa.pull-right {\n  margin-left: 0.3em;\n}\n.fa-spin {\n  -webkit-animation: fa-spin 2s infinite linear;\n  animation: fa-spin 2s infinite linear;\n}\n.fa-pulse {\n  -webkit-animation: fa-spin 1s infinite steps(8);\n  animation: fa-spin 1s infinite steps(8);\n}\n@-webkit-keyframes fa-spin {\n0% {\n    -webkit-transform: rotate(0deg);\n    transform: rotate(0deg);\n}\n100% {\n    -webkit-transform: rotate(359deg);\n    transform: rotate(359deg);\n}\n}\n@keyframes fa-spin {\n0% {\n    -webkit-transform: rotate(0deg);\n    transform: rotate(0deg);\n}\n100% {\n    -webkit-transform: rotate(359deg);\n    transform: rotate(359deg);\n}\n}\n.fa-rotate-90 {\n  -ms-filter: \"progid:DXImageTransform.Microsoft.BasicImage(rotation=1)\";\n  -webkit-transform: rotate(90deg);\n  -ms-transform: rotate(90deg);\n  transform: rotate(90deg);\n}\n.fa-rotate-180 {\n  -ms-filter: \"progid:DXImageTransform.Microsoft.BasicImage(rotation=2)\";\n  -webkit-transform: rotate(180deg);\n  -ms-transform: rotate(180deg);\n  transform: rotate(180deg);\n}\n.fa-rotate-270 {\n  -ms-filter: \"progid:DXImageTransform.Microsoft.BasicImage(rotation=3)\";\n  -webkit-transform: rotate(270deg);\n  -ms-transform: rotate(270deg);\n  transform: rotate(270deg);\n}\n.fa-flip-horizontal {\n  -ms-filter: \"progid:DXImageTransform.Microsoft.BasicImage(rotation=0, mirror=1)\";\n  -webkit-transform: scale(-1, 1);\n  -ms-transform: scale(-1, 1);\n  transform: scale(-1, 1);\n}\n.fa-flip-vertical {\n  -ms-filter: \"progid:DXImageTransform.Microsoft.BasicImage(rotation=2, mirror=1)\";\n  -webkit-transform: scale(1, -1);\n  -ms-transform: scale(1, -1);\n  transform: scale(1, -1);\n}\n:root .fa-rotate-90,\n:root .fa-rotate-180,\n:root .fa-rotate-270,\n:root .fa-flip-horizontal,\n:root .fa-flip-vertical {\n  filter: none;\n}\n.fa-stack {\n  position: relative;\n  display: inline-block;\n  width: 2em;\n  height: 2em;\n  line-height: 2em;\n  vertical-align: middle;\n}\n.fa-stack-1x, .fa-stack-2x {\n  position: absolute;\n  left: 0;\n  width: 100%;\n  text-align: center;\n}\n.fa-stack-1x {\n  line-height: inherit;\n}\n.fa-stack-2x {\n  font-size: 2em;\n}\n.fa-inverse {\n  color: #fff;\n}\n\n/* Font Awesome uses the Unicode Private Use Area (PUA) to ensure screen\n   readers do not read off random characters that represent icons */\n.fa-glass:before {\n  content: \"\";\n}\n.fa-music:before {\n  content: \"\";\n}\n.fa-search:before {\n  content: \"\";\n}\n.fa-envelope-o:before {\n  content: \"\";\n}\n.fa-heart:before {\n  content: \"\";\n}\n.fa-star:before {\n  content: \"\";\n}\n.fa-star-o:before {\n  content: \"\";\n}\n.fa-user:before {\n  content: \"\";\n}\n.fa-film:before {\n  content: \"\";\n}\n.fa-th-large:before {\n  content: \"\";\n}\n.fa-th:before {\n  content: \"\";\n}\n.fa-th-list:before {\n  content: \"\";\n}\n.fa-check:before {\n  content: \"\";\n}\n.fa-remove:before,\n.fa-close:before,\n.fa-times:before {\n  content: \"\";\n}\n.fa-search-plus:before {\n  content: \"\";\n}\n.fa-search-minus:before {\n  content: \"\";\n}\n.fa-power-off:before {\n  content: \"\";\n}\n.fa-signal:before {\n  content: \"\";\n}\n.fa-gear:before,\n.fa-cog:before {\n  content: \"\";\n}\n.fa-trash-o:before {\n  content: \"\";\n}\n.fa-home:before {\n  content: \"\";\n}\n.fa-file-o:before {\n  content: \"\";\n}\n.fa-clock-o:before {\n  content: \"\";\n}\n.fa-road:before {\n  content: \"\";\n}\n.fa-download:before {\n  content: \"\";\n}\n.fa-arrow-circle-o-down:before {\n  content: \"\";\n}\n.fa-arrow-circle-o-up:before {\n  content: \"\";\n}\n.fa-inbox:before {\n  content: \"\";\n}\n.fa-play-circle-o:before {\n  content: \"\";\n}\n.fa-rotate-right:before,\n.fa-repeat:before {\n  content: \"\";\n}\n.fa-refresh:before {\n  content: \"\";\n}\n.fa-list-alt:before {\n  content: \"\";\n}\n.fa-lock:before {\n  content: \"\";\n}\n.fa-flag:before {\n  content: \"\";\n}\n.fa-headphones:before {\n  content: \"\";\n}\n.fa-volume-off:before {\n  content: \"\";\n}\n.fa-volume-down:before {\n  content: \"\";\n}\n.fa-volume-up:before {\n  content: \"\";\n}\n.fa-qrcode:before {\n  content: \"\";\n}\n.fa-barcode:before {\n  content: \"\";\n}\n.fa-tag:before {\n  content: \"\";\n}\n.fa-tags:before {\n  content: \"\";\n}\n.fa-book:before {\n  content: \"\";\n}\n.fa-bookmark:before {\n  content: \"\";\n}\n.fa-print:before {\n  content: \"\";\n}\n.fa-camera:before {\n  content: \"\";\n}\n.fa-font:before {\n  content: \"\";\n}\n.fa-bold:before {\n  content: \"\";\n}\n.fa-italic:before {\n  content: \"\";\n}\n.fa-text-height:before {\n  content: \"\";\n}\n.fa-text-width:before {\n  content: \"\";\n}\n.fa-align-left:before {\n  content: \"\";\n}\n.fa-align-center:before {\n  content: \"\";\n}\n.fa-align-right:before {\n  content: \"\";\n}\n.fa-align-justify:before {\n  content: \"\";\n}\n.fa-list:before {\n  content: \"\";\n}\n.fa-dedent:before,\n.fa-outdent:before {\n  content: \"\";\n}\n.fa-indent:before {\n  content: \"\";\n}\n.fa-video-camera:before {\n  content: \"\";\n}\n.fa-photo:before,\n.fa-image:before,\n.fa-picture-o:before {\n  content: \"\";\n}\n.fa-pencil:before {\n  content: \"\";\n}\n.fa-map-marker:before {\n  content: \"\";\n}\n.fa-adjust:before {\n  content: \"\";\n}\n.fa-tint:before {\n  content: \"\";\n}\n.fa-edit:before,\n.fa-pencil-square-o:before {\n  content: \"\";\n}\n.fa-share-square-o:before {\n  content: \"\";\n}\n.fa-check-square-o:before {\n  content: \"\";\n}\n.fa-arrows:before {\n  content: \"\";\n}\n.fa-step-backward:before {\n  content: \"\";\n}\n.fa-fast-backward:before {\n  content: \"\";\n}\n.fa-backward:before {\n  content: \"\";\n}\n.fa-play:before {\n  content: \"\";\n}\n.fa-pause:before {\n  content: \"\";\n}\n.fa-stop:before {\n  content: \"\";\n}\n.fa-forward:before {\n  content: \"\";\n}\n.fa-fast-forward:before {\n  content: \"\";\n}\n.fa-step-forward:before {\n  content: \"\";\n}\n.fa-eject:before {\n  content: \"\";\n}\n.fa-chevron-left:before {\n  content: \"\";\n}\n.fa-chevron-right:before {\n  content: \"\";\n}\n.fa-plus-circle:before {\n  content: \"\";\n}\n.fa-minus-circle:before {\n  content: \"\";\n}\n.fa-times-circle:before {\n  content: \"\";\n}\n.fa-check-circle:before {\n  content: \"\";\n}\n.fa-question-circle:before {\n  content: \"\";\n}\n.fa-info-circle:before {\n  content: \"\";\n}\n.fa-crosshairs:before {\n  content: \"\";\n}\n.fa-times-circle-o:before {\n  content: \"\";\n}\n.fa-check-circle-o:before {\n  content: \"\";\n}\n.fa-ban:before {\n  content: \"\";\n}\n.fa-arrow-left:before {\n  content: \"\";\n}\n.fa-arrow-right:before {\n  content: \"\";\n}\n.fa-arrow-up:before {\n  content: \"\";\n}\n.fa-arrow-down:before {\n  content: \"\";\n}\n.fa-mail-forward:before,\n.fa-share:before {\n  content: \"\";\n}\n.fa-expand:before {\n  content: \"\";\n}\n.fa-compress:before {\n  content: \"\";\n}\n.fa-plus:before {\n  content: \"\";\n}\n.fa-minus:before {\n  content: \"\";\n}\n.fa-asterisk:before {\n  content: \"\";\n}\n.fa-exclamation-circle:before {\n  content: \"\";\n}\n.fa-gift:before {\n  content: \"\";\n}\n.fa-leaf:before {\n  content: \"\";\n}\n.fa-fire:before {\n  content: \"\";\n}\n.fa-eye:before {\n  content: \"\";\n}\n.fa-eye-slash:before {\n  content: \"\";\n}\n.fa-warning:before,\n.fa-exclamation-triangle:before {\n  content: \"\";\n}\n.fa-plane:before {\n  content: \"\";\n}\n.fa-calendar:before {\n  content: \"\";\n}\n.fa-random:before {\n  content: \"\";\n}\n.fa-comment:before {\n  content: \"\";\n}\n.fa-magnet:before {\n  content: \"\";\n}\n.fa-chevron-up:before {\n  content: \"\";\n}\n.fa-chevron-down:before {\n  content: \"\";\n}\n.fa-retweet:before {\n  content: \"\";\n}\n.fa-shopping-cart:before {\n  content: \"\";\n}\n.fa-folder:before {\n  content: \"\";\n}\n.fa-folder-open:before {\n  content: \"\";\n}\n.fa-arrows-v:before {\n  content: \"\";\n}\n.fa-arrows-h:before {\n  content: \"\";\n}\n.fa-bar-chart-o:before,\n.fa-bar-chart:before {\n  content: \"\";\n}\n.fa-twitter-square:before {\n  content: \"\";\n}\n.fa-facebook-square:before {\n  content: \"\";\n}\n.fa-camera-retro:before {\n  content: \"\";\n}\n.fa-key:before {\n  content: \"\";\n}\n.fa-gears:before,\n.fa-cogs:before {\n  content: \"\";\n}\n.fa-comments:before {\n  content: \"\";\n}\n.fa-thumbs-o-up:before {\n  content: \"\";\n}\n.fa-thumbs-o-down:before {\n  content: \"\";\n}\n.fa-star-half:before {\n  content: \"\";\n}\n.fa-heart-o:before {\n  content: \"\";\n}\n.fa-sign-out:before {\n  content: \"\";\n}\n.fa-linkedin-square:before {\n  content: \"\";\n}\n.fa-thumb-tack:before {\n  content: \"\";\n}\n.fa-external-link:before {\n  content: \"\";\n}\n.fa-sign-in:before {\n  content: \"\";\n}\n.fa-trophy:before {\n  content: \"\";\n}\n.fa-github-square:before {\n  content: \"\";\n}\n.fa-upload:before {\n  content: \"\";\n}\n.fa-lemon-o:before {\n  content: \"\";\n}\n.fa-phone:before {\n  content: \"\";\n}\n.fa-square-o:before {\n  content: \"\";\n}\n.fa-bookmark-o:before {\n  content: \"\";\n}\n.fa-phone-square:before {\n  content: \"\";\n}\n.fa-twitter:before {\n  content: \"\";\n}\n.fa-facebook-f:before,\n.fa-facebook:before {\n  content: \"\";\n}\n.fa-github:before {\n  content: \"\";\n}\n.fa-unlock:before {\n  content: \"\";\n}\n.fa-credit-card:before {\n  content: \"\";\n}\n.fa-feed:before,\n.fa-rss:before {\n  content: \"\";\n}\n.fa-hdd-o:before {\n  content: \"\";\n}\n.fa-bullhorn:before {\n  content: \"\";\n}\n.fa-bell:before {\n  content: \"\";\n}\n.fa-certificate:before {\n  content: \"\";\n}\n.fa-hand-o-right:before {\n  content: \"\";\n}\n.fa-hand-o-left:before {\n  content: \"\";\n}\n.fa-hand-o-up:before {\n  content: \"\";\n}\n.fa-hand-o-down:before {\n  content: \"\";\n}\n.fa-arrow-circle-left:before {\n  content: \"\";\n}\n.fa-arrow-circle-right:before {\n  content: \"\";\n}\n.fa-arrow-circle-up:before {\n  content: \"\";\n}\n.fa-arrow-circle-down:before {\n  content: \"\";\n}\n.fa-globe:before {\n  content: \"\";\n}\n.fa-wrench:before {\n  content: \"\";\n}\n.fa-tasks:before {\n  content: \"\";\n}\n.fa-filter:before {\n  content: \"\";\n}\n.fa-briefcase:before {\n  content: \"\";\n}\n.fa-arrows-alt:before {\n  content: \"\";\n}\n.fa-group:before,\n.fa-users:before {\n  content: \"\";\n}\n.fa-chain:before,\n.fa-link:before {\n  content: \"\";\n}\n.fa-cloud:before {\n  content: \"\";\n}\n.fa-flask:before {\n  content: \"\";\n}\n.fa-cut:before,\n.fa-scissors:before {\n  content: \"\";\n}\n.fa-copy:before,\n.fa-files-o:before {\n  content: \"\";\n}\n.fa-paperclip:before {\n  content: \"\";\n}\n.fa-save:before,\n.fa-floppy-o:before {\n  content: \"\";\n}\n.fa-square:before {\n  content: \"\";\n}\n.fa-navicon:before,\n.fa-reorder:before,\n.fa-bars:before {\n  content: \"\";\n}\n.fa-list-ul:before {\n  content: \"\";\n}\n.fa-list-ol:before {\n  content: \"\";\n}\n.fa-strikethrough:before {\n  content: \"\";\n}\n.fa-underline:before {\n  content: \"\";\n}\n.fa-table:before {\n  content: \"\";\n}\n.fa-magic:before {\n  content: \"\";\n}\n.fa-truck:before {\n  content: \"\";\n}\n.fa-pinterest:before {\n  content: \"\";\n}\n.fa-pinterest-square:before {\n  content: \"\";\n}\n.fa-google-plus-square:before {\n  content: \"\";\n}\n.fa-google-plus:before {\n  content: \"\";\n}\n.fa-money:before {\n  content: \"\";\n}\n.fa-caret-down:before {\n  content: \"\";\n}\n.fa-caret-up:before {\n  content: \"\";\n}\n.fa-caret-left:before {\n  content: \"\";\n}\n.fa-caret-right:before {\n  content: \"\";\n}\n.fa-columns:before {\n  content: \"\";\n}\n.fa-unsorted:before,\n.fa-sort:before {\n  content: \"\";\n}\n.fa-sort-down:before,\n.fa-sort-desc:before {\n  content: \"\";\n}\n.fa-sort-up:before,\n.fa-sort-asc:before {\n  content: \"\";\n}\n.fa-envelope:before {\n  content: \"\";\n}\n.fa-linkedin:before {\n  content: \"\";\n}\n.fa-rotate-left:before,\n.fa-undo:before {\n  content: \"\";\n}\n.fa-legal:before,\n.fa-gavel:before {\n  content: \"\";\n}\n.fa-dashboard:before,\n.fa-tachometer:before {\n  content: \"\";\n}\n.fa-comment-o:before {\n  content: \"\";\n}\n.fa-comments-o:before {\n  content: \"\";\n}\n.fa-flash:before,\n.fa-bolt:before {\n  content: \"\";\n}\n.fa-sitemap:before {\n  content: \"\";\n}\n.fa-umbrella:before {\n  content: \"\";\n}\n.fa-paste:before,\n.fa-clipboard:before {\n  content: \"\";\n}\n.fa-lightbulb-o:before {\n  content: \"\";\n}\n.fa-exchange:before {\n  content: \"\";\n}\n.fa-cloud-download:before {\n  content: \"\";\n}\n.fa-cloud-upload:before {\n  content: \"\";\n}\n.fa-user-md:before {\n  content: \"\";\n}\n.fa-stethoscope:before {\n  content: \"\";\n}\n.fa-suitcase:before {\n  content: \"\";\n}\n.fa-bell-o:before {\n  content: \"\";\n}\n.fa-coffee:before {\n  content: \"\";\n}\n.fa-cutlery:before {\n  content: \"\";\n}\n.fa-file-text-o:before {\n  content: \"\";\n}\n.fa-building-o:before {\n  content: \"\";\n}\n.fa-hospital-o:before {\n  content: \"\";\n}\n.fa-ambulance:before {\n  content: \"\";\n}\n.fa-medkit:before {\n  content: \"\";\n}\n.fa-fighter-jet:before {\n  content: \"\";\n}\n.fa-beer:before {\n  content: \"\";\n}\n.fa-h-square:before {\n  content: \"\";\n}\n.fa-plus-square:before {\n  content: \"\";\n}\n.fa-angle-double-left:before {\n  content: \"\";\n}\n.fa-angle-double-right:before {\n  content: \"\";\n}\n.fa-angle-double-up:before {\n  content: \"\";\n}\n.fa-angle-double-down:before {\n  content: \"\";\n}\n.fa-angle-left:before {\n  content: \"\";\n}\n.fa-angle-right:before {\n  content: \"\";\n}\n.fa-angle-up:before {\n  content: \"\";\n}\n.fa-angle-down:before {\n  content: \"\";\n}\n.fa-desktop:before {\n  content: \"\";\n}\n.fa-laptop:before {\n  content: \"\";\n}\n.fa-tablet:before {\n  content: \"\";\n}\n.fa-mobile-phone:before,\n.fa-mobile:before {\n  content: \"\";\n}\n.fa-circle-o:before {\n  content: \"\";\n}\n.fa-quote-left:before {\n  content: \"\";\n}\n.fa-quote-right:before {\n  content: \"\";\n}\n.fa-spinner:before {\n  content: \"\";\n}\n.fa-circle:before {\n  content: \"\";\n}\n.fa-mail-reply:before,\n.fa-reply:before {\n  content: \"\";\n}\n.fa-github-alt:before {\n  content: \"\";\n}\n.fa-folder-o:before {\n  content: \"\";\n}\n.fa-folder-open-o:before {\n  content: \"\";\n}\n.fa-smile-o:before {\n  content: \"\";\n}\n.fa-frown-o:before {\n  content: \"\";\n}\n.fa-meh-o:before {\n  content: \"\";\n}\n.fa-gamepad:before {\n  content: \"\";\n}\n.fa-keyboard-o:before {\n  content: \"\";\n}\n.fa-flag-o:before {\n  content: \"\";\n}\n.fa-flag-checkered:before {\n  content: \"\";\n}\n.fa-terminal:before {\n  content: \"\";\n}\n.fa-code:before {\n  content: \"\";\n}\n.fa-mail-reply-all:before,\n.fa-reply-all:before {\n  content: \"\";\n}\n.fa-star-half-empty:before,\n.fa-star-half-full:before,\n.fa-star-half-o:before {\n  content: \"\";\n}\n.fa-location-arrow:before {\n  content: \"\";\n}\n.fa-crop:before {\n  content: \"\";\n}\n.fa-code-fork:before {\n  content: \"\";\n}\n.fa-unlink:before,\n.fa-chain-broken:before {\n  content: \"\";\n}\n.fa-question:before {\n  content: \"\";\n}\n.fa-info:before {\n  content: \"\";\n}\n.fa-exclamation:before {\n  content: \"\";\n}\n.fa-superscript:before {\n  content: \"\";\n}\n.fa-subscript:before {\n  content: \"\";\n}\n.fa-eraser:before {\n  content: \"\";\n}\n.fa-puzzle-piece:before {\n  content: \"\";\n}\n.fa-microphone:before {\n  content: \"\";\n}\n.fa-microphone-slash:before {\n  content: \"\";\n}\n.fa-shield:before {\n  content: \"\";\n}\n.fa-calendar-o:before {\n  content: \"\";\n}\n.fa-fire-extinguisher:before {\n  content: \"\";\n}\n.fa-rocket:before {\n  content: \"\";\n}\n.fa-maxcdn:before {\n  content: \"\";\n}\n.fa-chevron-circle-left:before {\n  content: \"\";\n}\n.fa-chevron-circle-right:before {\n  content: \"\";\n}\n.fa-chevron-circle-up:before {\n  content: \"\";\n}\n.fa-chevron-circle-down:before {\n  content: \"\";\n}\n.fa-html5:before {\n  content: \"\";\n}\n.fa-css3:before {\n  content: \"\";\n}\n.fa-anchor:before {\n  content: \"\";\n}\n.fa-unlock-alt:before {\n  content: \"\";\n}\n.fa-bullseye:before {\n  content: \"\";\n}\n.fa-ellipsis-h:before {\n  content: \"\";\n}\n.fa-ellipsis-v:before {\n  content: \"\";\n}\n.fa-rss-square:before {\n  content: \"\";\n}\n.fa-play-circle:before {\n  content: \"\";\n}\n.fa-ticket:before {\n  content: \"\";\n}\n.fa-minus-square:before {\n  content: \"\";\n}\n.fa-minus-square-o:before {\n  content: \"\";\n}\n.fa-level-up:before {\n  content: \"\";\n}\n.fa-level-down:before {\n  content: \"\";\n}\n.fa-check-square:before {\n  content: \"\";\n}\n.fa-pencil-square:before {\n  content: \"\";\n}\n.fa-external-link-square:before {\n  content: \"\";\n}\n.fa-share-square:before {\n  content: \"\";\n}\n.fa-compass:before {\n  content: \"\";\n}\n.fa-toggle-down:before,\n.fa-caret-square-o-down:before {\n  content: \"\";\n}\n.fa-toggle-up:before,\n.fa-caret-square-o-up:before {\n  content: \"\";\n}\n.fa-toggle-right:before,\n.fa-caret-square-o-right:before {\n  content: \"\";\n}\n.fa-euro:before,\n.fa-eur:before {\n  content: \"\";\n}\n.fa-gbp:before {\n  content: \"\";\n}\n.fa-dollar:before,\n.fa-usd:before {\n  content: \"\";\n}\n.fa-rupee:before,\n.fa-inr:before {\n  content: \"\";\n}\n.fa-cny:before,\n.fa-rmb:before,\n.fa-yen:before,\n.fa-jpy:before {\n  content: \"\";\n}\n.fa-ruble:before,\n.fa-rouble:before,\n.fa-rub:before {\n  content: \"\";\n}\n.fa-won:before,\n.fa-krw:before {\n  content: \"\";\n}\n.fa-bitcoin:before,\n.fa-btc:before {\n  content: \"\";\n}\n.fa-file:before {\n  content: \"\";\n}\n.fa-file-text:before {\n  content: \"\";\n}\n.fa-sort-alpha-asc:before {\n  content: \"\";\n}\n.fa-sort-alpha-desc:before {\n  content: \"\";\n}\n.fa-sort-amount-asc:before {\n  content: \"\";\n}\n.fa-sort-amount-desc:before {\n  content: \"\";\n}\n.fa-sort-numeric-asc:before {\n  content: \"\";\n}\n.fa-sort-numeric-desc:before {\n  content: \"\";\n}\n.fa-thumbs-up:before {\n  content: \"\";\n}\n.fa-thumbs-down:before {\n  content: \"\";\n}\n.fa-youtube-square:before {\n  content: \"\";\n}\n.fa-youtube:before {\n  content: \"\";\n}\n.fa-xing:before {\n  content: \"\";\n}\n.fa-xing-square:before {\n  content: \"\";\n}\n.fa-youtube-play:before {\n  content: \"\";\n}\n.fa-dropbox:before {\n  content: \"\";\n}\n.fa-stack-overflow:before {\n  content: \"\";\n}\n.fa-instagram:before {\n  content: \"\";\n}\n.fa-flickr:before {\n  content: \"\";\n}\n.fa-adn:before {\n  content: \"\";\n}\n.fa-bitbucket:before {\n  content: \"\";\n}\n.fa-bitbucket-square:before {\n  content: \"\";\n}\n.fa-tumblr:before {\n  content: \"\";\n}\n.fa-tumblr-square:before {\n  content: \"\";\n}\n.fa-long-arrow-down:before {\n  content: \"\";\n}\n.fa-long-arrow-up:before {\n  content: \"\";\n}\n.fa-long-arrow-left:before {\n  content: \"\";\n}\n.fa-long-arrow-right:before {\n  content: \"\";\n}\n.fa-apple:before {\n  content: \"\";\n}\n.fa-windows:before {\n  content: \"\";\n}\n.fa-android:before {\n  content: \"\";\n}\n.fa-linux:before {\n  content: \"\";\n}\n.fa-dribbble:before {\n  content: \"\";\n}\n.fa-skype:before {\n  content: \"\";\n}\n.fa-foursquare:before {\n  content: \"\";\n}\n.fa-trello:before {\n  content: \"\";\n}\n.fa-female:before {\n  content: \"\";\n}\n.fa-male:before {\n  content: \"\";\n}\n.fa-gittip:before,\n.fa-gratipay:before {\n  content: \"\";\n}\n.fa-sun-o:before {\n  content: \"\";\n}\n.fa-moon-o:before {\n  content: \"\";\n}\n.fa-archive:before {\n  content: \"\";\n}\n.fa-bug:before {\n  content: \"\";\n}\n.fa-vk:before {\n  content: \"\";\n}\n.fa-weibo:before {\n  content: \"\";\n}\n.fa-renren:before {\n  content: \"\";\n}\n.fa-pagelines:before {\n  content: \"\";\n}\n.fa-stack-exchange:before {\n  content: \"\";\n}\n.fa-arrow-circle-o-right:before {\n  content: \"\";\n}\n.fa-arrow-circle-o-left:before {\n  content: \"\";\n}\n.fa-toggle-left:before,\n.fa-caret-square-o-left:before {\n  content: \"\";\n}\n.fa-dot-circle-o:before {\n  content: \"\";\n}\n.fa-wheelchair:before {\n  content: \"\";\n}\n.fa-vimeo-square:before {\n  content: \"\";\n}\n.fa-turkish-lira:before,\n.fa-try:before {\n  content: \"\";\n}\n.fa-plus-square-o:before {\n  content: \"\";\n}\n.fa-space-shuttle:before {\n  content: \"\";\n}\n.fa-slack:before {\n  content: \"\";\n}\n.fa-envelope-square:before {\n  content: \"\";\n}\n.fa-wordpress:before {\n  content: \"\";\n}\n.fa-openid:before {\n  content: \"\";\n}\n.fa-institution:before,\n.fa-bank:before,\n.fa-university:before {\n  content: \"\";\n}\n.fa-mortar-board:before,\n.fa-graduation-cap:before {\n  content: \"\";\n}\n.fa-yahoo:before {\n  content: \"\";\n}\n.fa-google:before {\n  content: \"\";\n}\n.fa-reddit:before {\n  content: \"\";\n}\n.fa-reddit-square:before {\n  content: \"\";\n}\n.fa-stumbleupon-circle:before {\n  content: \"\";\n}\n.fa-stumbleupon:before {\n  content: \"\";\n}\n.fa-delicious:before {\n  content: \"\";\n}\n.fa-digg:before {\n  content: \"\";\n}\n.fa-pied-piper-pp:before {\n  content: \"\";\n}\n.fa-pied-piper-alt:before {\n  content: \"\";\n}\n.fa-drupal:before {\n  content: \"\";\n}\n.fa-joomla:before {\n  content: \"\";\n}\n.fa-language:before {\n  content: \"\";\n}\n.fa-fax:before {\n  content: \"\";\n}\n.fa-building:before {\n  content: \"\";\n}\n.fa-child:before {\n  content: \"\";\n}\n.fa-paw:before {\n  content: \"\";\n}\n.fa-spoon:before {\n  content: \"\";\n}\n.fa-cube:before {\n  content: \"\";\n}\n.fa-cubes:before {\n  content: \"\";\n}\n.fa-behance:before {\n  content: \"\";\n}\n.fa-behance-square:before {\n  content: \"\";\n}\n.fa-steam:before {\n  content: \"\";\n}\n.fa-steam-square:before {\n  content: \"\";\n}\n.fa-recycle:before {\n  content: \"\";\n}\n.fa-automobile:before,\n.fa-car:before {\n  content: \"\";\n}\n.fa-cab:before,\n.fa-taxi:before {\n  content: \"\";\n}\n.fa-tree:before {\n  content: \"\";\n}\n.fa-spotify:before {\n  content: \"\";\n}\n.fa-deviantart:before {\n  content: \"\";\n}\n.fa-soundcloud:before {\n  content: \"\";\n}\n.fa-database:before {\n  content: \"\";\n}\n.fa-file-pdf-o:before {\n  content: \"\";\n}\n.fa-file-word-o:before {\n  content: \"\";\n}\n.fa-file-excel-o:before {\n  content: \"\";\n}\n.fa-file-powerpoint-o:before {\n  content: \"\";\n}\n.fa-file-photo-o:before,\n.fa-file-picture-o:before,\n.fa-file-image-o:before {\n  content: \"\";\n}\n.fa-file-zip-o:before,\n.fa-file-archive-o:before {\n  content: \"\";\n}\n.fa-file-sound-o:before,\n.fa-file-audio-o:before {\n  content: \"\";\n}\n.fa-file-movie-o:before,\n.fa-file-video-o:before {\n  content: \"\";\n}\n.fa-file-code-o:before {\n  content: \"\";\n}\n.fa-vine:before {\n  content: \"\";\n}\n.fa-codepen:before {\n  content: \"\";\n}\n.fa-jsfiddle:before {\n  content: \"\";\n}\n.fa-life-bouy:before,\n.fa-life-buoy:before,\n.fa-life-saver:before,\n.fa-support:before,\n.fa-life-ring:before {\n  content: \"\";\n}\n.fa-circle-o-notch:before {\n  content: \"\";\n}\n.fa-ra:before,\n.fa-resistance:before,\n.fa-rebel:before {\n  content: \"\";\n}\n.fa-ge:before,\n.fa-empire:before {\n  content: \"\";\n}\n.fa-git-square:before {\n  content: \"\";\n}\n.fa-git:before {\n  content: \"\";\n}\n.fa-y-combinator-square:before,\n.fa-yc-square:before,\n.fa-hacker-news:before {\n  content: \"\";\n}\n.fa-tencent-weibo:before {\n  content: \"\";\n}\n.fa-qq:before {\n  content: \"\";\n}\n.fa-wechat:before,\n.fa-weixin:before {\n  content: \"\";\n}\n.fa-send:before,\n.fa-paper-plane:before {\n  content: \"\";\n}\n.fa-send-o:before,\n.fa-paper-plane-o:before {\n  content: \"\";\n}\n.fa-history:before {\n  content: \"\";\n}\n.fa-circle-thin:before {\n  content: \"\";\n}\n.fa-header:before {\n  content: \"\";\n}\n.fa-paragraph:before {\n  content: \"\";\n}\n.fa-sliders:before {\n  content: \"\";\n}\n.fa-share-alt:before {\n  content: \"\";\n}\n.fa-share-alt-square:before {\n  content: \"\";\n}\n.fa-bomb:before {\n  content: \"\";\n}\n.fa-soccer-ball-o:before,\n.fa-futbol-o:before {\n  content: \"\";\n}\n.fa-tty:before {\n  content: \"\";\n}\n.fa-binoculars:before {\n  content: \"\";\n}\n.fa-plug:before {\n  content: \"\";\n}\n.fa-slideshare:before {\n  content: \"\";\n}\n.fa-twitch:before {\n  content: \"\";\n}\n.fa-yelp:before {\n  content: \"\";\n}\n.fa-newspaper-o:before {\n  content: \"\";\n}\n.fa-wifi:before {\n  content: \"\";\n}\n.fa-calculator:before {\n  content: \"\";\n}\n.fa-paypal:before {\n  content: \"\";\n}\n.fa-google-wallet:before {\n  content: \"\";\n}\n.fa-cc-visa:before {\n  content: \"\";\n}\n.fa-cc-mastercard:before {\n  content: \"\";\n}\n.fa-cc-discover:before {\n  content: \"\";\n}\n.fa-cc-amex:before {\n  content: \"\";\n}\n.fa-cc-paypal:before {\n  content: \"\";\n}\n.fa-cc-stripe:before {\n  content: \"\";\n}\n.fa-bell-slash:before {\n  content: \"\";\n}\n.fa-bell-slash-o:before {\n  content: \"\";\n}\n.fa-trash:before {\n  content: \"\";\n}\n.fa-copyright:before {\n  content: \"\";\n}\n.fa-at:before {\n  content: \"\";\n}\n.fa-eyedropper:before {\n  content: \"\";\n}\n.fa-paint-brush:before {\n  content: \"\";\n}\n.fa-birthday-cake:before {\n  content: \"\";\n}\n.fa-area-chart:before {\n  content: \"\";\n}\n.fa-pie-chart:before {\n  content: \"\";\n}\n.fa-line-chart:before {\n  content: \"\";\n}\n.fa-lastfm:before {\n  content: \"\";\n}\n.fa-lastfm-square:before {\n  content: \"\";\n}\n.fa-toggle-off:before {\n  content: \"\";\n}\n.fa-toggle-on:before {\n  content: \"\";\n}\n.fa-bicycle:before {\n  content: \"\";\n}\n.fa-bus:before {\n  content: \"\";\n}\n.fa-ioxhost:before {\n  content: \"\";\n}\n.fa-angellist:before {\n  content: \"\";\n}\n.fa-cc:before {\n  content: \"\";\n}\n.fa-shekel:before,\n.fa-sheqel:before,\n.fa-ils:before {\n  content: \"\";\n}\n.fa-meanpath:before {\n  content: \"\";\n}\n.fa-buysellads:before {\n  content: \"\";\n}\n.fa-connectdevelop:before {\n  content: \"\";\n}\n.fa-dashcube:before {\n  content: \"\";\n}\n.fa-forumbee:before {\n  content: \"\";\n}\n.fa-leanpub:before {\n  content: \"\";\n}\n.fa-sellsy:before {\n  content: \"\";\n}\n.fa-shirtsinbulk:before {\n  content: \"\";\n}\n.fa-simplybuilt:before {\n  content: \"\";\n}\n.fa-skyatlas:before {\n  content: \"\";\n}\n.fa-cart-plus:before {\n  content: \"\";\n}\n.fa-cart-arrow-down:before {\n  content: \"\";\n}\n.fa-diamond:before {\n  content: \"\";\n}\n.fa-ship:before {\n  content: \"\";\n}\n.fa-user-secret:before {\n  content: \"\";\n}\n.fa-motorcycle:before {\n  content: \"\";\n}\n.fa-street-view:before {\n  content: \"\";\n}\n.fa-heartbeat:before {\n  content: \"\";\n}\n.fa-venus:before {\n  content: \"\";\n}\n.fa-mars:before {\n  content: \"\";\n}\n.fa-mercury:before {\n  content: \"\";\n}\n.fa-intersex:before,\n.fa-transgender:before {\n  content: \"\";\n}\n.fa-transgender-alt:before {\n  content: \"\";\n}\n.fa-venus-double:before {\n  content: \"\";\n}\n.fa-mars-double:before {\n  content: \"\";\n}\n.fa-venus-mars:before {\n  content: \"\";\n}\n.fa-mars-stroke:before {\n  content: \"\";\n}\n.fa-mars-stroke-v:before {\n  content: \"\";\n}\n.fa-mars-stroke-h:before {\n  content: \"\";\n}\n.fa-neuter:before {\n  content: \"\";\n}\n.fa-genderless:before {\n  content: \"\";\n}\n.fa-facebook-official:before {\n  content: \"\";\n}\n.fa-pinterest-p:before {\n  content: \"\";\n}\n.fa-whatsapp:before {\n  content: \"\";\n}\n.fa-server:before {\n  content: \"\";\n}\n.fa-user-plus:before {\n  content: \"\";\n}\n.fa-user-times:before {\n  content: \"\";\n}\n.fa-hotel:before,\n.fa-bed:before {\n  content: \"\";\n}\n.fa-viacoin:before {\n  content: \"\";\n}\n.fa-train:before {\n  content: \"\";\n}\n.fa-subway:before {\n  content: \"\";\n}\n.fa-medium:before {\n  content: \"\";\n}\n.fa-yc:before,\n.fa-y-combinator:before {\n  content: \"\";\n}\n.fa-optin-monster:before {\n  content: \"\";\n}\n.fa-opencart:before {\n  content: \"\";\n}\n.fa-expeditedssl:before {\n  content: \"\";\n}\n.fa-battery-4:before,\n.fa-battery:before,\n.fa-battery-full:before {\n  content: \"\";\n}\n.fa-battery-3:before,\n.fa-battery-three-quarters:before {\n  content: \"\";\n}\n.fa-battery-2:before,\n.fa-battery-half:before {\n  content: \"\";\n}\n.fa-battery-1:before,\n.fa-battery-quarter:before {\n  content: \"\";\n}\n.fa-battery-0:before,\n.fa-battery-empty:before {\n  content: \"\";\n}\n.fa-mouse-pointer:before {\n  content: \"\";\n}\n.fa-i-cursor:before {\n  content: \"\";\n}\n.fa-object-group:before {\n  content: \"\";\n}\n.fa-object-ungroup:before {\n  content: \"\";\n}\n.fa-sticky-note:before {\n  content: \"\";\n}\n.fa-sticky-note-o:before {\n  content: \"\";\n}\n.fa-cc-jcb:before {\n  content: \"\";\n}\n.fa-cc-diners-club:before {\n  content: \"\";\n}\n.fa-clone:before {\n  content: \"\";\n}\n.fa-balance-scale:before {\n  content: \"\";\n}\n.fa-hourglass-o:before {\n  content: \"\";\n}\n.fa-hourglass-1:before,\n.fa-hourglass-start:before {\n  content: \"\";\n}\n.fa-hourglass-2:before,\n.fa-hourglass-half:before {\n  content: \"\";\n}\n.fa-hourglass-3:before,\n.fa-hourglass-end:before {\n  content: \"\";\n}\n.fa-hourglass:before {\n  content: \"\";\n}\n.fa-hand-grab-o:before,\n.fa-hand-rock-o:before {\n  content: \"\";\n}\n.fa-hand-stop-o:before,\n.fa-hand-paper-o:before {\n  content: \"\";\n}\n.fa-hand-scissors-o:before {\n  content: \"\";\n}\n.fa-hand-lizard-o:before {\n  content: \"\";\n}\n.fa-hand-spock-o:before {\n  content: \"\";\n}\n.fa-hand-pointer-o:before {\n  content: \"\";\n}\n.fa-hand-peace-o:before {\n  content: \"\";\n}\n.fa-trademark:before {\n  content: \"\";\n}\n.fa-registered:before {\n  content: \"\";\n}\n.fa-creative-commons:before {\n  content: \"\";\n}\n.fa-gg:before {\n  content: \"\";\n}\n.fa-gg-circle:before {\n  content: \"\";\n}\n.fa-tripadvisor:before {\n  content: \"\";\n}\n.fa-odnoklassniki:before {\n  content: \"\";\n}\n.fa-odnoklassniki-square:before {\n  content: \"\";\n}\n.fa-get-pocket:before {\n  content: \"\";\n}\n.fa-wikipedia-w:before {\n  content: \"\";\n}\n.fa-safari:before {\n  content: \"\";\n}\n.fa-chrome:before {\n  content: \"\";\n}\n.fa-firefox:before {\n  content: \"\";\n}\n.fa-opera:before {\n  content: \"\";\n}\n.fa-internet-explorer:before {\n  content: \"\";\n}\n.fa-tv:before,\n.fa-television:before {\n  content: \"\";\n}\n.fa-contao:before {\n  content: \"\";\n}\n.fa-500px:before {\n  content: \"\";\n}\n.fa-amazon:before {\n  content: \"\";\n}\n.fa-calendar-plus-o:before {\n  content: \"\";\n}\n.fa-calendar-minus-o:before {\n  content: \"\";\n}\n.fa-calendar-times-o:before {\n  content: \"\";\n}\n.fa-calendar-check-o:before {\n  content: \"\";\n}\n.fa-industry:before {\n  content: \"\";\n}\n.fa-map-pin:before {\n  content: \"\";\n}\n.fa-map-signs:before {\n  content: \"\";\n}\n.fa-map-o:before {\n  content: \"\";\n}\n.fa-map:before {\n  content: \"\";\n}\n.fa-commenting:before {\n  content: \"\";\n}\n.fa-commenting-o:before {\n  content: \"\";\n}\n.fa-houzz:before {\n  content: \"\";\n}\n.fa-vimeo:before {\n  content: \"\";\n}\n.fa-black-tie:before {\n  content: \"\";\n}\n.fa-fonticons:before {\n  content: \"\";\n}\n.fa-reddit-alien:before {\n  content: \"\";\n}\n.fa-edge:before {\n  content: \"\";\n}\n.fa-credit-card-alt:before {\n  content: \"\";\n}\n.fa-codiepie:before {\n  content: \"\";\n}\n.fa-modx:before {\n  content: \"\";\n}\n.fa-fort-awesome:before {\n  content: \"\";\n}\n.fa-usb:before {\n  content: \"\";\n}\n.fa-product-hunt:before {\n  content: \"\";\n}\n.fa-mixcloud:before {\n  content: \"\";\n}\n.fa-scribd:before {\n  content: \"\";\n}\n.fa-pause-circle:before {\n  content: \"\";\n}\n.fa-pause-circle-o:before {\n  content: \"\";\n}\n.fa-stop-circle:before {\n  content: \"\";\n}\n.fa-stop-circle-o:before {\n  content: \"\";\n}\n.fa-shopping-bag:before {\n  content: \"\";\n}\n.fa-shopping-basket:before {\n  content: \"\";\n}\n.fa-hashtag:before {\n  content: \"\";\n}\n.fa-bluetooth:before {\n  content: \"\";\n}\n.fa-bluetooth-b:before {\n  content: \"\";\n}\n.fa-percent:before {\n  content: \"\";\n}\n.fa-gitlab:before {\n  content: \"\";\n}\n.fa-wpbeginner:before {\n  content: \"\";\n}\n.fa-wpforms:before {\n  content: \"\";\n}\n.fa-envira:before {\n  content: \"\";\n}\n.fa-universal-access:before {\n  content: \"\";\n}\n.fa-wheelchair-alt:before {\n  content: \"\";\n}\n.fa-question-circle-o:before {\n  content: \"\";\n}\n.fa-blind:before {\n  content: \"\";\n}\n.fa-audio-description:before {\n  content: \"\";\n}\n.fa-volume-control-phone:before {\n  content: \"\";\n}\n.fa-braille:before {\n  content: \"\";\n}\n.fa-assistive-listening-systems:before {\n  content: \"\";\n}\n.fa-asl-interpreting:before,\n.fa-american-sign-language-interpreting:before {\n  content: \"\";\n}\n.fa-deafness:before,\n.fa-hard-of-hearing:before,\n.fa-deaf:before {\n  content: \"\";\n}\n.fa-glide:before {\n  content: \"\";\n}\n.fa-glide-g:before {\n  content: \"\";\n}\n.fa-signing:before,\n.fa-sign-language:before {\n  content: \"\";\n}\n.fa-low-vision:before {\n  content: \"\";\n}\n.fa-viadeo:before {\n  content: \"\";\n}\n.fa-viadeo-square:before {\n  content: \"\";\n}\n.fa-snapchat:before {\n  content: \"\";\n}\n.fa-snapchat-ghost:before {\n  content: \"\";\n}\n.fa-snapchat-square:before {\n  content: \"\";\n}\n.fa-pied-piper:before {\n  content: \"\";\n}\n.fa-first-order:before {\n  content: \"\";\n}\n.fa-yoast:before {\n  content: \"\";\n}\n.fa-themeisle:before {\n  content: \"\";\n}\n.fa-google-plus-circle:before,\n.fa-google-plus-official:before {\n  content: \"\";\n}\n.fa-fa:before,\n.fa-font-awesome:before {\n  content: \"\";\n}\n.fa-handshake-o:before {\n  content: \"\";\n}\n.fa-envelope-open:before {\n  content: \"\";\n}\n.fa-envelope-open-o:before {\n  content: \"\";\n}\n.fa-linode:before {\n  content: \"\";\n}\n.fa-address-book:before {\n  content: \"\";\n}\n.fa-address-book-o:before {\n  content: \"\";\n}\n.fa-vcard:before,\n.fa-address-card:before {\n  content: \"\";\n}\n.fa-vcard-o:before,\n.fa-address-card-o:before {\n  content: \"\";\n}\n.fa-user-circle:before {\n  content: \"\";\n}\n.fa-user-circle-o:before {\n  content: \"\";\n}\n.fa-user-o:before {\n  content: \"\";\n}\n.fa-id-badge:before {\n  content: \"\";\n}\n.fa-drivers-license:before,\n.fa-id-card:before {\n  content: \"\";\n}\n.fa-drivers-license-o:before,\n.fa-id-card-o:before {\n  content: \"\";\n}\n.fa-quora:before {\n  content: \"\";\n}\n.fa-free-code-camp:before {\n  content: \"\";\n}\n.fa-telegram:before {\n  content: \"\";\n}\n.fa-thermometer-4:before,\n.fa-thermometer:before,\n.fa-thermometer-full:before {\n  content: \"\";\n}\n.fa-thermometer-3:before,\n.fa-thermometer-three-quarters:before {\n  content: \"\";\n}\n.fa-thermometer-2:before,\n.fa-thermometer-half:before {\n  content: \"\";\n}\n.fa-thermometer-1:before,\n.fa-thermometer-quarter:before {\n  content: \"\";\n}\n.fa-thermometer-0:before,\n.fa-thermometer-empty:before {\n  content: \"\";\n}\n.fa-shower:before {\n  content: \"\";\n}\n.fa-bathtub:before,\n.fa-s15:before,\n.fa-bath:before {\n  content: \"\";\n}\n.fa-podcast:before {\n  content: \"\";\n}\n.fa-window-maximize:before {\n  content: \"\";\n}\n.fa-window-minimize:before {\n  content: \"\";\n}\n.fa-window-restore:before {\n  content: \"\";\n}\n.fa-times-rectangle:before,\n.fa-window-close:before {\n  content: \"\";\n}\n.fa-times-rectangle-o:before,\n.fa-window-close-o:before {\n  content: \"\";\n}\n.fa-bandcamp:before {\n  content: \"\";\n}\n.fa-grav:before {\n  content: \"\";\n}\n.fa-etsy:before {\n  content: \"\";\n}\n.fa-imdb:before {\n  content: \"\";\n}\n.fa-ravelry:before {\n  content: \"\";\n}\n.fa-eercast:before {\n  content: \"\";\n}\n.fa-microchip:before {\n  content: \"\";\n}\n.fa-snowflake-o:before {\n  content: \"\";\n}\n.fa-superpowers:before {\n  content: \"\";\n}\n.fa-wpexplorer:before {\n  content: \"\";\n}\n.fa-meetup:before {\n  content: \"\";\n}\n.sr-only {\n  position: absolute;\n  width: 1px;\n  height: 1px;\n  padding: 0;\n  margin: -1px;\n  overflow: hidden;\n  clip: rect(0, 0, 0, 0);\n  border: 0;\n}\n.sr-only-focusable:active, .sr-only-focusable:focus {\n  position: static;\n  width: auto;\n  height: auto;\n  margin: 0;\n  overflow: visible;\n  clip: auto;\n}\n\n/* Import Simple Line Icons Set */\n@font-face {\n  font-family: \"simple-line-icons\";\n  src: url(" + ___CSS_LOADER_URL___6___ + ");\n  src: url(" + ___CSS_LOADER_URL___7___ + ") format(\"embedded-opentype\"), url(" + ___CSS_LOADER_URL___8___ + ") format(\"woff2\"), url(" + ___CSS_LOADER_URL___9___ + ") format(\"truetype\"), url(" + ___CSS_LOADER_URL___10___ + ") format(\"woff\"), url(" + ___CSS_LOADER_URL___11___ + ") format(\"svg\");\n  font-weight: normal;\n  font-style: normal;\n}\n.icon-user, .icon-people, .icon-user-female, .icon-user-follow, .icon-user-following, .icon-user-unfollow, .icon-login, .icon-logout, .icon-emotsmile, .icon-phone, .icon-call-end, .icon-call-in, .icon-call-out, .icon-map, .icon-location-pin, .icon-direction, .icon-directions, .icon-compass, .icon-layers, .icon-menu, .icon-list, .icon-options-vertical, .icon-options, .icon-arrow-down, .icon-arrow-left, .icon-arrow-right, .icon-arrow-up, .icon-arrow-up-circle, .icon-arrow-left-circle, .icon-arrow-right-circle, .icon-arrow-down-circle, .icon-check, .icon-clock, .icon-plus, .icon-minus, .icon-close, .icon-event, .icon-exclamation, .icon-organization, .icon-trophy, .icon-screen-smartphone, .icon-screen-desktop, .icon-plane, .icon-notebook, .icon-mustache, .icon-mouse, .icon-magnet, .icon-energy, .icon-disc, .icon-cursor, .icon-cursor-move, .icon-crop, .icon-chemistry, .icon-speedometer, .icon-shield, .icon-screen-tablet, .icon-magic-wand, .icon-hourglass, .icon-graduation, .icon-ghost, .icon-game-controller, .icon-fire, .icon-eyeglass, .icon-envelope-open, .icon-envelope-letter, .icon-bell, .icon-badge, .icon-anchor, .icon-wallet, .icon-vector, .icon-speech, .icon-puzzle, .icon-printer, .icon-present, .icon-playlist, .icon-pin, .icon-picture, .icon-handbag, .icon-globe-alt, .icon-globe, .icon-folder-alt, .icon-folder, .icon-film, .icon-feed, .icon-drop, .icon-drawer, .icon-docs, .icon-doc, .icon-diamond, .icon-cup, .icon-calculator, .icon-bubbles, .icon-briefcase, .icon-book-open, .icon-basket-loaded, .icon-basket, .icon-bag, .icon-action-undo, .icon-action-redo, .icon-wrench, .icon-umbrella, .icon-trash, .icon-tag, .icon-support, .icon-frame, .icon-size-fullscreen, .icon-size-actual, .icon-shuffle, .icon-share-alt, .icon-share, .icon-rocket, .icon-question, .icon-pie-chart, .icon-pencil, .icon-note, .icon-loop, .icon-home, .icon-grid, .icon-graph, .icon-microphone, .icon-music-tone-alt, .icon-music-tone, .icon-earphones-alt, .icon-earphones, .icon-equalizer, .icon-like, .icon-dislike, .icon-control-start, .icon-control-rewind, .icon-control-play, .icon-control-pause, .icon-control-forward, .icon-control-end, .icon-volume-1, .icon-volume-2, .icon-volume-off, .icon-calendar, .icon-bulb, .icon-chart, .icon-ban, .icon-bubble, .icon-camrecorder, .icon-camera, .icon-cloud-download, .icon-cloud-upload, .icon-envelope, .icon-eye, .icon-flag, .icon-heart, .icon-info, .icon-key, .icon-link, .icon-lock, .icon-lock-open, .icon-magnifier, .icon-magnifier-add, .icon-magnifier-remove, .icon-paper-clip, .icon-paper-plane, .icon-power, .icon-refresh, .icon-reload, .icon-settings, .icon-star, .icon-symbol-female, .icon-symbol-male, .icon-target, .icon-credit-card, .icon-paypal, .icon-social-tumblr, .icon-social-twitter, .icon-social-facebook, .icon-social-instagram, .icon-social-linkedin, .icon-social-pinterest, .icon-social-github, .icon-social-google, .icon-social-reddit, .icon-social-skype, .icon-social-dribbble, .icon-social-behance, .icon-social-foursqare, .icon-social-soundcloud, .icon-social-spotify, .icon-social-stumbleupon, .icon-social-youtube, .icon-social-dropbox, .icon-social-vkontakte, .icon-social-steam {\n  font-family: \"simple-line-icons\";\n  speak: none;\n  font-style: normal;\n  font-weight: normal;\n  font-variant: normal;\n  text-transform: none;\n  line-height: 1;\n  /* Better Font Rendering =========== */\n  -webkit-font-smoothing: antialiased;\n  -moz-osx-font-smoothing: grayscale;\n}\n.icon-user:before {\n  content: \"\";\n}\n.icon-people:before {\n  content: \"\";\n}\n.icon-user-female:before {\n  content: \"\";\n}\n.icon-user-follow:before {\n  content: \"\";\n}\n.icon-user-following:before {\n  content: \"\";\n}\n.icon-user-unfollow:before {\n  content: \"\";\n}\n.icon-login:before {\n  content: \"\";\n}\n.icon-logout:before {\n  content: \"\";\n}\n.icon-emotsmile:before {\n  content: \"\";\n}\n.icon-phone:before {\n  content: \"\";\n}\n.icon-call-end:before {\n  content: \"\";\n}\n.icon-call-in:before {\n  content: \"\";\n}\n.icon-call-out:before {\n  content: \"\";\n}\n.icon-map:before {\n  content: \"\";\n}\n.icon-location-pin:before {\n  content: \"\";\n}\n.icon-direction:before {\n  content: \"\";\n}\n.icon-directions:before {\n  content: \"\";\n}\n.icon-compass:before {\n  content: \"\";\n}\n.icon-layers:before {\n  content: \"\";\n}\n.icon-menu:before {\n  content: \"\";\n}\n.icon-list:before {\n  content: \"\";\n}\n.icon-options-vertical:before {\n  content: \"\";\n}\n.icon-options:before {\n  content: \"\";\n}\n.icon-arrow-down:before {\n  content: \"\";\n}\n.icon-arrow-left:before {\n  content: \"\";\n}\n.icon-arrow-right:before {\n  content: \"\";\n}\n.icon-arrow-up:before {\n  content: \"\";\n}\n.icon-arrow-up-circle:before {\n  content: \"\";\n}\n.icon-arrow-left-circle:before {\n  content: \"\";\n}\n.icon-arrow-right-circle:before {\n  content: \"\";\n}\n.icon-arrow-down-circle:before {\n  content: \"\";\n}\n.icon-check:before {\n  content: \"\";\n}\n.icon-clock:before {\n  content: \"\";\n}\n.icon-plus:before {\n  content: \"\";\n}\n.icon-minus:before {\n  content: \"\";\n}\n.icon-close:before {\n  content: \"\";\n}\n.icon-event:before {\n  content: \"\";\n}\n.icon-exclamation:before {\n  content: \"\";\n}\n.icon-organization:before {\n  content: \"\";\n}\n.icon-trophy:before {\n  content: \"\";\n}\n.icon-screen-smartphone:before {\n  content: \"\";\n}\n.icon-screen-desktop:before {\n  content: \"\";\n}\n.icon-plane:before {\n  content: \"\";\n}\n.icon-notebook:before {\n  content: \"\";\n}\n.icon-mustache:before {\n  content: \"\";\n}\n.icon-mouse:before {\n  content: \"\";\n}\n.icon-magnet:before {\n  content: \"\";\n}\n.icon-energy:before {\n  content: \"\";\n}\n.icon-disc:before {\n  content: \"\";\n}\n.icon-cursor:before {\n  content: \"\";\n}\n.icon-cursor-move:before {\n  content: \"\";\n}\n.icon-crop:before {\n  content: \"\";\n}\n.icon-chemistry:before {\n  content: \"\";\n}\n.icon-speedometer:before {\n  content: \"\";\n}\n.icon-shield:before {\n  content: \"\";\n}\n.icon-screen-tablet:before {\n  content: \"\";\n}\n.icon-magic-wand:before {\n  content: \"\";\n}\n.icon-hourglass:before {\n  content: \"\";\n}\n.icon-graduation:before {\n  content: \"\";\n}\n.icon-ghost:before {\n  content: \"\";\n}\n.icon-game-controller:before {\n  content: \"\";\n}\n.icon-fire:before {\n  content: \"\";\n}\n.icon-eyeglass:before {\n  content: \"\";\n}\n.icon-envelope-open:before {\n  content: \"\";\n}\n.icon-envelope-letter:before {\n  content: \"\";\n}\n.icon-bell:before {\n  content: \"\";\n}\n.icon-badge:before {\n  content: \"\";\n}\n.icon-anchor:before {\n  content: \"\";\n}\n.icon-wallet:before {\n  content: \"\";\n}\n.icon-vector:before {\n  content: \"\";\n}\n.icon-speech:before {\n  content: \"\";\n}\n.icon-puzzle:before {\n  content: \"\";\n}\n.icon-printer:before {\n  content: \"\";\n}\n.icon-present:before {\n  content: \"\";\n}\n.icon-playlist:before {\n  content: \"\";\n}\n.icon-pin:before {\n  content: \"\";\n}\n.icon-picture:before {\n  content: \"\";\n}\n.icon-handbag:before {\n  content: \"\";\n}\n.icon-globe-alt:before {\n  content: \"\";\n}\n.icon-globe:before {\n  content: \"\";\n}\n.icon-folder-alt:before {\n  content: \"\";\n}\n.icon-folder:before {\n  content: \"\";\n}\n.icon-film:before {\n  content: \"\";\n}\n.icon-feed:before {\n  content: \"\";\n}\n.icon-drop:before {\n  content: \"\";\n}\n.icon-drawer:before {\n  content: \"\";\n}\n.icon-docs:before {\n  content: \"\";\n}\n.icon-doc:before {\n  content: \"\";\n}\n.icon-diamond:before {\n  content: \"\";\n}\n.icon-cup:before {\n  content: \"\";\n}\n.icon-calculator:before {\n  content: \"\";\n}\n.icon-bubbles:before {\n  content: \"\";\n}\n.icon-briefcase:before {\n  content: \"\";\n}\n.icon-book-open:before {\n  content: \"\";\n}\n.icon-basket-loaded:before {\n  content: \"\";\n}\n.icon-basket:before {\n  content: \"\";\n}\n.icon-bag:before {\n  content: \"\";\n}\n.icon-action-undo:before {\n  content: \"\";\n}\n.icon-action-redo:before {\n  content: \"\";\n}\n.icon-wrench:before {\n  content: \"\";\n}\n.icon-umbrella:before {\n  content: \"\";\n}\n.icon-trash:before {\n  content: \"\";\n}\n.icon-tag:before {\n  content: \"\";\n}\n.icon-support:before {\n  content: \"\";\n}\n.icon-frame:before {\n  content: \"\";\n}\n.icon-size-fullscreen:before {\n  content: \"\";\n}\n.icon-size-actual:before {\n  content: \"\";\n}\n.icon-shuffle:before {\n  content: \"\";\n}\n.icon-share-alt:before {\n  content: \"\";\n}\n.icon-share:before {\n  content: \"\";\n}\n.icon-rocket:before {\n  content: \"\";\n}\n.icon-question:before {\n  content: \"\";\n}\n.icon-pie-chart:before {\n  content: \"\";\n}\n.icon-pencil:before {\n  content: \"\";\n}\n.icon-note:before {\n  content: \"\";\n}\n.icon-loop:before {\n  content: \"\";\n}\n.icon-home:before {\n  content: \"\";\n}\n.icon-grid:before {\n  content: \"\";\n}\n.icon-graph:before {\n  content: \"\";\n}\n.icon-microphone:before {\n  content: \"\";\n}\n.icon-music-tone-alt:before {\n  content: \"\";\n}\n.icon-music-tone:before {\n  content: \"\";\n}\n.icon-earphones-alt:before {\n  content: \"\";\n}\n.icon-earphones:before {\n  content: \"\";\n}\n.icon-equalizer:before {\n  content: \"\";\n}\n.icon-like:before {\n  content: \"\";\n}\n.icon-dislike:before {\n  content: \"\";\n}\n.icon-control-start:before {\n  content: \"\";\n}\n.icon-control-rewind:before {\n  content: \"\";\n}\n.icon-control-play:before {\n  content: \"\";\n}\n.icon-control-pause:before {\n  content: \"\";\n}\n.icon-control-forward:before {\n  content: \"\";\n}\n.icon-control-end:before {\n  content: \"\";\n}\n.icon-volume-1:before {\n  content: \"\";\n}\n.icon-volume-2:before {\n  content: \"\";\n}\n.icon-volume-off:before {\n  content: \"\";\n}\n.icon-calendar:before {\n  content: \"\";\n}\n.icon-bulb:before {\n  content: \"\";\n}\n.icon-chart:before {\n  content: \"\";\n}\n.icon-ban:before {\n  content: \"\";\n}\n.icon-bubble:before {\n  content: \"\";\n}\n.icon-camrecorder:before {\n  content: \"\";\n}\n.icon-camera:before {\n  content: \"\";\n}\n.icon-cloud-download:before {\n  content: \"\";\n}\n.icon-cloud-upload:before {\n  content: \"\";\n}\n.icon-envelope:before {\n  content: \"\";\n}\n.icon-eye:before {\n  content: \"\";\n}\n.icon-flag:before {\n  content: \"\";\n}\n.icon-heart:before {\n  content: \"\";\n}\n.icon-info:before {\n  content: \"\";\n}\n.icon-key:before {\n  content: \"\";\n}\n.icon-link:before {\n  content: \"\";\n}\n.icon-lock:before {\n  content: \"\";\n}\n.icon-lock-open:before {\n  content: \"\";\n}\n.icon-magnifier:before {\n  content: \"\";\n}\n.icon-magnifier-add:before {\n  content: \"\";\n}\n.icon-magnifier-remove:before {\n  content: \"\";\n}\n.icon-paper-clip:before {\n  content: \"\";\n}\n.icon-paper-plane:before {\n  content: \"\";\n}\n.icon-power:before {\n  content: \"\";\n}\n.icon-refresh:before {\n  content: \"\";\n}\n.icon-reload:before {\n  content: \"\";\n}\n.icon-settings:before {\n  content: \"\";\n}\n.icon-star:before {\n  content: \"\";\n}\n.icon-symbol-female:before {\n  content: \"\";\n}\n.icon-symbol-male:before {\n  content: \"\";\n}\n.icon-target:before {\n  content: \"\";\n}\n.icon-credit-card:before {\n  content: \"\";\n}\n.icon-paypal:before {\n  content: \"\";\n}\n.icon-social-tumblr:before {\n  content: \"\";\n}\n.icon-social-twitter:before {\n  content: \"\";\n}\n.icon-social-facebook:before {\n  content: \"\";\n}\n.icon-social-instagram:before {\n  content: \"\";\n}\n.icon-social-linkedin:before {\n  content: \"\";\n}\n.icon-social-pinterest:before {\n  content: \"\";\n}\n.icon-social-github:before {\n  content: \"\";\n}\n.icon-social-google:before {\n  content: \"\";\n}\n.icon-social-reddit:before {\n  content: \"\";\n}\n.icon-social-skype:before {\n  content: \"\";\n}\n.icon-social-dribbble:before {\n  content: \"\";\n}\n.icon-social-behance:before {\n  content: \"\";\n}\n.icon-social-foursqare:before {\n  content: \"\";\n}\n.icon-social-soundcloud:before {\n  content: \"\";\n}\n.icon-social-spotify:before {\n  content: \"\";\n}\n.icon-social-stumbleupon:before {\n  content: \"\";\n}\n.icon-social-youtube:before {\n  content: \"\";\n}\n.icon-social-dropbox:before {\n  content: \"\";\n}\n.icon-social-vkontakte:before {\n  content: \"\";\n}\n.icon-social-steam:before {\n  content: \"\";\n}", ""]);
+
+
+/***/ }),
+
+/***/ "./node_modules/css-loader/dist/runtime/api.js":
+/*!*****************************************************!*\
+  !*** ./node_modules/css-loader/dist/runtime/api.js ***!
+  \*****************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+/*
+  MIT License http://www.opensource.org/licenses/mit-license.php
+  Author Tobias Koppers @sokra
+*/
+// css base code, injected by the css-loader
+// eslint-disable-next-line func-names
+module.exports = function (useSourceMap) {
+  var list = []; // return the list of modules as css string
+
+  list.toString = function toString() {
+    return this.map(function (item) {
+      var content = cssWithMappingToString(item, useSourceMap);
+
+      if (item[2]) {
+        return "@media ".concat(item[2], "{").concat(content, "}");
+      }
+
+      return content;
+    }).join('');
+  }; // import a list of modules into the list
+  // eslint-disable-next-line func-names
+
+
+  list.i = function (modules, mediaQuery) {
+    if (typeof modules === 'string') {
+      // eslint-disable-next-line no-param-reassign
+      modules = [[null, modules, '']];
+    }
+
+    var alreadyImportedModules = {};
+
+    for (var i = 0; i < this.length; i++) {
+      // eslint-disable-next-line prefer-destructuring
+      var id = this[i][0];
+
+      if (id != null) {
+        alreadyImportedModules[id] = true;
+      }
+    }
+
+    for (var _i = 0; _i < modules.length; _i++) {
+      var item = modules[_i]; // skip already imported module
+      // this implementation is not 100% perfect for weird media query combinations
+      // when a module is imported multiple times with different media queries.
+      // I hope this will never occur (Hey this way we have smaller bundles)
+
+      if (item[0] == null || !alreadyImportedModules[item[0]]) {
+        if (mediaQuery && !item[2]) {
+          item[2] = mediaQuery;
+        } else if (mediaQuery) {
+          item[2] = "(".concat(item[2], ") and (").concat(mediaQuery, ")");
+        }
+
+        list.push(item);
+      }
+    }
+  };
+
+  return list;
+};
+
+function cssWithMappingToString(item, useSourceMap) {
+  var content = item[1] || ''; // eslint-disable-next-line prefer-destructuring
+
+  var cssMapping = item[3];
+
+  if (!cssMapping) {
+    return content;
+  }
+
+  if (useSourceMap && typeof btoa === 'function') {
+    var sourceMapping = toComment(cssMapping);
+    var sourceURLs = cssMapping.sources.map(function (source) {
+      return "/*# sourceURL=".concat(cssMapping.sourceRoot).concat(source, " */");
+    });
+    return [content].concat(sourceURLs).concat([sourceMapping]).join('\n');
+  }
+
+  return [content].join('\n');
+} // Adapted from convert-source-map (MIT)
+
+
+function toComment(sourceMap) {
+  // eslint-disable-next-line no-undef
+  var base64 = btoa(unescape(encodeURIComponent(JSON.stringify(sourceMap))));
+  var data = "sourceMappingURL=data:application/json;charset=utf-8;base64,".concat(base64);
+  return "/*# ".concat(data, " */");
+}
+
+/***/ }),
+
+/***/ "./node_modules/css-loader/dist/runtime/getUrl.js":
+/*!********************************************************!*\
+  !*** ./node_modules/css-loader/dist/runtime/getUrl.js ***!
+  \********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+module.exports = function (url, needQuotes) {
+  // eslint-disable-next-line no-underscore-dangle, no-param-reassign
+  url = url.__esModule ? url.default : url;
+
+  if (typeof url !== 'string') {
+    return url;
+  } // If url is already wrapped in quotes, remove them
+
+
+  if (/^['"].*['"]$/.test(url)) {
+    // eslint-disable-next-line no-param-reassign
+    url = url.slice(1, -1);
+  } // Should url be wrapped?
+  // See https://drafts.csswg.org/css-values-3/#urls
+
+
+  if (/["'() \t\n]/.test(url) || needQuotes) {
+    return "\"".concat(url.replace(/"/g, '\\"').replace(/\n/g, '\\n'), "\"");
+  }
+
+  return url;
+};
+
+/***/ }),
+
+/***/ "./node_modules/debounce/index.js":
+/*!****************************************!*\
+  !*** ./node_modules/debounce/index.js ***!
+  \****************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * Returns a function, that, as long as it continues to be invoked, will not
+ * be triggered. The function will be called after it stops being called for
+ * N milliseconds. If `immediate` is passed, trigger the function on the
+ * leading edge, instead of the trailing. The function also has a property 'clear' 
+ * that is a function which will clear the timer to prevent previously scheduled executions. 
+ *
+ * @source underscore.js
+ * @see http://unscriptable.com/2009/03/20/debouncing-javascript-methods/
+ * @param {Function} function to wrap
+ * @param {Number} timeout in ms (`100`)
+ * @param {Boolean} whether to execute at the beginning (`false`)
+ * @api public
+ */
+function debounce(func, wait, immediate){
+  var timeout, args, context, timestamp, result;
+  if (null == wait) wait = 100;
+
+  function later() {
+    var last = Date.now() - timestamp;
+
+    if (last < wait && last >= 0) {
+      timeout = setTimeout(later, wait - last);
+    } else {
+      timeout = null;
+      if (!immediate) {
+        result = func.apply(context, args);
+        context = args = null;
+      }
+    }
+  };
+
+  var debounced = function(){
+    context = this;
+    args = arguments;
+    timestamp = Date.now();
+    var callNow = immediate && !timeout;
+    if (!timeout) timeout = setTimeout(later, wait);
+    if (callNow) {
+      result = func.apply(context, args);
+      context = args = null;
+    }
+
+    return result;
+  };
+
+  debounced.clear = function() {
+    if (timeout) {
+      clearTimeout(timeout);
+      timeout = null;
+    }
+  };
+  
+  debounced.flush = function() {
+    if (timeout) {
+      result = func.apply(context, args);
+      context = args = null;
+      
+      clearTimeout(timeout);
+      timeout = null;
+    }
+  };
+
+  return debounced;
+};
+
+// Adds compatibility for ES modules
+debounce.debounce = debounce;
+
+module.exports = debounce;
+
+
+/***/ }),
+
+/***/ "./node_modules/expand-range/index.js":
+/*!********************************************!*\
+  !*** ./node_modules/expand-range/index.js ***!
+  \********************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+/*!
+ * expand-range <https://github.com/jonschlinkert/expand-range>
+ *
+ * Copyright (c) 2014-2015, Jon Schlinkert.
+ * Licensed under the MIT license.
+ */
+
+
+
+var fill = __webpack_require__(/*! fill-range */ "./node_modules/expand-range/node_modules/fill-range/index.js");
+
+module.exports = function expandRange(str, options, fn) {
+  if (typeof str !== 'string') {
+    throw new TypeError('expand-range expects a string.');
+  }
+
+  if (typeof options === 'function') {
+    fn = options;
+    options = {};
+  }
+
+  if (typeof options === 'boolean') {
+    options = {};
+    options.makeRe = true;
+  }
+
+  // create arguments to pass to fill-range
+  var opts = options || {};
+  var args = str.split('..');
+  var len = args.length;
+  if (len > 3) { return str; }
+
+  // if only one argument, it can't expand so return it
+  if (len === 1) { return args; }
+
+  // if `true`, tell fill-range to regexify the string
+  if (typeof fn === 'boolean' && fn === true) {
+    opts.makeRe = true;
+  }
+
+  args.push(opts);
+  return fill.apply(null, args.concat(fn));
+};
+
+
+/***/ }),
+
+/***/ "./node_modules/expand-range/node_modules/fill-range/index.js":
+/*!********************************************************************!*\
+  !*** ./node_modules/expand-range/node_modules/fill-range/index.js ***!
+  \********************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+/*!
+ * fill-range <https://github.com/jonschlinkert/fill-range>
+ *
+ * Copyright (c) 2014-2018, Jon Schlinkert.
+ * Released under the MIT License.
+ */
+
+
+
+var isObject = __webpack_require__(/*! isobject */ "./node_modules/expand-range/node_modules/isobject/index.js");
+var isNumber = __webpack_require__(/*! is-number */ "./node_modules/expand-range/node_modules/is-number/index.js");
+var randomize = __webpack_require__(/*! randomatic */ "./node_modules/randomatic/index.js");
+var repeatStr = __webpack_require__(/*! repeat-string */ "./node_modules/repeat-string/index.js");
+var repeat = __webpack_require__(/*! repeat-element */ "./node_modules/repeat-element/index.js");
+
+/**
+ * Expose `fillRange`
+ */
+
+module.exports = fillRange;
+
+/**
+ * Return a range of numbers or letters.
+ *
+ * @param  {String} `a` Start of the range
+ * @param  {String} `b` End of the range
+ * @param  {String} `step` Increment or decrement to use.
+ * @param  {Function} `fn` Custom function to modify each element in the range.
+ * @return {Array}
+ */
+
+function fillRange(a, b, step, options, fn) {
+  if (a == null || b == null) {
+    throw new Error('fill-range expects the first and second args to be strings.');
+  }
+
+  if (typeof step === 'function') {
+    fn = step; options = {}; step = null;
+  }
+
+  if (typeof options === 'function') {
+    fn = options; options = {};
+  }
+
+  if (isObject(step)) {
+    options = step; step = '';
+  }
+
+  var expand, regex = false, sep = '';
+  var opts = options || {};
+
+  if (typeof opts.silent === 'undefined') {
+    opts.silent = true;
+  }
+
+  step = step || opts.step;
+
+  // store a ref to unmodified arg
+  var origA = a, origB = b;
+
+  b = (b.toString() === '-0') ? 0 : b;
+
+  if (opts.optimize || opts.makeRe) {
+    step = step ? (step += '~') : step;
+    expand = true;
+    regex = true;
+    sep = '~';
+  }
+
+  // handle special step characters
+  if (typeof step === 'string') {
+    var match = stepRe().exec(step);
+
+    if (match) {
+      var i = match.index;
+      var m = match[0];
+
+      // repeat string
+      if (m === '+') {
+        return repeat(a, b);
+
+      // randomize a, `b` times
+      } else if (m === '?') {
+        return [randomize(a, b)];
+
+      // expand right, no regex reduction
+      } else if (m === '>') {
+        step = step.substr(0, i) + step.substr(i + 1);
+        expand = true;
+
+      // expand to an array, or if valid create a reduced
+      // string for a regex logic `or`
+      } else if (m === '|') {
+        step = step.substr(0, i) + step.substr(i + 1);
+        expand = true;
+        regex = true;
+        sep = m;
+
+      // expand to an array, or if valid create a reduced
+      // string for a regex range
+      } else if (m === '~') {
+        step = step.substr(0, i) + step.substr(i + 1);
+        expand = true;
+        regex = true;
+        sep = m;
+      }
+    } else if (!isNumber(step)) {
+      if (!opts.silent) {
+        throw new TypeError('fill-range: invalid step.');
+      }
+      return null;
+    }
+  }
+
+  if (/[.&*()[\]^%$#@!]/.test(a) || /[.&*()[\]^%$#@!]/.test(b)) {
+    if (!opts.silent) {
+      throw new RangeError('fill-range: invalid range arguments.');
+    }
+    return null;
+  }
+
+  // has neither a letter nor number, or has both letters and numbers
+  // this needs to be after the step logic
+  if (!noAlphaNum(a) || !noAlphaNum(b) || hasBoth(a) || hasBoth(b)) {
+    if (!opts.silent) {
+      throw new RangeError('fill-range: invalid range arguments.');
+    }
+    return null;
+  }
+
+  // validate arguments
+  var isNumA = isNumber(zeros(a));
+  var isNumB = isNumber(zeros(b));
+
+  if ((!isNumA && isNumB) || (isNumA && !isNumB)) {
+    if (!opts.silent) {
+      throw new TypeError('fill-range: first range argument is incompatible with second.');
+    }
+    return null;
+  }
+
+  // by this point both are the same, so we
+  // can use A to check going forward.
+  var isNum = isNumA;
+  var num = formatStep(step);
+
+  // is the range alphabetical? or numeric?
+  if (isNum) {
+    // if numeric, coerce to an integer
+    a = +a; b = +b;
+  } else {
+    // otherwise, get the charCode to expand alpha ranges
+    a = a.charCodeAt(0);
+    b = b.charCodeAt(0);
+  }
+
+  // is the pattern descending?
+  var isDescending = a > b;
+
+  // don't create a character class if the args are < 0
+  if (a < 0 || b < 0) {
+    expand = false;
+    regex = false;
+  }
+
+  // detect padding
+  var padding = isPadded(origA, origB);
+  var res, pad, arr = [];
+  var ii = 0;
+
+  // character classes, ranges and logical `or`
+  if (regex) {
+    if (shouldExpand(a, b, num, isNum, padding, opts)) {
+      // make sure the correct separator is used
+      if (sep === '|' || sep === '~') {
+        sep = detectSeparator(a, b, num, isNum, isDescending);
+      }
+      return wrap([origA, origB], sep, opts);
+    }
+  }
+
+  while (isDescending ? (a >= b) : (a <= b)) {
+    if (padding && isNum) {
+      pad = padding(a);
+    }
+
+    // custom function
+    if (typeof fn === 'function') {
+      res = fn(a, isNum, pad, ii++);
+
+    // letters
+    } else if (!isNum) {
+      if (regex && isInvalidChar(a)) {
+        res = null;
+      } else {
+        res = String.fromCharCode(a);
+      }
+
+    // numbers
+    } else {
+      res = formatPadding(a, pad);
+    }
+
+    // add result to the array, filtering any nulled values
+    if (res !== null) arr.push(res);
+
+    // increment or decrement
+    if (isDescending) {
+      a -= num;
+    } else {
+      a += num;
+    }
+  }
+
+  // now that the array is expanded, we need to handle regex
+  // character classes, ranges or logical `or` that wasn't
+  // already handled before the loop
+  if ((regex || expand) && !opts.noexpand) {
+    // make sure the correct separator is used
+    if (sep === '|' || sep === '~') {
+      sep = detectSeparator(a, b, num, isNum, isDescending);
+    }
+    if (arr.length === 1 || a < 0 || b < 0) { return arr; }
+    return wrap(arr, sep, opts);
+  }
+
+  return arr;
+}
+
+/**
+ * Wrap the string with the correct regex
+ * syntax.
+ */
+
+function wrap(arr, sep, opts) {
+  if (sep === '~') { sep = '-'; }
+  var str = arr.join(sep);
+  var pre = opts && opts.regexPrefix;
+
+  // regex logical `or`
+  if (sep === '|') {
+    str = pre ? pre + str : str;
+    str = '(' + str + ')';
+  }
+
+  // regex character class
+  if (sep === '-') {
+    str = (pre && pre === '^')
+      ? pre + str
+      : str;
+    str = '[' + str + ']';
+  }
+  return [str];
+}
+
+/**
+ * Check for invalid characters
+ */
+
+function isCharClass(a, b, step, isNum, isDescending) {
+  if (isDescending) { return false; }
+  if (isNum) { return a <= 9 && b <= 9; }
+  if (a < b) { return step === 1; }
+  return false;
+}
+
+/**
+ * Detect the correct separator to use
+ */
+
+function shouldExpand(a, b, num, isNum, padding, opts) {
+  if (isNum && (a > 9 || b > 9)) { return false; }
+  return !padding && num === 1 && a < b;
+}
+
+/**
+ * Detect the correct separator to use
+ */
+
+function detectSeparator(a, b, step, isNum, isDescending) {
+  var isChar = isCharClass(a, b, step, isNum, isDescending);
+  if (!isChar) {
+    return '|';
+  }
+  return '~';
+}
+
+/**
+ * Correctly format the step based on type
+ */
+
+function formatStep(step) {
+  return Math.abs(step >> 0) || 1;
+}
+
+/**
+ * Format padding, taking leading `-` into account
+ */
+
+function formatPadding(ch, pad) {
+  var res = pad ? pad + ch : ch;
+  if (pad && ch.toString().charAt(0) === '-') {
+    res = '-' + pad + ch.toString().substr(1);
+  }
+  return res.toString();
+}
+
+/**
+ * Check for invalid characters
+ */
+
+function isInvalidChar(str) {
+  var ch = toStr(str);
+  return ch === '\\'
+    || ch === '['
+    || ch === ']'
+    || ch === '^'
+    || ch === '('
+    || ch === ')'
+    || ch === '`';
+}
+
+/**
+ * Convert to a string from a charCode
+ */
+
+function toStr(ch) {
+  return String.fromCharCode(ch);
+}
+
+
+/**
+ * Step regex
+ */
+
+function stepRe() {
+  return /\?|>|\||\+|\~/g;
+}
+
+/**
+ * Return true if `val` has either a letter
+ * or a number
+ */
+
+function noAlphaNum(val) {
+  return /[a-z0-9]/i.test(val);
+}
+
+/**
+ * Return true if `val` has both a letter and
+ * a number (invalid)
+ */
+
+function hasBoth(val) {
+  return /[a-z][0-9]|[0-9][a-z]/i.test(val);
+}
+
+/**
+ * Normalize zeros for checks
+ */
+
+function zeros(val) {
+  if (/^-*0+$/.test(val.toString())) {
+    return '0';
+  }
+  return val;
+}
+
+/**
+ * Return true if `val` has leading zeros,
+ * or a similar valid pattern.
+ */
+
+function hasZeros(val) {
+  return /[^.]\.|^-*0+[0-9]/.test(val);
+}
+
+/**
+ * If the string is padded, returns a curried function with
+ * the a cached padding string, or `false` if no padding.
+ *
+ * @param  {*} `origA` String or number.
+ * @return {String|Boolean}
+ */
+
+function isPadded(origA, origB) {
+  if (hasZeros(origA) || hasZeros(origB)) {
+    var alen = length(origA);
+    var blen = length(origB);
+
+    var len = alen >= blen
+      ? alen
+      : blen;
+
+    return function (a) {
+      return repeatStr('0', len - length(a));
+    };
+  }
+  return false;
+}
+
+/**
+ * Get the string length of `val`
+ */
+
+function length(val) {
+  return val.toString().length;
+}
+
+
+/***/ }),
+
+/***/ "./node_modules/expand-range/node_modules/is-buffer/index.js":
+/*!*******************************************************************!*\
+  !*** ./node_modules/expand-range/node_modules/is-buffer/index.js ***!
+  \*******************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/*!
+ * Determine if an object is a Buffer
+ *
+ * @author   Feross Aboukhadijeh <https://feross.org>
+ * @license  MIT
+ */
+
+// The _isBuffer check is for Safari 5-7 support, because it's missing
+// Object.prototype.constructor. Remove this eventually
+module.exports = function (obj) {
+  return obj != null && (isBuffer(obj) || isSlowBuffer(obj) || !!obj._isBuffer)
+}
+
+function isBuffer (obj) {
+  return !!obj.constructor && typeof obj.constructor.isBuffer === 'function' && obj.constructor.isBuffer(obj)
+}
+
+// For Node v0.10 support. Remove this eventually.
+function isSlowBuffer (obj) {
+  return typeof obj.readFloatLE === 'function' && typeof obj.slice === 'function' && isBuffer(obj.slice(0, 0))
+}
+
+
+/***/ }),
+
+/***/ "./node_modules/expand-range/node_modules/is-number/index.js":
+/*!*******************************************************************!*\
+  !*** ./node_modules/expand-range/node_modules/is-number/index.js ***!
+  \*******************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+/*!
+ * is-number <https://github.com/jonschlinkert/is-number>
+ *
+ * Copyright (c) 2014-2015, Jon Schlinkert.
+ * Licensed under the MIT License.
+ */
+
+
+
+var typeOf = __webpack_require__(/*! kind-of */ "./node_modules/expand-range/node_modules/kind-of/index.js");
+
+module.exports = function isNumber(num) {
+  var type = typeOf(num);
+  if (type !== 'number' && type !== 'string') {
+    return false;
+  }
+  var n = +num;
+  return (n - n + 1) >= 0 && num !== '';
+};
+
+
+/***/ }),
+
+/***/ "./node_modules/expand-range/node_modules/isobject/index.js":
+/*!******************************************************************!*\
+  !*** ./node_modules/expand-range/node_modules/isobject/index.js ***!
+  \******************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+/*!
+ * isobject <https://github.com/jonschlinkert/isobject>
+ *
+ * Copyright (c) 2014-2015, Jon Schlinkert.
+ * Licensed under the MIT License.
+ */
+
+
+
+var isArray = __webpack_require__(/*! isarray */ "./node_modules/isarray/index.js");
+
+module.exports = function isObject(val) {
+  return val != null && typeof val === 'object' && isArray(val) === false;
+};
+
+
+/***/ }),
+
+/***/ "./node_modules/expand-range/node_modules/kind-of/index.js":
+/*!*****************************************************************!*\
+  !*** ./node_modules/expand-range/node_modules/kind-of/index.js ***!
+  \*****************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+var isBuffer = __webpack_require__(/*! is-buffer */ "./node_modules/expand-range/node_modules/is-buffer/index.js");
+var toString = Object.prototype.toString;
+
+/**
+ * Get the native `typeof` a value.
+ *
+ * @param  {*} `val`
+ * @return {*} Native javascript type
+ */
+
+module.exports = function kindOf(val) {
+  // primitivies
+  if (typeof val === 'undefined') {
+    return 'undefined';
+  }
+  if (val === null) {
+    return 'null';
+  }
+  if (val === true || val === false || val instanceof Boolean) {
+    return 'boolean';
+  }
+  if (typeof val === 'string' || val instanceof String) {
+    return 'string';
+  }
+  if (typeof val === 'number' || val instanceof Number) {
+    return 'number';
+  }
+
+  // functions
+  if (typeof val === 'function' || val instanceof Function) {
+    return 'function';
+  }
+
+  // array
+  if (typeof Array.isArray !== 'undefined' && Array.isArray(val)) {
+    return 'array';
+  }
+
+  // check for instances of RegExp and Date before calling `toString`
+  if (val instanceof RegExp) {
+    return 'regexp';
+  }
+  if (val instanceof Date) {
+    return 'date';
+  }
+
+  // other objects
+  var type = toString.call(val);
+
+  if (type === '[object RegExp]') {
+    return 'regexp';
+  }
+  if (type === '[object Date]') {
+    return 'date';
+  }
+  if (type === '[object Arguments]') {
+    return 'arguments';
+  }
+  if (type === '[object Error]') {
+    return 'error';
+  }
+
+  // buffer
+  if (isBuffer(val)) {
+    return 'buffer';
+  }
+
+  // es6: Map, WeakMap, Set, WeakSet
+  if (type === '[object Set]') {
+    return 'set';
+  }
+  if (type === '[object WeakSet]') {
+    return 'weakset';
+  }
+  if (type === '[object Map]') {
+    return 'map';
+  }
+  if (type === '[object WeakMap]') {
+    return 'weakmap';
+  }
+  if (type === '[object Symbol]') {
+    return 'symbol';
+  }
+
+  // typed arrays
+  if (type === '[object Int8Array]') {
+    return 'int8array';
+  }
+  if (type === '[object Uint8Array]') {
+    return 'uint8array';
+  }
+  if (type === '[object Uint8ClampedArray]') {
+    return 'uint8clampedarray';
+  }
+  if (type === '[object Int16Array]') {
+    return 'int16array';
+  }
+  if (type === '[object Uint16Array]') {
+    return 'uint16array';
+  }
+  if (type === '[object Int32Array]') {
+    return 'int32array';
+  }
+  if (type === '[object Uint32Array]') {
+    return 'uint32array';
+  }
+  if (type === '[object Float32Array]') {
+    return 'float32array';
+  }
+  if (type === '[object Float64Array]') {
+    return 'float64array';
+  }
+
+  // must be a plain object
+  return 'object';
+};
+
+
+/***/ }),
+
+/***/ "./node_modules/filename-regex/index.js":
+/*!**********************************************!*\
+  !*** ./node_modules/filename-regex/index.js ***!
+  \**********************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/*!
+ * filename-regex <https://github.com/regexps/filename-regex>
+ *
+ * Copyright (c) 2014-2015, Jon Schlinkert
+ * Licensed under the MIT license.
+ */
+
+module.exports = function filenameRegex() {
+  return /([^\\\/]+)$/;
+};
+
+
+/***/ }),
+
+/***/ "./node_modules/filter-array/index.js":
+/*!********************************************!*\
+  !*** ./node_modules/filter-array/index.js ***!
+  \********************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+/*!
+ * filter-array <https://github.com/jonschlinkert/filter-array>
+ *
+ * Copyright (c) 2014-2015 Jon Schlinkert, contributors.
+ * Licensed under the MIT License
+ */
+
+
+
+var typeOf = __webpack_require__(/*! kind-of */ "./node_modules/filter-array/node_modules/kind-of/index.js");
+var filter = __webpack_require__(/*! arr-filter */ "./node_modules/arr-filter/index.js");
+var mm = __webpack_require__(/*! micromatch */ "./node_modules/filter-array/node_modules/micromatch/index.js");
+
+/**
+ * Filter array against given glob
+ * patterns, regex or given function.
+ *
+ * ```js
+ * var filter = require('filter-array');
+ *
+ * filter(['a', 'b', 'c', 'b', 'c', 'e'], function(ele) {
+ *   return ele === 'a' || ele === 'b';
+ * });
+ *
+ * //=> ['a', 'b', 'b']
+ * ```
+ *
+ * @name   filterArray
+ * @param  {Array} `arr` array to filter
+ * @param  {Array|String|Function|RegExp} `filters`
+ * @param  {Object} `opts` options to pass to [micromatch]
+ * @return {Array}
+ * @api public
+ */
+
+module.exports = function filterArray(arr, filters, opts) {
+  if (arr.length === 0) {
+    return [];
+  }
+
+  if (typeOf(filters) === 'function' || typeOf(filters) === 'regexp') {
+    var isMatch = mm.matcher(filters, opts);
+
+    return filter(arr, function _filter(val) {
+      return isMatch(val);
+    });
+  }
+
+  if (typeOf(filters) === 'string' || typeOf(filters) === 'array') {
+    return filter(arr, mm.filter(filters, opts));
+  }
+
+  return [];
+};
+
+
+/***/ }),
+
+/***/ "./node_modules/filter-array/node_modules/arr-diff/index.js":
+/*!******************************************************************!*\
+  !*** ./node_modules/filter-array/node_modules/arr-diff/index.js ***!
+  \******************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+/*!
+ * arr-diff <https://github.com/jonschlinkert/arr-diff>
+ *
+ * Copyright (c) 2014 Jon Schlinkert, contributors.
+ * Licensed under the MIT License
+ */
+
+
+
+var flatten = __webpack_require__(/*! arr-flatten */ "./node_modules/arr-flatten/index.js");
+var slice = [].slice;
+
+/**
+ * Return the difference between the first array and
+ * additional arrays.
+ *
+ * ```js
+ * var diff = require('{%= name %}');
+ *
+ * var a = ['a', 'b', 'c', 'd'];
+ * var b = ['b', 'c'];
+ *
+ * console.log(diff(a, b))
+ * //=> ['a', 'd']
+ * ```
+ *
+ * @param  {Array} `a`
+ * @param  {Array} `b`
+ * @return {Array}
+ * @api public
+ */
+
+function diff(arr, arrays) {
+  var argsLen = arguments.length;
+  var len = arr.length, i = -1;
+  var res = [], arrays;
+
+  if (argsLen === 1) {
+    return arr;
+  }
+
+  if (argsLen > 2) {
+    arrays = flatten(slice.call(arguments, 1));
+  }
+
+  while (++i < len) {
+    if (!~arrays.indexOf(arr[i])) {
+      res.push(arr[i]);
+    }
+  }
+  return res;
+}
+
+/**
+ * Expose `diff`
+ */
+
+module.exports = diff;
+
+
+/***/ }),
+
+/***/ "./node_modules/filter-array/node_modules/array-unique/index.js":
+/*!**********************************************************************!*\
+  !*** ./node_modules/filter-array/node_modules/array-unique/index.js ***!
+  \**********************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+/*!
+ * array-unique <https://github.com/jonschlinkert/array-unique>
+ *
+ * Copyright (c) 2014-2015, Jon Schlinkert.
+ * Licensed under the MIT License.
+ */
+
+
+
+module.exports = function unique(arr) {
+  if (!Array.isArray(arr)) {
+    throw new TypeError('array-unique expects an array.');
+  }
+
+  var len = arr.length;
+  var i = -1;
+
+  while (i++ < len) {
+    var j = i + 1;
+
+    for (; j < arr.length; ++j) {
+      if (arr[i] === arr[j]) {
+        arr.splice(j--, 1);
+      }
+    }
+  }
+  return arr;
+};
+
+
+/***/ }),
+
+/***/ "./node_modules/filter-array/node_modules/braces/index.js":
+/*!****************************************************************!*\
+  !*** ./node_modules/filter-array/node_modules/braces/index.js ***!
+  \****************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+/*!
+ * braces <https://github.com/jonschlinkert/braces>
+ *
+ * Copyright (c) 2014-2015, Jon Schlinkert.
+ * Licensed under the MIT license.
+ */
+
+
+
+/**
+ * Module dependencies
+ */
+
+var expand = __webpack_require__(/*! expand-range */ "./node_modules/expand-range/index.js");
+var repeat = __webpack_require__(/*! repeat-element */ "./node_modules/repeat-element/index.js");
+var tokens = __webpack_require__(/*! preserve */ "./node_modules/preserve/index.js");
+
+/**
+ * Expose `braces`
+ */
+
+module.exports = function(str, options) {
+  if (typeof str !== 'string') {
+    throw new Error('braces expects a string');
+  }
+  return braces(str, options);
+};
+
+/**
+ * Expand `{foo,bar}` or `{1..5}` braces in the
+ * given `string`.
+ *
+ * @param  {String} `str`
+ * @param  {Array} `arr`
+ * @param  {Object} `options`
+ * @return {Array}
+ */
+
+function braces(str, arr, options) {
+  if (str === '') {
+    return [];
+  }
+
+  if (!Array.isArray(arr)) {
+    options = arr;
+    arr = [];
+  }
+
+  var opts = options || {};
+  arr = arr || [];
+
+  if (typeof opts.nodupes === 'undefined') {
+    opts.nodupes = true;
+  }
+
+  var fn = opts.fn;
+  var es6;
+
+  if (typeof opts === 'function') {
+    fn = opts;
+    opts = {};
+  }
+
+  if (!(patternRe instanceof RegExp)) {
+    patternRe = patternRegex();
+  }
+
+  var matches = str.match(patternRe) || [];
+  var m = matches[0];
+
+  switch(m) {
+    case '\\,':
+      return escapeCommas(str, arr, opts);
+    case '\\.':
+      return escapeDots(str, arr, opts);
+    case '\/.':
+      return escapePaths(str, arr, opts);
+    case ' ':
+      return splitWhitespace(str);
+    case '{,}':
+      return exponential(str, opts, braces);
+    case '{}':
+      return emptyBraces(str, arr, opts);
+    case '\\{':
+    case '\\}':
+      return escapeBraces(str, arr, opts);
+    case '${':
+      if (!/\{[^{]+\{/.test(str)) {
+        return arr.concat(str);
+      } else {
+        es6 = true;
+        str = tokens.before(str, es6Regex());
+      }
+  }
+
+  if (!(braceRe instanceof RegExp)) {
+    braceRe = braceRegex();
+  }
+
+  var match = braceRe.exec(str);
+  if (match == null) {
+    return [str];
+  }
+
+  var outter = match[1];
+  var inner = match[2];
+  if (inner === '') { return [str]; }
+
+  var segs, segsLength;
+
+  if (inner.indexOf('..') !== -1) {
+    segs = expand(inner, opts, fn) || inner.split(',');
+    segsLength = segs.length;
+
+  } else if (inner[0] === '"' || inner[0] === '\'') {
+    return arr.concat(str.split(/['"]/).join(''));
+
+  } else {
+    segs = inner.split(',');
+    if (opts.makeRe) {
+      return braces(str.replace(outter, wrap(segs, '|')), opts);
+    }
+
+    segsLength = segs.length;
+    if (segsLength === 1 && opts.bash) {
+      segs[0] = wrap(segs[0], '\\');
+    }
+  }
+
+  var len = segs.length;
+  var i = 0, val;
+
+  while (len--) {
+    var path = segs[i++];
+
+    if (/(\.[^.\/])/.test(path)) {
+      if (segsLength > 1) {
+        return segs;
+      } else {
+        return [str];
+      }
+    }
+
+    val = splice(str, outter, path);
+
+    if (/\{[^{}]+?\}/.test(val)) {
+      arr = braces(val, arr, opts);
+    } else if (val !== '') {
+      if (opts.nodupes && arr.indexOf(val) !== -1) { continue; }
+      arr.push(es6 ? tokens.after(val) : val);
+    }
+  }
+
+  if (opts.strict) { return filter(arr, filterEmpty); }
+  return arr;
+}
+
+/**
+ * Expand exponential ranges
+ *
+ *   `a{,}{,}` => ['a', 'a', 'a', 'a']
+ */
+
+function exponential(str, options, fn) {
+  if (typeof options === 'function') {
+    fn = options;
+    options = null;
+  }
+
+  var opts = options || {};
+  var esc = '__ESC_EXP__';
+  var exp = 0;
+  var res;
+
+  var parts = str.split('{,}');
+  if (opts.nodupes) {
+    return fn(parts.join(''), opts);
+  }
+
+  exp = parts.length - 1;
+  res = fn(parts.join(esc), opts);
+  var len = res.length;
+  var arr = [];
+  var i = 0;
+
+  while (len--) {
+    var ele = res[i++];
+    var idx = ele.indexOf(esc);
+
+    if (idx === -1) {
+      arr.push(ele);
+
+    } else {
+      ele = ele.split('__ESC_EXP__').join('');
+      if (!!ele && opts.nodupes !== false) {
+        arr.push(ele);
+
+      } else {
+        var num = Math.pow(2, exp);
+        arr.push.apply(arr, repeat(ele, num));
+      }
+    }
+  }
+  return arr;
+}
+
+/**
+ * Wrap a value with parens, brackets or braces,
+ * based on the given character/separator.
+ *
+ * @param  {String|Array} `val`
+ * @param  {String} `ch`
+ * @return {String}
+ */
+
+function wrap(val, ch) {
+  if (ch === '|') {
+    return '(' + val.join(ch) + ')';
+  }
+  if (ch === ',') {
+    return '{' + val.join(ch) + '}';
+  }
+  if (ch === '-') {
+    return '[' + val.join(ch) + ']';
+  }
+  if (ch === '\\') {
+    return '\\{' + val + '\\}';
+  }
+}
+
+/**
+ * Handle empty braces: `{}`
+ */
+
+function emptyBraces(str, arr, opts) {
+  return braces(str.split('{}').join('\\{\\}'), arr, opts);
+}
+
+/**
+ * Filter out empty-ish values
+ */
+
+function filterEmpty(ele) {
+  return !!ele && ele !== '\\';
+}
+
+/**
+ * Handle patterns with whitespace
+ */
+
+function splitWhitespace(str) {
+  var segs = str.split(' ');
+  var len = segs.length;
+  var res = [];
+  var i = 0;
+
+  while (len--) {
+    res.push.apply(res, braces(segs[i++]));
+  }
+  return res;
+}
+
+/**
+ * Handle escaped braces: `\\{foo,bar}`
+ */
+
+function escapeBraces(str, arr, opts) {
+  if (!/\{[^{]+\{/.test(str)) {
+    return arr.concat(str.split('\\').join(''));
+  } else {
+    str = str.split('\\{').join('__LT_BRACE__');
+    str = str.split('\\}').join('__RT_BRACE__');
+    return map(braces(str, arr, opts), function(ele) {
+      ele = ele.split('__LT_BRACE__').join('{');
+      return ele.split('__RT_BRACE__').join('}');
+    });
+  }
+}
+
+/**
+ * Handle escaped dots: `{1\\.2}`
+ */
+
+function escapeDots(str, arr, opts) {
+  if (!/[^\\]\..+\\\./.test(str)) {
+    return arr.concat(str.split('\\').join(''));
+  } else {
+    str = str.split('\\.').join('__ESC_DOT__');
+    return map(braces(str, arr, opts), function(ele) {
+      return ele.split('__ESC_DOT__').join('.');
+    });
+  }
+}
+
+/**
+ * Handle escaped dots: `{1\\.2}`
+ */
+
+function escapePaths(str, arr, opts) {
+  str = str.split('\/.').join('__ESC_PATH__');
+  return map(braces(str, arr, opts), function(ele) {
+    return ele.split('__ESC_PATH__').join('\/.');
+  });
+}
+
+/**
+ * Handle escaped commas: `{a\\,b}`
+ */
+
+function escapeCommas(str, arr, opts) {
+  if (!/\w,/.test(str)) {
+    return arr.concat(str.split('\\').join(''));
+  } else {
+    str = str.split('\\,').join('__ESC_COMMA__');
+    return map(braces(str, arr, opts), function(ele) {
+      return ele.split('__ESC_COMMA__').join(',');
+    });
+  }
+}
+
+/**
+ * Regex for common patterns
+ */
+
+function patternRegex() {
+  return /\${|( (?=[{,}])|(?=[{,}]) )|{}|{,}|\\,(?=.*[{}])|\/\.(?=.*[{}])|\\\.(?={)|\\{|\\}/;
+}
+
+/**
+ * Braces regex.
+ */
+
+function braceRegex() {
+  return /.*(\\?\{([^}]+)\})/;
+}
+
+/**
+ * es6 delimiter regex.
+ */
+
+function es6Regex() {
+  return /\$\{([^}]+)\}/;
+}
+
+var braceRe;
+var patternRe;
+
+/**
+ * Faster alternative to `String.replace()` when the
+ * index of the token to be replaces can't be supplied
+ */
+
+function splice(str, token, replacement) {
+  var i = str.indexOf(token);
+  return str.substr(0, i) + replacement
+    + str.substr(i + token.length);
+}
+
+/**
+ * Fast array map
+ */
+
+function map(arr, fn) {
+  if (arr == null) {
+    return [];
+  }
+
+  var len = arr.length;
+  var res = new Array(len);
+  var i = -1;
+
+  while (++i < len) {
+    res[i] = fn(arr[i], i, arr);
+  }
+
+  return res;
+}
+
+/**
+ * Fast array filter
+ */
+
+function filter(arr, cb) {
+  if (arr == null) return [];
+  if (typeof cb !== 'function') {
+    throw new TypeError('braces: filter expects a callback function.');
+  }
+
+  var len = arr.length;
+  var res = arr.slice();
+  var i = 0;
+
+  while (len--) {
+    if (!cb(arr[len], i++)) {
+      res.splice(len, 1);
+    }
+  }
+  return res;
+}
+
+
+/***/ }),
+
+/***/ "./node_modules/filter-array/node_modules/expand-brackets/index.js":
+/*!*************************************************************************!*\
+  !*** ./node_modules/filter-array/node_modules/expand-brackets/index.js ***!
+  \*************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+/*!
+ * expand-brackets <https://github.com/jonschlinkert/expand-brackets>
+ *
+ * Copyright (c) 2015 Jon Schlinkert.
+ * Licensed under the MIT license.
+ */
+
+
+
+var isPosixBracket = __webpack_require__(/*! is-posix-bracket */ "./node_modules/is-posix-bracket/index.js");
+
+/**
+ * POSIX character classes
+ */
+
+var POSIX = {
+  alnum: 'a-zA-Z0-9',
+  alpha: 'a-zA-Z',
+  blank: ' \\t',
+  cntrl: '\\x00-\\x1F\\x7F',
+  digit: '0-9',
+  graph: '\\x21-\\x7E',
+  lower: 'a-z',
+  print: '\\x20-\\x7E',
+  punct: '-!"#$%&\'()\\*+,./:;<=>?@[\\]^_`{|}~',
+  space: ' \\t\\r\\n\\v\\f',
+  upper: 'A-Z',
+  word:  'A-Za-z0-9_',
+  xdigit: 'A-Fa-f0-9',
+};
+
+/**
+ * Expose `brackets`
+ */
+
+module.exports = brackets;
+
+function brackets(str) {
+  if (!isPosixBracket(str)) {
+    return str;
+  }
+
+  var negated = false;
+  if (str.indexOf('[^') !== -1) {
+    negated = true;
+    str = str.split('[^').join('[');
+  }
+  if (str.indexOf('[!') !== -1) {
+    negated = true;
+    str = str.split('[!').join('[');
+  }
+
+  var a = str.split('[');
+  var b = str.split(']');
+  var imbalanced = a.length !== b.length;
+
+  var parts = str.split(/(?::\]\[:|\[?\[:|:\]\]?)/);
+  var len = parts.length, i = 0;
+  var end = '', beg = '';
+  var res = [];
+
+  // start at the end (innermost) first
+  while (len--) {
+    var inner = parts[i++];
+    if (inner === '^[!' || inner === '[!') {
+      inner = '';
+      negated = true;
+    }
+
+    var prefix = negated ? '^' : '';
+    var ch = POSIX[inner];
+
+    if (ch) {
+      res.push('[' + prefix + ch + ']');
+    } else if (inner) {
+      if (/^\[?\w-\w\]?$/.test(inner)) {
+        if (i === parts.length) {
+          res.push('[' + prefix + inner);
+        } else if (i === 1) {
+          res.push(prefix + inner + ']');
+        } else {
+          res.push(prefix + inner);
+        }
+      } else {
+        if (i === 1) {
+          beg += inner;
+        } else if (i === parts.length) {
+          end += inner;
+        } else {
+          res.push('[' + prefix + inner + ']');
+        }
+      }
+    }
+  }
+
+  var result = res.join('|');
+  var rlen = res.length || 1;
+  if (rlen > 1) {
+    result = '(?:' + result + ')';
+    rlen = 1;
+  }
+  if (beg) {
+    rlen++;
+    if (beg.charAt(0) === '[') {
+      if (imbalanced) {
+        beg = '\\[' + beg.slice(1);
+      } else {
+        beg += ']';
+      }
+    }
+    result = beg + result;
+  }
+  if (end) {
+    rlen++;
+    if (end.slice(-1) === ']') {
+      if (imbalanced) {
+        end = end.slice(0, end.length - 1) + '\\]';
+      } else {
+        end = '[' + end;
+      }
+    }
+    result += end;
+  }
+
+  if (rlen > 1) {
+    result = result.split('][').join(']|[');
+    if (result.indexOf('|') !== -1 && !/\(\?/.test(result)) {
+      result = '(?:' + result + ')';
+    }
+  }
+
+  result = result.replace(/\[+=|=\]+/g, '\\b');
+  return result;
+}
+
+brackets.makeRe = function(pattern) {
+  try {
+    return new RegExp(brackets(pattern));
+  } catch (err) {}
+};
+
+brackets.isMatch = function(str, pattern) {
+  try {
+    return brackets.makeRe(pattern).test(str);
+  } catch (err) {
+    return false;
+  }
+};
+
+brackets.match = function(arr, pattern) {
+  var len = arr.length, i = 0;
+  var res = arr.slice();
+
+  var re = brackets.makeRe(pattern);
+  while (i < len) {
+    var ele = arr[i++];
+    if (!re.test(ele)) {
+      continue;
+    }
+    res.splice(i, 1);
+  }
+  return res;
+};
+
+
+/***/ }),
+
+/***/ "./node_modules/filter-array/node_modules/extglob/index.js":
+/*!*****************************************************************!*\
+  !*** ./node_modules/filter-array/node_modules/extglob/index.js ***!
+  \*****************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+/*!
+ * extglob <https://github.com/jonschlinkert/extglob>
+ *
+ * Copyright (c) 2015, Jon Schlinkert.
+ * Licensed under the MIT License.
+ */
+
+
+
+/**
+ * Module dependencies
+ */
+
+var isExtglob = __webpack_require__(/*! is-extglob */ "./node_modules/filter-array/node_modules/is-extglob/index.js");
+var re, cache = {};
+
+/**
+ * Expose `extglob`
+ */
+
+module.exports = extglob;
+
+/**
+ * Convert the given extglob `string` to a regex-compatible
+ * string.
+ *
+ * ```js
+ * var extglob = require('extglob');
+ * extglob('!(a?(b))');
+ * //=> '(?!a(?:b)?)[^/]*?'
+ * ```
+ *
+ * @param {String} `str` The string to convert.
+ * @param {Object} `options`
+ *   @option {Boolean} [options] `esc` If `false` special characters will not be escaped. Defaults to `true`.
+ *   @option {Boolean} [options] `regex` If `true` a regular expression is returned instead of a string.
+ * @return {String}
+ * @api public
+ */
+
+
+function extglob(str, opts) {
+  opts = opts || {};
+  var o = {}, i = 0;
+
+  // fix common character reversals
+  // '*!(.js)' => '*.!(js)'
+  str = str.replace(/!\(([^\w*()])/g, '$1!(');
+
+  // support file extension negation
+  str = str.replace(/([*\/])\.!\([*]\)/g, function (m, ch) {
+    if (ch === '/') {
+      return escape('\\/[^.]+');
+    }
+    return escape('[^.]+');
+  });
+
+  // create a unique key for caching by
+  // combining the string and options
+  var key = str
+    + String(!!opts.regex)
+    + String(!!opts.contains)
+    + String(!!opts.escape);
+
+  if (cache.hasOwnProperty(key)) {
+    return cache[key];
+  }
+
+  if (!(re instanceof RegExp)) {
+    re = regex();
+  }
+
+  opts.negate = false;
+  var m;
+
+  while (m = re.exec(str)) {
+    var prefix = m[1];
+    var inner = m[3];
+    if (prefix === '!') {
+      opts.negate = true;
+    }
+
+    var id = '__EXTGLOB_' + (i++) + '__';
+    // use the prefix of the _last_ (outtermost) pattern
+    o[id] = wrap(inner, prefix, opts.escape);
+    str = str.split(m[0]).join(id);
+  }
+
+  var keys = Object.keys(o);
+  var len = keys.length;
+
+  // we have to loop again to allow us to convert
+  // patterns in reverse order (starting with the
+  // innermost/last pattern first)
+  while (len--) {
+    var prop = keys[len];
+    str = str.split(prop).join(o[prop]);
+  }
+
+  var result = opts.regex
+    ? toRegex(str, opts.contains, opts.negate)
+    : str;
+
+  result = result.split('.').join('\\.');
+
+  // cache the result and return it
+  return (cache[key] = result);
+}
+
+/**
+ * Convert `string` to a regex string.
+ *
+ * @param  {String} `str`
+ * @param  {String} `prefix` Character that determines how to wrap the string.
+ * @param  {Boolean} `esc` If `false` special characters will not be escaped. Defaults to `true`.
+ * @return {String}
+ */
+
+function wrap(inner, prefix, esc) {
+  if (esc) inner = escape(inner);
+
+  switch (prefix) {
+    case '!':
+      return '(?!' + inner + ')[^/]' + (esc ? '%%%~' : '*?');
+    case '@':
+      return '(?:' + inner + ')';
+    case '+':
+      return '(?:' + inner + ')+';
+    case '*':
+      return '(?:' + inner + ')' + (esc ? '%%' : '*')
+    case '?':
+      return '(?:' + inner + '|)';
+    default:
+      return inner;
+  }
+}
+
+function escape(str) {
+  str = str.split('*').join('[^/]%%%~');
+  str = str.split('.').join('\\.');
+  return str;
+}
+
+/**
+ * extglob regex.
+ */
+
+function regex() {
+  return /(\\?[@?!+*$]\\?)(\(([^()]*?)\))/;
+}
+
+/**
+ * Negation regex
+ */
+
+function negate(str) {
+  return '(?!^' + str + ').*$';
+}
+
+/**
+ * Create the regex to do the matching. If
+ * the leading character in the `pattern` is `!`
+ * a negation regex is returned.
+ *
+ * @param {String} `pattern`
+ * @param {Boolean} `contains` Allow loose matching.
+ * @param {Boolean} `isNegated` True if the pattern is a negation pattern.
+ */
+
+function toRegex(pattern, contains, isNegated) {
+  var prefix = contains ? '^' : '';
+  var after = contains ? '$' : '';
+  pattern = ('(?:' + pattern + ')' + after);
+  if (isNegated) {
+    pattern = prefix + negate(pattern);
+  }
+  return new RegExp(prefix + pattern);
+}
+
+
+/***/ }),
+
+/***/ "./node_modules/filter-array/node_modules/is-buffer/index.js":
+/*!*******************************************************************!*\
+  !*** ./node_modules/filter-array/node_modules/is-buffer/index.js ***!
+  \*******************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/*!
+ * Determine if an object is a Buffer
+ *
+ * @author   Feross Aboukhadijeh <https://feross.org>
+ * @license  MIT
+ */
+
+// The _isBuffer check is for Safari 5-7 support, because it's missing
+// Object.prototype.constructor. Remove this eventually
+module.exports = function (obj) {
+  return obj != null && (isBuffer(obj) || isSlowBuffer(obj) || !!obj._isBuffer)
+}
+
+function isBuffer (obj) {
+  return !!obj.constructor && typeof obj.constructor.isBuffer === 'function' && obj.constructor.isBuffer(obj)
+}
+
+// For Node v0.10 support. Remove this eventually.
+function isSlowBuffer (obj) {
+  return typeof obj.readFloatLE === 'function' && typeof obj.slice === 'function' && isBuffer(obj.slice(0, 0))
+}
+
+
+/***/ }),
+
+/***/ "./node_modules/filter-array/node_modules/is-extendable/index.js":
+/*!***********************************************************************!*\
+  !*** ./node_modules/filter-array/node_modules/is-extendable/index.js ***!
+  \***********************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+/*!
+ * is-extendable <https://github.com/jonschlinkert/is-extendable>
+ *
+ * Copyright (c) 2015, Jon Schlinkert.
+ * Licensed under the MIT License.
+ */
+
+
+
+module.exports = function isExtendable(val) {
+  return typeof val !== 'undefined' && val !== null
+    && (typeof val === 'object' || typeof val === 'function');
+};
+
+
+/***/ }),
+
+/***/ "./node_modules/filter-array/node_modules/is-extglob/index.js":
+/*!********************************************************************!*\
+  !*** ./node_modules/filter-array/node_modules/is-extglob/index.js ***!
+  \********************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/*!
+ * is-extglob <https://github.com/jonschlinkert/is-extglob>
+ *
+ * Copyright (c) 2014-2015, Jon Schlinkert.
+ * Licensed under the MIT License.
+ */
+
+module.exports = function isExtglob(str) {
+  return typeof str === 'string'
+    && /[@?!+*]\(/.test(str);
+};
+
+
+/***/ }),
+
+/***/ "./node_modules/filter-array/node_modules/is-glob/index.js":
+/*!*****************************************************************!*\
+  !*** ./node_modules/filter-array/node_modules/is-glob/index.js ***!
+  \*****************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+/*!
+ * is-glob <https://github.com/jonschlinkert/is-glob>
+ *
+ * Copyright (c) 2014-2015, Jon Schlinkert.
+ * Licensed under the MIT License.
+ */
+
+var isExtglob = __webpack_require__(/*! is-extglob */ "./node_modules/filter-array/node_modules/is-extglob/index.js");
+
+module.exports = function isGlob(str) {
+  return typeof str === 'string'
+    && (/[*!?{}(|)[\]]/.test(str)
+     || isExtglob(str));
+};
+
+/***/ }),
+
+/***/ "./node_modules/filter-array/node_modules/kind-of/index.js":
+/*!*****************************************************************!*\
+  !*** ./node_modules/filter-array/node_modules/kind-of/index.js ***!
+  \*****************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+/* WEBPACK VAR INJECTION */(function(Buffer) {var toString = Object.prototype.toString;
+
+/**
+ * Get the native `typeof` a value.
+ *
+ * @param  {*} `val`
+ * @return {*} Native javascript type
+ */
+
+module.exports = function kindOf(val) {
+  if (val === undefined) {
+    return 'undefined';
+  }
+  if (val === null) {
+    return 'null';
+  }
+  if (val === true || val === false || val instanceof Boolean) {
+    return 'boolean';
+  }
+  if (typeof val !== 'object') {
+    return typeof val;
+  }
+  if (Array.isArray(val)) {
+    return 'array';
+  }
+
+  var type = toString.call(val);
+
+  if (val instanceof RegExp || type === '[object RegExp]') {
+    return 'regexp';
+  }
+  if (val instanceof Date || type === '[object Date]') {
+    return 'date';
+  }
+  if (type === '[object Function]') {
+    return 'function';
+  }
+  if (type === '[object Arguments]') {
+    return 'arguments';
+  }
+  if (typeof Buffer !== 'undefined' && Buffer.isBuffer(val)) {
+    return 'buffer';
+  }
+  return type.slice(8, -1).toLowerCase();
+};
+
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../../../buffer/index.js */ "./node_modules/buffer/index.js").Buffer))
+
+/***/ }),
+
+/***/ "./node_modules/filter-array/node_modules/micromatch/index.js":
+/*!********************************************************************!*\
+  !*** ./node_modules/filter-array/node_modules/micromatch/index.js ***!
+  \********************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+/*!
+ * micromatch <https://github.com/jonschlinkert/micromatch>
+ *
+ * Copyright (c) 2014-2015, Jon Schlinkert.
+ * Licensed under the MIT License.
+ */
+
+
+
+var expand = __webpack_require__(/*! ./lib/expand */ "./node_modules/filter-array/node_modules/micromatch/lib/expand.js");
+var utils = __webpack_require__(/*! ./lib/utils */ "./node_modules/filter-array/node_modules/micromatch/lib/utils.js");
+
+/**
+ * The main function. Pass an array of filepaths,
+ * and a string or array of glob patterns
+ *
+ * @param  {Array|String} `files`
+ * @param  {Array|String} `patterns`
+ * @param  {Object} `opts`
+ * @return {Array} Array of matches
+ */
+
+function micromatch(files, patterns, opts) {
+  if (!files || !patterns) return [];
+  opts = opts || {};
+
+  if (typeof opts.cache === 'undefined') {
+    opts.cache = true;
+  }
+
+  if (!Array.isArray(patterns)) {
+    return match(files, patterns, opts);
+  }
+
+  var len = patterns.length, i = 0;
+  var omit = [], keep = [];
+
+  while (len--) {
+    var glob = patterns[i++];
+    if (typeof glob === 'string' && glob.charCodeAt(0) === 33 /* ! */) {
+      omit.push.apply(omit, match(files, glob.slice(1), opts));
+    } else {
+      keep.push.apply(keep, match(files, glob, opts));
+    }
+  }
+  return utils.diff(keep, omit);
+}
+
+/**
+ * Return an array of files that match the given glob pattern.
+ *
+ * This function is called by the main `micromatch` function If you only
+ * need to pass a single pattern you might get very minor speed improvements
+ * using this function.
+ *
+ * @param  {Array} `files`
+ * @param  {String} `pattern`
+ * @param  {Object} `options`
+ * @return {Array}
+ */
+
+function match(files, pattern, opts) {
+  if (utils.typeOf(files) !== 'string' && !Array.isArray(files)) {
+    throw new Error(msg('match', 'files', 'a string or array'));
+  }
+
+  files = utils.arrayify(files);
+  opts = opts || {};
+
+  var negate = opts.negate || false;
+  var orig = pattern;
+
+  if (typeof pattern === 'string') {
+    negate = pattern.charAt(0) === '!';
+    if (negate) {
+      pattern = pattern.slice(1);
+    }
+
+    // we need to remove the character regardless,
+    // so the above logic is still needed
+    if (opts.nonegate === true) {
+      negate = false;
+    }
+  }
+
+  var _isMatch = matcher(pattern, opts);
+  var len = files.length, i = 0;
+  var res = [];
+
+  while (i < len) {
+    var file = files[i++];
+    var fp = utils.unixify(file, opts);
+
+    if (!_isMatch(fp)) { continue; }
+    res.push(fp);
+  }
+
+  if (res.length === 0) {
+    if (opts.failglob === true) {
+      throw new Error('micromatch.match() found no matches for: "' + orig + '".');
+    }
+
+    if (opts.nonull || opts.nullglob) {
+      res.push(utils.unescapeGlob(orig));
+    }
+  }
+
+  // if `negate` was defined, diff negated files
+  if (negate) { res = utils.diff(files, res); }
+
+  // if `ignore` was defined, diff ignored filed
+  if (opts.ignore && opts.ignore.length) {
+    pattern = opts.ignore;
+    opts = utils.omit(opts, ['ignore']);
+    res = utils.diff(res, micromatch(res, pattern, opts));
+  }
+
+  if (opts.nodupes) {
+    return utils.unique(res);
+  }
+  return res;
+}
+
+/**
+ * Returns a function that takes a glob pattern or array of glob patterns
+ * to be used with `Array#filter()`. (Internally this function generates
+ * the matching function using the [matcher] method).
+ *
+ * ```js
+ * var fn = mm.filter('[a-c]');
+ * ['a', 'b', 'c', 'd', 'e'].filter(fn);
+ * //=> ['a', 'b', 'c']
+ * ```
+ * @param  {String|Array} `patterns` Can be a glob or array of globs.
+ * @param  {Options} `opts` Options to pass to the [matcher] method.
+ * @return {Function} Filter function to be passed to `Array#filter()`.
+ */
+
+function filter(patterns, opts) {
+  if (!Array.isArray(patterns) && typeof patterns !== 'string') {
+    throw new TypeError(msg('filter', 'patterns', 'a string or array'));
+  }
+
+  patterns = utils.arrayify(patterns);
+  var len = patterns.length, i = 0;
+  var patternMatchers = Array(len);
+  while (i < len) {
+    patternMatchers[i] = matcher(patterns[i++], opts);
+  }
+
+  return function(fp) {
+    if (fp == null) return [];
+    var len = patternMatchers.length, i = 0;
+    var res = true;
+
+    fp = utils.unixify(fp, opts);
+    while (i < len) {
+      var fn = patternMatchers[i++];
+      if (!fn(fp)) {
+        res = false;
+        break;
+      }
+    }
+    return res;
+  };
+}
+
+/**
+ * Returns true if the filepath contains the given
+ * pattern. Can also return a function for matching.
+ *
+ * ```js
+ * isMatch('foo.md', '*.md', {});
+ * //=> true
+ *
+ * isMatch('*.md', {})('foo.md')
+ * //=> true
+ * ```
+ * @param  {String} `fp`
+ * @param  {String} `pattern`
+ * @param  {Object} `opts`
+ * @return {Boolean}
+ */
+
+function isMatch(fp, pattern, opts) {
+  if (typeof fp !== 'string') {
+    throw new TypeError(msg('isMatch', 'filepath', 'a string'));
+  }
+
+  fp = utils.unixify(fp, opts);
+  if (utils.typeOf(pattern) === 'object') {
+    return matcher(fp, pattern);
+  }
+  return matcher(pattern, opts)(fp);
+}
+
+/**
+ * Returns true if the filepath matches the
+ * given pattern.
+ */
+
+function contains(fp, pattern, opts) {
+  if (typeof fp !== 'string') {
+    throw new TypeError(msg('contains', 'pattern', 'a string'));
+  }
+
+  opts = opts || {};
+  opts.contains = (pattern !== '');
+  fp = utils.unixify(fp, opts);
+
+  if (opts.contains && !utils.isGlob(pattern)) {
+    return fp.indexOf(pattern) !== -1;
+  }
+  return matcher(pattern, opts)(fp);
+}
+
+/**
+ * Returns true if a file path matches any of the
+ * given patterns.
+ *
+ * @param  {String} `fp` The filepath to test.
+ * @param  {String|Array} `patterns` Glob patterns to use.
+ * @param  {Object} `opts` Options to pass to the `matcher()` function.
+ * @return {String}
+ */
+
+function any(fp, patterns, opts) {
+  if (!Array.isArray(patterns) && typeof patterns !== 'string') {
+    throw new TypeError(msg('any', 'patterns', 'a string or array'));
+  }
+
+  patterns = utils.arrayify(patterns);
+  var len = patterns.length;
+
+  fp = utils.unixify(fp, opts);
+  while (len--) {
+    var isMatch = matcher(patterns[len], opts);
+    if (isMatch(fp)) {
+      return true;
+    }
+  }
+  return false;
+}
+
+/**
+ * Filter the keys of an object with the given `glob` pattern
+ * and `options`
+ *
+ * @param  {Object} `object`
+ * @param  {Pattern} `object`
+ * @return {Array}
+ */
+
+function matchKeys(obj, glob, options) {
+  if (utils.typeOf(obj) !== 'object') {
+    throw new TypeError(msg('matchKeys', 'first argument', 'an object'));
+  }
+
+  var fn = matcher(glob, options);
+  var res = {};
+
+  for (var key in obj) {
+    if (obj.hasOwnProperty(key) && fn(key)) {
+      res[key] = obj[key];
+    }
+  }
+  return res;
+}
+
+/**
+ * Return a function for matching based on the
+ * given `pattern` and `options`.
+ *
+ * @param  {String} `pattern`
+ * @param  {Object} `options`
+ * @return {Function}
+ */
+
+function matcher(pattern, opts) {
+  // pattern is a function
+  if (typeof pattern === 'function') {
+    return pattern;
+  }
+  // pattern is a regex
+  if (pattern instanceof RegExp) {
+    return function(fp) {
+      return pattern.test(fp);
+    };
+  }
+
+  if (typeof pattern !== 'string') {
+    throw new TypeError(msg('matcher', 'pattern', 'a string, regex, or function'));
+  }
+
+  // strings, all the way down...
+  pattern = utils.unixify(pattern, opts);
+
+  // pattern is a non-glob string
+  if (!utils.isGlob(pattern)) {
+    return utils.matchPath(pattern, opts);
+  }
+  // pattern is a glob string
+  var re = makeRe(pattern, opts);
+
+  // `matchBase` is defined
+  if (opts && opts.matchBase) {
+    return utils.hasFilename(re, opts);
+  }
+  // `matchBase` is not defined
+  return function(fp) {
+    fp = utils.unixify(fp, opts);
+    return re.test(fp);
+  };
+}
+
+/**
+ * Create and cache a regular expression for matching
+ * file paths.
+ *
+ * If the leading character in the `glob` is `!`, a negation
+ * regex is returned.
+ *
+ * @param  {String} `glob`
+ * @param  {Object} `options`
+ * @return {RegExp}
+ */
+
+function toRegex(glob, options) {
+  // clone options to prevent  mutating the original object
+  var opts = Object.create(options || {});
+  var flags = opts.flags || '';
+  if (opts.nocase && flags.indexOf('i') === -1) {
+    flags += 'i';
+  }
+
+  var parsed = expand(glob, opts);
+
+  // pass in tokens to avoid parsing more than once
+  opts.negated = opts.negated || parsed.negated;
+  opts.negate = opts.negated;
+  glob = wrapGlob(parsed.pattern, opts);
+  var re;
+
+  try {
+    re = new RegExp(glob, flags);
+    return re;
+  } catch (err) {
+    err.reason = 'micromatch invalid regex: (' + re + ')';
+    if (opts.strict) throw new SyntaxError(err);
+  }
+
+  // we're only here if a bad pattern was used and the user
+  // passed `options.silent`, so match nothing
+  return /$^/;
+}
+
+/**
+ * Create the regex to do the matching. If the leading
+ * character in the `glob` is `!` a negation regex is returned.
+ *
+ * @param {String} `glob`
+ * @param {Boolean} `negate`
+ */
+
+function wrapGlob(glob, opts) {
+  var prefix = (opts && !opts.contains) ? '^' : '';
+  var after = (opts && !opts.contains) ? '$' : '';
+  glob = ('(?:' + glob + ')' + after);
+  if (opts && opts.negate) {
+    return prefix + ('(?!^' + glob + ').*$');
+  }
+  return prefix + glob;
+}
+
+/**
+ * Create and cache a regular expression for matching file paths.
+ * If the leading character in the `glob` is `!`, a negation
+ * regex is returned.
+ *
+ * @param  {String} `glob`
+ * @param  {Object} `options`
+ * @return {RegExp}
+ */
+
+function makeRe(glob, opts) {
+  if (utils.typeOf(glob) !== 'string') {
+    throw new Error(msg('makeRe', 'glob', 'a string'));
+  }
+  return utils.cache(toRegex, glob, opts);
+}
+
+/**
+ * Make error messages consistent. Follows this format:
+ *
+ * ```js
+ * msg(methodName, argNumber, nativeType);
+ * // example:
+ * msg('matchKeys', 'first', 'an object');
+ * ```
+ *
+ * @param  {String} `method`
+ * @param  {String} `num`
+ * @param  {String} `type`
+ * @return {String}
+ */
+
+function msg(method, what, type) {
+  return 'micromatch.' + method + '(): ' + what + ' should be ' + type + '.';
+}
+
+/**
+ * Public methods
+ */
+
+/* eslint no-multi-spaces: 0 */
+micromatch.any       = any;
+micromatch.braces    = micromatch.braceExpand = utils.braces;
+micromatch.contains  = contains;
+micromatch.expand    = expand;
+micromatch.filter    = filter;
+micromatch.isMatch   = isMatch;
+micromatch.makeRe    = makeRe;
+micromatch.match     = match;
+micromatch.matcher   = matcher;
+micromatch.matchKeys = matchKeys;
+
+/**
+ * Expose `micromatch`
+ */
+
+module.exports = micromatch;
+
+
+/***/ }),
+
+/***/ "./node_modules/filter-array/node_modules/micromatch/lib/chars.js":
+/*!************************************************************************!*\
+  !*** ./node_modules/filter-array/node_modules/micromatch/lib/chars.js ***!
+  \************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var chars = {}, unesc, temp;
+
+function reverse(object, prepender) {
+  return Object.keys(object).reduce(function(reversed, key) {
+    var newKey = prepender ? prepender + key : key; // Optionally prepend a string to key.
+    reversed[object[key]] = newKey; // Swap key and value.
+    return reversed; // Return the result.
+  }, {});
+}
+
+/**
+ * Regex for common characters
+ */
+
+chars.escapeRegex = {
+  '?': /\?/g,
+  '@': /\@/g,
+  '!': /\!/g,
+  '+': /\+/g,
+  '*': /\*/g,
+  '(': /\(/g,
+  ')': /\)/g,
+  '[': /\[/g,
+  ']': /\]/g
+};
+
+/**
+ * Escape characters
+ */
+
+chars.ESC = {
+  '?': '__UNESC_QMRK__',
+  '@': '__UNESC_AMPE__',
+  '!': '__UNESC_EXCL__',
+  '+': '__UNESC_PLUS__',
+  '*': '__UNESC_STAR__',
+  ',': '__UNESC_COMMA__',
+  '(': '__UNESC_LTPAREN__',
+  ')': '__UNESC_RTPAREN__',
+  '[': '__UNESC_LTBRACK__',
+  ']': '__UNESC_RTBRACK__'
+};
+
+/**
+ * Unescape characters
+ */
+
+chars.UNESC = unesc || (unesc = reverse(chars.ESC, '\\'));
+
+chars.ESC_TEMP = {
+  '?': '__TEMP_QMRK__',
+  '@': '__TEMP_AMPE__',
+  '!': '__TEMP_EXCL__',
+  '*': '__TEMP_STAR__',
+  '+': '__TEMP_PLUS__',
+  ',': '__TEMP_COMMA__',
+  '(': '__TEMP_LTPAREN__',
+  ')': '__TEMP_RTPAREN__',
+  '[': '__TEMP_LTBRACK__',
+  ']': '__TEMP_RTBRACK__'
+};
+
+chars.TEMP = temp || (temp = reverse(chars.ESC_TEMP));
+
+module.exports = chars;
+
+
+/***/ }),
+
+/***/ "./node_modules/filter-array/node_modules/micromatch/lib/expand.js":
+/*!*************************************************************************!*\
+  !*** ./node_modules/filter-array/node_modules/micromatch/lib/expand.js ***!
+  \*************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+/*!
+ * micromatch <https://github.com/jonschlinkert/micromatch>
+ *
+ * Copyright (c) 2014-2015, Jon Schlinkert.
+ * Licensed under the MIT License.
+ */
+
+
+
+var utils = __webpack_require__(/*! ./utils */ "./node_modules/filter-array/node_modules/micromatch/lib/utils.js");
+var Glob = __webpack_require__(/*! ./glob */ "./node_modules/filter-array/node_modules/micromatch/lib/glob.js");
+
+/**
+ * Expose `expand`
+ */
+
+module.exports = expand;
+
+/**
+ * Expand a glob pattern to resolve braces and
+ * similar patterns before converting to regex.
+ *
+ * @param  {String|Array} `pattern`
+ * @param  {Array} `files`
+ * @param  {Options} `opts`
+ * @return {Array}
+ */
+
+function expand(pattern, options) {
+  if (typeof pattern !== 'string') {
+    throw new TypeError('micromatch.expand(): argument should be a string.');
+  }
+
+  var glob = new Glob(pattern, options || {});
+  var opts = glob.options;
+
+  if (!utils.isGlob(pattern)) {
+    glob.pattern = glob.pattern.replace(/([\/.])/g, '\\$1');
+    return glob;
+  }
+
+  glob.pattern = glob.pattern.replace(/(\+)(?!\()/g, '\\$1');
+  glob.pattern = glob.pattern.split('$').join('\\$');
+
+  if (typeof opts.braces !== 'boolean' && typeof opts.nobraces !== 'boolean') {
+    opts.braces = true;
+  }
+
+  if (glob.pattern === '.*') {
+    return {
+      pattern: '\\.' + star,
+      tokens: tok,
+      options: opts
+    };
+  }
+
+  if (glob.pattern === '*') {
+    return {
+      pattern: oneStar(opts.dot),
+      tokens: tok,
+      options: opts
+    };
+  }
+
+  // parse the glob pattern into tokens
+  glob.parse();
+  var tok = glob.tokens;
+  tok.is.negated = opts.negated;
+
+  // dotfile handling
+  if ((opts.dotfiles === true || tok.is.dotfile) && opts.dot !== false) {
+    opts.dotfiles = true;
+    opts.dot = true;
+  }
+
+  if ((opts.dotdirs === true || tok.is.dotdir) && opts.dot !== false) {
+    opts.dotdirs = true;
+    opts.dot = true;
+  }
+
+  // check for braces with a dotfile pattern
+  if (/[{,]\./.test(glob.pattern)) {
+    opts.makeRe = false;
+    opts.dot = true;
+  }
+
+  if (opts.nonegate !== true) {
+    opts.negated = glob.negated;
+  }
+
+  // if the leading character is a dot or a slash, escape it
+  if (glob.pattern.charAt(0) === '.' && glob.pattern.charAt(1) !== '/') {
+    glob.pattern = '\\' + glob.pattern;
+  }
+
+  /**
+   * Extended globs
+   */
+
+  // expand braces, e.g `{1..5}`
+  glob.track('before braces');
+  if (tok.is.braces) {
+    glob.braces();
+  }
+  glob.track('after braces');
+
+  // expand extglobs, e.g `foo/!(a|b)`
+  glob.track('before extglob');
+  if (tok.is.extglob) {
+    glob.extglob();
+  }
+  glob.track('after extglob');
+
+  // expand brackets, e.g `[[:alpha:]]`
+  glob.track('before brackets');
+  if (tok.is.brackets) {
+    glob.brackets();
+  }
+  glob.track('after brackets');
+
+  // special patterns
+  glob._replace('[!', '[^');
+  glob._replace('(?', '(%~');
+  glob._replace(/\[\]/, '\\[\\]');
+  glob._replace('/[', '/' + (opts.dot ? dotfiles : nodot) + '[', true);
+  glob._replace('/?', '/' + (opts.dot ? dotfiles : nodot) + '[^/]', true);
+  glob._replace('/.', '/(?=.)\\.', true);
+
+  // windows drives
+  glob._replace(/^(\w):([\\\/]+?)/gi, '(?=.)$1:$2', true);
+
+  // negate slashes in exclusion ranges
+  if (glob.pattern.indexOf('[^') !== -1) {
+    glob.pattern = negateSlash(glob.pattern);
+  }
+
+  if (opts.globstar !== false && glob.pattern === '**') {
+    glob.pattern = globstar(opts.dot);
+
+  } else {
+    glob.pattern = balance(glob.pattern, '[', ']');
+    glob.escape(glob.pattern);
+
+    // if the pattern has `**`
+    if (tok.is.globstar) {
+      glob.pattern = collapse(glob.pattern, '/**');
+      glob.pattern = collapse(glob.pattern, '**/');
+      glob._replace('/**/', '(?:/' + globstar(opts.dot) + '/|/)', true);
+      glob._replace(/\*{2,}/g, '**');
+
+      // 'foo/*'
+      glob._replace(/(\w+)\*(?!\/)/g, '$1[^/]*?', true);
+      glob._replace(/\*\*\/\*(\w)/g, globstar(opts.dot) + '\\/' + (opts.dot ? dotfiles : nodot) + '[^/]*?$1', true);
+
+      if (opts.dot !== true) {
+        glob._replace(/\*\*\/(.)/g, '(?:**\\/|)$1');
+      }
+
+      // 'foo/**' or '{**,*}', but not 'foo**'
+      if (tok.path.dirname !== '' || /,\*\*|\*\*,/.test(glob.orig)) {
+        glob._replace('**', globstar(opts.dot), true);
+      }
+    }
+
+    // ends with /*
+    glob._replace(/\/\*$/, '\\/' + oneStar(opts.dot), true);
+    // ends with *, no slashes
+    glob._replace(/(?!\/)\*$/, star, true);
+    // has 'n*.' (partial wildcard w/ file extension)
+    glob._replace(/([^\/]+)\*/, '$1' + oneStar(true), true);
+    // has '*'
+    glob._replace('*', oneStar(opts.dot), true);
+    glob._replace('?.', '?\\.', true);
+    glob._replace('?:', '?:', true);
+
+    glob._replace(/\?+/g, function(match) {
+      var len = match.length;
+      if (len === 1) {
+        return qmark;
+      }
+      return qmark + '{' + len + '}';
+    });
+
+    // escape '.abc' => '\\.abc'
+    glob._replace(/\.([*\w]+)/g, '\\.$1');
+    // fix '[^\\\\/]'
+    glob._replace(/\[\^[\\\/]+\]/g, qmark);
+    // '///' => '\/'
+    glob._replace(/\/+/g, '\\/');
+    // '\\\\\\' => '\\'
+    glob._replace(/\\{2,}/g, '\\');
+  }
+
+  // unescape previously escaped patterns
+  glob.unescape(glob.pattern);
+  glob._replace('__UNESC_STAR__', '*');
+
+  // escape dots that follow qmarks
+  glob._replace('?.', '?\\.');
+
+  // remove unnecessary slashes in character classes
+  glob._replace('[^\\/]', qmark);
+
+  if (glob.pattern.length > 1) {
+    if (/^[\[?*]/.test(glob.pattern)) {
+      // only prepend the string if we don't want to match dotfiles
+      glob.pattern = (opts.dot ? dotfiles : nodot) + glob.pattern;
+    }
+  }
+
+  return glob;
+}
+
+/**
+ * Collapse repeated character sequences.
+ *
+ * ```js
+ * collapse('a/../../../b', '../');
+ * //=> 'a/../b'
+ * ```
+ *
+ * @param  {String} `str`
+ * @param  {String} `ch` Character sequence to collapse
+ * @return {String}
+ */
+
+function collapse(str, ch) {
+  var res = str.split(ch);
+  var isFirst = res[0] === '';
+  var isLast = res[res.length - 1] === '';
+  res = res.filter(Boolean);
+  if (isFirst) res.unshift('');
+  if (isLast) res.push('');
+  return res.join(ch);
+}
+
+/**
+ * Negate slashes in exclusion ranges, per glob spec:
+ *
+ * ```js
+ * negateSlash('[^foo]');
+ * //=> '[^\\/foo]'
+ * ```
+ *
+ * @param  {String} `str` glob pattern
+ * @return {String}
+ */
+
+function negateSlash(str) {
+  return str.replace(/\[\^([^\]]*?)\]/g, function(match, inner) {
+    if (inner.indexOf('/') === -1) {
+      inner = '\\/' + inner;
+    }
+    return '[^' + inner + ']';
+  });
+}
+
+/**
+ * Escape imbalanced braces/bracket. This is a very
+ * basic, naive implementation that only does enough
+ * to serve the purpose.
+ */
+
+function balance(str, a, b) {
+  var aarr = str.split(a);
+  var alen = aarr.join('').length;
+  var blen = str.split(b).join('').length;
+
+  if (alen !== blen) {
+    str = aarr.join('\\' + a);
+    return str.split(b).join('\\' + b);
+  }
+  return str;
+}
+
+/**
+ * Special patterns to be converted to regex.
+ * Heuristics are used to simplify patterns
+ * and speed up processing.
+ */
+
+/* eslint no-multi-spaces: 0 */
+var qmark       = '[^/]';
+var star        = qmark + '*?';
+var nodot       = '(?!\\.)(?=.)';
+var dotfileGlob = '(?:\\/|^)\\.{1,2}($|\\/)';
+var dotfiles    = '(?!' + dotfileGlob + ')(?=.)';
+var twoStarDot  = '(?:(?!' + dotfileGlob + ').)*?';
+
+/**
+ * Create a regex for `*`.
+ *
+ * If `dot` is true, or the pattern does not begin with
+ * a leading star, then return the simpler regex.
+ */
+
+function oneStar(dotfile) {
+  return dotfile ? '(?!' + dotfileGlob + ')(?=.)' + star : (nodot + star);
+}
+
+function globstar(dotfile) {
+  if (dotfile) { return twoStarDot; }
+  return '(?:(?!(?:\\/|^)\\.).)*?';
+}
+
+
+/***/ }),
+
+/***/ "./node_modules/filter-array/node_modules/micromatch/lib/glob.js":
+/*!***********************************************************************!*\
+  !*** ./node_modules/filter-array/node_modules/micromatch/lib/glob.js ***!
+  \***********************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var chars = __webpack_require__(/*! ./chars */ "./node_modules/filter-array/node_modules/micromatch/lib/chars.js");
+var utils = __webpack_require__(/*! ./utils */ "./node_modules/filter-array/node_modules/micromatch/lib/utils.js");
+
+/**
+ * Expose `Glob`
+ */
+
+var Glob = module.exports = function Glob(pattern, options) {
+  if (!(this instanceof Glob)) {
+    return new Glob(pattern, options);
+  }
+  this.options = options || {};
+  this.pattern = pattern;
+  this.history = [];
+  this.tokens = {};
+  this.init(pattern);
+};
+
+/**
+ * Initialize defaults
+ */
+
+Glob.prototype.init = function(pattern) {
+  this.orig = pattern;
+  this.negated = this.isNegated();
+  this.options.track = this.options.track || false;
+  this.options.makeRe = true;
+};
+
+/**
+ * Push a change into `glob.history`. Useful
+ * for debugging.
+ */
+
+Glob.prototype.track = function(msg) {
+  if (this.options.track) {
+    this.history.push({msg: msg, pattern: this.pattern});
+  }
+};
+
+/**
+ * Return true if `glob.pattern` was negated
+ * with `!`, also remove the `!` from the pattern.
+ *
+ * @return {Boolean}
+ */
+
+Glob.prototype.isNegated = function() {
+  if (this.pattern.charCodeAt(0) === 33 /* '!' */) {
+    this.pattern = this.pattern.slice(1);
+    return true;
+  }
+  return false;
+};
+
+/**
+ * Expand braces in the given glob pattern.
+ *
+ * We only need to use the [braces] lib when
+ * patterns are nested.
+ */
+
+Glob.prototype.braces = function() {
+  if (this.options.nobraces !== true && this.options.nobrace !== true) {
+    // naive/fast check for imbalanced characters
+    var a = this.pattern.match(/[\{\(\[]/g);
+    var b = this.pattern.match(/[\}\)\]]/g);
+
+    // if imbalanced, don't optimize the pattern
+    if (a && b && (a.length !== b.length)) {
+      this.options.makeRe = false;
+    }
+
+    // expand brace patterns and join the resulting array
+    var expanded = utils.braces(this.pattern, this.options);
+    this.pattern = expanded.join('|');
+  }
+};
+
+/**
+ * Expand bracket expressions in `glob.pattern`
+ */
+
+Glob.prototype.brackets = function() {
+  if (this.options.nobrackets !== true) {
+    this.pattern = utils.brackets(this.pattern);
+  }
+};
+
+/**
+ * Expand bracket expressions in `glob.pattern`
+ */
+
+Glob.prototype.extglob = function() {
+  if (this.options.noextglob === true) return;
+
+  if (utils.isExtglob(this.pattern)) {
+    this.pattern = utils.extglob(this.pattern, {escape: true});
+  }
+};
+
+/**
+ * Parse the given pattern
+ */
+
+Glob.prototype.parse = function(pattern) {
+  this.tokens = utils.parseGlob(pattern || this.pattern, true);
+  return this.tokens;
+};
+
+/**
+ * Replace `a` with `b`. Also tracks the change before and
+ * after each replacement. This is disabled by default, but
+ * can be enabled by setting `options.track` to true.
+ *
+ * Also, when the pattern is a string, `.split()` is used,
+ * because it's much faster than replace.
+ *
+ * @param  {RegExp|String} `a`
+ * @param  {String} `b`
+ * @param  {Boolean} `escape` When `true`, escapes `*` and `?` in the replacement.
+ * @return {String}
+ */
+
+Glob.prototype._replace = function(a, b, escape) {
+  this.track('before (find): "' + a + '" (replace with): "' + b + '"');
+  if (escape) b = esc(b);
+  if (a && b && typeof a === 'string') {
+    this.pattern = this.pattern.split(a).join(b);
+  } else {
+    this.pattern = this.pattern.replace(a, b);
+  }
+  this.track('after');
+};
+
+/**
+ * Escape special characters in the given string.
+ *
+ * @param  {String} `str` Glob pattern
+ * @return {String}
+ */
+
+Glob.prototype.escape = function(str) {
+  this.track('before escape: ');
+  var re = /["\\](['"]?[^"'\\]['"]?)/g;
+
+  this.pattern = str.replace(re, function($0, $1) {
+    var o = chars.ESC;
+    var ch = o && o[$1];
+    if (ch) {
+      return ch;
+    }
+    if (/[a-z]/i.test($0)) {
+      return $0.split('\\').join('');
+    }
+    return $0;
+  });
+
+  this.track('after escape: ');
+};
+
+/**
+ * Unescape special characters in the given string.
+ *
+ * @param  {String} `str`
+ * @return {String}
+ */
+
+Glob.prototype.unescape = function(str) {
+  var re = /__([A-Z]+)_([A-Z]+)__/g;
+  this.pattern = str.replace(re, function($0, $1) {
+    return chars[$1][$0];
+  });
+  this.pattern = unesc(this.pattern);
+};
+
+/**
+ * Escape/unescape utils
+ */
+
+function esc(str) {
+  str = str.split('?').join('%~');
+  str = str.split('*').join('%%');
+  return str;
+}
+
+function unesc(str) {
+  str = str.split('%~').join('?');
+  str = str.split('%%').join('*');
+  return str;
+}
+
+
+/***/ }),
+
+/***/ "./node_modules/filter-array/node_modules/micromatch/lib/utils.js":
+/*!************************************************************************!*\
+  !*** ./node_modules/filter-array/node_modules/micromatch/lib/utils.js ***!
+  \************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+/* WEBPACK VAR INJECTION */(function(process) {
+
+var win32 = process && process.platform === 'win32';
+var path = __webpack_require__(/*! path */ "./node_modules/path-browserify/index.js");
+var fileRe = __webpack_require__(/*! filename-regex */ "./node_modules/filename-regex/index.js");
+var utils = module.exports;
+
+/**
+ * Module dependencies
+ */
+
+utils.diff = __webpack_require__(/*! arr-diff */ "./node_modules/filter-array/node_modules/arr-diff/index.js");
+utils.unique = __webpack_require__(/*! array-unique */ "./node_modules/filter-array/node_modules/array-unique/index.js");
+utils.braces = __webpack_require__(/*! braces */ "./node_modules/filter-array/node_modules/braces/index.js");
+utils.brackets = __webpack_require__(/*! expand-brackets */ "./node_modules/filter-array/node_modules/expand-brackets/index.js");
+utils.extglob = __webpack_require__(/*! extglob */ "./node_modules/filter-array/node_modules/extglob/index.js");
+utils.isExtglob = __webpack_require__(/*! is-extglob */ "./node_modules/filter-array/node_modules/is-extglob/index.js");
+utils.isGlob = __webpack_require__(/*! is-glob */ "./node_modules/filter-array/node_modules/is-glob/index.js");
+utils.typeOf = __webpack_require__(/*! kind-of */ "./node_modules/filter-array/node_modules/micromatch/node_modules/kind-of/index.js");
+utils.normalize = __webpack_require__(/*! normalize-path */ "./node_modules/filter-array/node_modules/normalize-path/index.js");
+utils.omit = __webpack_require__(/*! object.omit */ "./node_modules/filter-array/node_modules/object.omit/index.js");
+utils.parseGlob = __webpack_require__(/*! parse-glob */ "./node_modules/parse-glob/index.js");
+utils.cache = __webpack_require__(/*! regex-cache */ "./node_modules/regex-cache/index.js");
+
+/**
+ * Get the filename of a filepath
+ *
+ * @param {String} `string`
+ * @return {String}
+ */
+
+utils.filename = function filename(fp) {
+  var seg = fp.match(fileRe());
+  return seg && seg[0];
+};
+
+/**
+ * Returns a function that returns true if the given
+ * pattern is the same as a given `filepath`
+ *
+ * @param {String} `pattern`
+ * @return {Function}
+ */
+
+utils.isPath = function isPath(pattern, opts) {
+  opts = opts || {};
+  return function(fp) {
+    var unixified = utils.unixify(fp, opts);
+    if(opts.nocase){
+      return pattern.toLowerCase() === unixified.toLowerCase();
+    }
+    return pattern === unixified;
+  };
+};
+
+/**
+ * Returns a function that returns true if the given
+ * pattern contains a `filepath`
+ *
+ * @param {String} `pattern`
+ * @return {Function}
+ */
+
+utils.hasPath = function hasPath(pattern, opts) {
+  return function(fp) {
+    return utils.unixify(pattern, opts).indexOf(fp) !== -1;
+  };
+};
+
+/**
+ * Returns a function that returns true if the given
+ * pattern matches or contains a `filepath`
+ *
+ * @param {String} `pattern`
+ * @return {Function}
+ */
+
+utils.matchPath = function matchPath(pattern, opts) {
+  var fn = (opts && opts.contains)
+    ? utils.hasPath(pattern, opts)
+    : utils.isPath(pattern, opts);
+  return fn;
+};
+
+/**
+ * Returns a function that returns true if the given
+ * regex matches the `filename` of a file path.
+ *
+ * @param {RegExp} `re`
+ * @return {Boolean}
+ */
+
+utils.hasFilename = function hasFilename(re) {
+  return function(fp) {
+    var name = utils.filename(fp);
+    return name && re.test(name);
+  };
+};
+
+/**
+ * Coerce `val` to an array
+ *
+ * @param  {*} val
+ * @return {Array}
+ */
+
+utils.arrayify = function arrayify(val) {
+  return !Array.isArray(val)
+    ? [val]
+    : val;
+};
+
+/**
+ * Normalize all slashes in a file path or glob pattern to
+ * forward slashes.
+ */
+
+utils.unixify = function unixify(fp, opts) {
+  if (opts && opts.unixify === false) return fp;
+  if (opts && opts.unixify === true || win32 || path.sep === '\\') {
+    return utils.normalize(fp, false);
+  }
+  if (opts && opts.unescape === true) {
+    return fp ? fp.toString().replace(/\\(\w)/g, '$1') : '';
+  }
+  return fp;
+};
+
+/**
+ * Escape/unescape utils
+ */
+
+utils.escapePath = function escapePath(fp) {
+  return fp.replace(/[\\.]/g, '\\$&');
+};
+
+utils.unescapeGlob = function unescapeGlob(fp) {
+  return fp.replace(/[\\"']/g, '');
+};
+
+utils.escapeRe = function escapeRe(str) {
+  return str.replace(/[-[\\$*+?.#^\s{}(|)\]]/g, '\\$&');
+};
+
+/**
+ * Expose `utils`
+ */
+
+module.exports = utils;
+
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../../../../process/browser.js */ "./node_modules/process/browser.js")))
+
+/***/ }),
+
+/***/ "./node_modules/filter-array/node_modules/micromatch/node_modules/kind-of/index.js":
+/*!*****************************************************************************************!*\
+  !*** ./node_modules/filter-array/node_modules/micromatch/node_modules/kind-of/index.js ***!
+  \*****************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+var isBuffer = __webpack_require__(/*! is-buffer */ "./node_modules/filter-array/node_modules/is-buffer/index.js");
+var toString = Object.prototype.toString;
+
+/**
+ * Get the native `typeof` a value.
+ *
+ * @param  {*} `val`
+ * @return {*} Native javascript type
+ */
+
+module.exports = function kindOf(val) {
+  // primitivies
+  if (typeof val === 'undefined') {
+    return 'undefined';
+  }
+  if (val === null) {
+    return 'null';
+  }
+  if (val === true || val === false || val instanceof Boolean) {
+    return 'boolean';
+  }
+  if (typeof val === 'string' || val instanceof String) {
+    return 'string';
+  }
+  if (typeof val === 'number' || val instanceof Number) {
+    return 'number';
+  }
+
+  // functions
+  if (typeof val === 'function' || val instanceof Function) {
+    return 'function';
+  }
+
+  // array
+  if (typeof Array.isArray !== 'undefined' && Array.isArray(val)) {
+    return 'array';
+  }
+
+  // check for instances of RegExp and Date before calling `toString`
+  if (val instanceof RegExp) {
+    return 'regexp';
+  }
+  if (val instanceof Date) {
+    return 'date';
+  }
+
+  // other objects
+  var type = toString.call(val);
+
+  if (type === '[object RegExp]') {
+    return 'regexp';
+  }
+  if (type === '[object Date]') {
+    return 'date';
+  }
+  if (type === '[object Arguments]') {
+    return 'arguments';
+  }
+  if (type === '[object Error]') {
+    return 'error';
+  }
+
+  // buffer
+  if (isBuffer(val)) {
+    return 'buffer';
+  }
+
+  // es6: Map, WeakMap, Set, WeakSet
+  if (type === '[object Set]') {
+    return 'set';
+  }
+  if (type === '[object WeakSet]') {
+    return 'weakset';
+  }
+  if (type === '[object Map]') {
+    return 'map';
+  }
+  if (type === '[object WeakMap]') {
+    return 'weakmap';
+  }
+  if (type === '[object Symbol]') {
+    return 'symbol';
+  }
+
+  // typed arrays
+  if (type === '[object Int8Array]') {
+    return 'int8array';
+  }
+  if (type === '[object Uint8Array]') {
+    return 'uint8array';
+  }
+  if (type === '[object Uint8ClampedArray]') {
+    return 'uint8clampedarray';
+  }
+  if (type === '[object Int16Array]') {
+    return 'int16array';
+  }
+  if (type === '[object Uint16Array]') {
+    return 'uint16array';
+  }
+  if (type === '[object Int32Array]') {
+    return 'int32array';
+  }
+  if (type === '[object Uint32Array]') {
+    return 'uint32array';
+  }
+  if (type === '[object Float32Array]') {
+    return 'float32array';
+  }
+  if (type === '[object Float64Array]') {
+    return 'float64array';
+  }
+
+  // must be a plain object
+  return 'object';
+};
+
+
+/***/ }),
+
+/***/ "./node_modules/filter-array/node_modules/normalize-path/index.js":
+/*!************************************************************************!*\
+  !*** ./node_modules/filter-array/node_modules/normalize-path/index.js ***!
+  \************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+/*!
+ * normalize-path <https://github.com/jonschlinkert/normalize-path>
+ *
+ * Copyright (c) 2014-2017, Jon Schlinkert.
+ * Released under the MIT License.
+ */
+
+var removeTrailingSeparator = __webpack_require__(/*! remove-trailing-separator */ "./node_modules/remove-trailing-separator/index.js");
+
+module.exports = function normalizePath(str, stripTrailing) {
+  if (typeof str !== 'string') {
+    throw new TypeError('expected a string');
+  }
+  str = str.replace(/[\\\/]+/g, '/');
+  if (stripTrailing !== false) {
+    str = removeTrailingSeparator(str);
+  }
+  return str;
+};
+
+
+/***/ }),
+
+/***/ "./node_modules/filter-array/node_modules/object.omit/index.js":
+/*!*********************************************************************!*\
+  !*** ./node_modules/filter-array/node_modules/object.omit/index.js ***!
+  \*********************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+/*!
+ * object.omit <https://github.com/jonschlinkert/object.omit>
+ *
+ * Copyright (c) 2014-2015, Jon Schlinkert.
+ * Licensed under the MIT License.
+ */
+
+
+
+var isObject = __webpack_require__(/*! is-extendable */ "./node_modules/filter-array/node_modules/is-extendable/index.js");
+var forOwn = __webpack_require__(/*! for-own */ "./node_modules/for-own/index.js");
+
+module.exports = function omit(obj, keys) {
+  if (!isObject(obj)) return {};
+
+  keys = [].concat.apply([], [].slice.call(arguments, 1));
+  var last = keys[keys.length - 1];
+  var res = {}, fn;
+
+  if (typeof last === 'function') {
+    fn = keys.pop();
+  }
+
+  var isFunction = typeof fn === 'function';
+  if (!keys.length && !isFunction) {
+    return obj;
+  }
+
+  forOwn(obj, function(value, key) {
+    if (keys.indexOf(key) === -1) {
+
+      if (!isFunction) {
+        res[key] = value;
+      } else if (fn(value, key, obj)) {
+        res[key] = value;
+      }
+    }
+  });
+  return res;
+};
+
+
+/***/ }),
+
+/***/ "./node_modules/font-awesome/fonts/fontawesome-webfont.eot":
+/*!*****************************************************************!*\
+  !*** ./node_modules/font-awesome/fonts/fontawesome-webfont.eot ***!
+  \*****************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = "/fonts/vendor/font-awesome/fontawesome-webfont.eot?674f50d287a8c48dc19ba404d20fe713";
+
+/***/ }),
+
+/***/ "./node_modules/font-awesome/fonts/fontawesome-webfont.eot?v=4.7.0":
+/*!*************************************************************************!*\
+  !*** ./node_modules/font-awesome/fonts/fontawesome-webfont.eot?v=4.7.0 ***!
+  \*************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = "/fonts/vendor/font-awesome/fontawesome-webfont.eot?674f50d287a8c48dc19ba404d20fe713";
+
+/***/ }),
+
+/***/ "./node_modules/font-awesome/fonts/fontawesome-webfont.svg?v=4.7.0":
+/*!*************************************************************************!*\
+  !*** ./node_modules/font-awesome/fonts/fontawesome-webfont.svg?v=4.7.0 ***!
+  \*************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = "/fonts/vendor/font-awesome/fontawesome-webfont.svg?912ec66d7572ff821749319396470bde";
+
+/***/ }),
+
+/***/ "./node_modules/font-awesome/fonts/fontawesome-webfont.ttf?v=4.7.0":
+/*!*************************************************************************!*\
+  !*** ./node_modules/font-awesome/fonts/fontawesome-webfont.ttf?v=4.7.0 ***!
+  \*************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = "/fonts/vendor/font-awesome/fontawesome-webfont.ttf?b06871f281fee6b241d60582ae9369b9";
+
+/***/ }),
+
+/***/ "./node_modules/font-awesome/fonts/fontawesome-webfont.woff2?v=4.7.0":
+/*!***************************************************************************!*\
+  !*** ./node_modules/font-awesome/fonts/fontawesome-webfont.woff2?v=4.7.0 ***!
+  \***************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = "/fonts/vendor/font-awesome/fontawesome-webfont.woff2?af7ae505a9eed503f8b8e6982036873e";
+
+/***/ }),
+
+/***/ "./node_modules/font-awesome/fonts/fontawesome-webfont.woff?v=4.7.0":
+/*!**************************************************************************!*\
+  !*** ./node_modules/font-awesome/fonts/fontawesome-webfont.woff?v=4.7.0 ***!
+  \**************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = "/fonts/vendor/font-awesome/fontawesome-webfont.woff?fee66e712a8a08eef5805a46892932ad";
+
+/***/ }),
+
+/***/ "./node_modules/for-in/index.js":
+/*!**************************************!*\
+  !*** ./node_modules/for-in/index.js ***!
+  \**************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+/*!
+ * for-in <https://github.com/jonschlinkert/for-in>
+ *
+ * Copyright (c) 2014-2017, Jon Schlinkert.
+ * Released under the MIT License.
+ */
+
+
+
+module.exports = function forIn(obj, fn, thisArg) {
+  for (var key in obj) {
+    if (fn.call(thisArg, obj[key], key, obj) === false) {
+      break;
+    }
+  }
+};
+
+
+/***/ }),
+
+/***/ "./node_modules/for-own/index.js":
+/*!***************************************!*\
+  !*** ./node_modules/for-own/index.js ***!
+  \***************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+/*!
+ * for-own <https://github.com/jonschlinkert/for-own>
+ *
+ * Copyright (c) 2014-2017, Jon Schlinkert.
+ * Released under the MIT License.
+ */
+
+
+
+var forIn = __webpack_require__(/*! for-in */ "./node_modules/for-in/index.js");
+var hasOwn = Object.prototype.hasOwnProperty;
+
+module.exports = function forOwn(obj, fn, thisArg) {
+  forIn(obj, function(val, key) {
+    if (hasOwn.call(obj, key)) {
+      return fn.call(thisArg, obj[key], key, obj);
+    }
+  });
+};
+
+
+/***/ }),
+
+/***/ "./node_modules/glob-base/index.js":
+/*!*****************************************!*\
+  !*** ./node_modules/glob-base/index.js ***!
+  \*****************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+/*!
+ * glob-base <https://github.com/jonschlinkert/glob-base>
+ *
+ * Copyright (c) 2015, Jon Schlinkert.
+ * Licensed under the MIT License.
+ */
+
+
+
+var path = __webpack_require__(/*! path */ "./node_modules/path-browserify/index.js");
+var parent = __webpack_require__(/*! glob-parent */ "./node_modules/glob-base/node_modules/glob-parent/index.js");
+var isGlob = __webpack_require__(/*! is-glob */ "./node_modules/glob-base/node_modules/is-glob/index.js");
+
+module.exports = function globBase(pattern) {
+  if (typeof pattern !== 'string') {
+    throw new TypeError('glob-base expects a string.');
+  }
+
+  var res = {};
+  res.base = parent(pattern);
+  res.isGlob = isGlob(pattern);
+
+  if (res.base !== '.') {
+    res.glob = pattern.substr(res.base.length);
+    if (res.glob.charAt(0) === '/') {
+      res.glob = res.glob.substr(1);
+    }
+  } else {
+    res.glob = pattern;
+  }
+
+  if (!res.isGlob) {
+    res.base = dirname(pattern);
+    res.glob = res.base !== '.'
+      ? pattern.substr(res.base.length)
+      : pattern;
+  }
+
+  if (res.glob.substr(0, 2) === './') {
+    res.glob = res.glob.substr(2);
+  }
+  if (res.glob.charAt(0) === '/') {
+    res.glob = res.glob.substr(1);
+  }
+  return res;
+};
+
+function dirname(glob) {
+  if (glob.slice(-1) === '/') return glob;
+  return path.dirname(glob);
+}
+
+
+/***/ }),
+
+/***/ "./node_modules/glob-base/node_modules/glob-parent/index.js":
+/*!******************************************************************!*\
+  !*** ./node_modules/glob-base/node_modules/glob-parent/index.js ***!
+  \******************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var path = __webpack_require__(/*! path */ "./node_modules/path-browserify/index.js");
+var isglob = __webpack_require__(/*! is-glob */ "./node_modules/glob-base/node_modules/is-glob/index.js");
+
+module.exports = function globParent(str) {
+	str += 'a'; // preserves full path in case of trailing path separator
+	do {str = path.dirname(str)} while (isglob(str));
+	return str;
+};
+
+
+/***/ }),
+
+/***/ "./node_modules/glob-base/node_modules/is-extglob/index.js":
+/*!*****************************************************************!*\
+  !*** ./node_modules/glob-base/node_modules/is-extglob/index.js ***!
+  \*****************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/*!
+ * is-extglob <https://github.com/jonschlinkert/is-extglob>
+ *
+ * Copyright (c) 2014-2015, Jon Schlinkert.
+ * Licensed under the MIT License.
+ */
+
+module.exports = function isExtglob(str) {
+  return typeof str === 'string'
+    && /[@?!+*]\(/.test(str);
+};
+
+
+/***/ }),
+
+/***/ "./node_modules/glob-base/node_modules/is-glob/index.js":
+/*!**************************************************************!*\
+  !*** ./node_modules/glob-base/node_modules/is-glob/index.js ***!
+  \**************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+/*!
+ * is-glob <https://github.com/jonschlinkert/is-glob>
+ *
+ * Copyright (c) 2014-2015, Jon Schlinkert.
+ * Licensed under the MIT License.
+ */
+
+var isExtglob = __webpack_require__(/*! is-extglob */ "./node_modules/glob-base/node_modules/is-extglob/index.js");
+
+module.exports = function isGlob(str) {
+  return typeof str === 'string'
+    && (/[*!?{}(|)[\]]/.test(str)
+     || isExtglob(str));
+};
+
+/***/ }),
+
+/***/ "./node_modules/ieee754/index.js":
+/*!***************************************!*\
+  !*** ./node_modules/ieee754/index.js ***!
+  \***************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+exports.read = function (buffer, offset, isLE, mLen, nBytes) {
+  var e, m
+  var eLen = (nBytes * 8) - mLen - 1
+  var eMax = (1 << eLen) - 1
+  var eBias = eMax >> 1
+  var nBits = -7
+  var i = isLE ? (nBytes - 1) : 0
+  var d = isLE ? -1 : 1
+  var s = buffer[offset + i]
+
+  i += d
+
+  e = s & ((1 << (-nBits)) - 1)
+  s >>= (-nBits)
+  nBits += eLen
+  for (; nBits > 0; e = (e * 256) + buffer[offset + i], i += d, nBits -= 8) {}
+
+  m = e & ((1 << (-nBits)) - 1)
+  e >>= (-nBits)
+  nBits += mLen
+  for (; nBits > 0; m = (m * 256) + buffer[offset + i], i += d, nBits -= 8) {}
+
+  if (e === 0) {
+    e = 1 - eBias
+  } else if (e === eMax) {
+    return m ? NaN : ((s ? -1 : 1) * Infinity)
+  } else {
+    m = m + Math.pow(2, mLen)
+    e = e - eBias
+  }
+  return (s ? -1 : 1) * m * Math.pow(2, e - mLen)
+}
+
+exports.write = function (buffer, value, offset, isLE, mLen, nBytes) {
+  var e, m, c
+  var eLen = (nBytes * 8) - mLen - 1
+  var eMax = (1 << eLen) - 1
+  var eBias = eMax >> 1
+  var rt = (mLen === 23 ? Math.pow(2, -24) - Math.pow(2, -77) : 0)
+  var i = isLE ? 0 : (nBytes - 1)
+  var d = isLE ? 1 : -1
+  var s = value < 0 || (value === 0 && 1 / value < 0) ? 1 : 0
+
+  value = Math.abs(value)
+
+  if (isNaN(value) || value === Infinity) {
+    m = isNaN(value) ? 1 : 0
+    e = eMax
+  } else {
+    e = Math.floor(Math.log(value) / Math.LN2)
+    if (value * (c = Math.pow(2, -e)) < 1) {
+      e--
+      c *= 2
+    }
+    if (e + eBias >= 1) {
+      value += rt / c
+    } else {
+      value += rt * Math.pow(2, 1 - eBias)
+    }
+    if (value * c >= 2) {
+      e++
+      c /= 2
+    }
+
+    if (e + eBias >= eMax) {
+      m = 0
+      e = eMax
+    } else if (e + eBias >= 1) {
+      m = ((value * c) - 1) * Math.pow(2, mLen)
+      e = e + eBias
+    } else {
+      m = value * Math.pow(2, eBias - 1) * Math.pow(2, mLen)
+      e = 0
+    }
+  }
+
+  for (; mLen >= 8; buffer[offset + i] = m & 0xff, i += d, m /= 256, mLen -= 8) {}
+
+  e = (e << mLen) | m
+  eLen += mLen
+  for (; eLen > 0; buffer[offset + i] = e & 0xff, i += d, e /= 256, eLen -= 8) {}
+
+  buffer[offset + i - d] |= s * 128
+}
+
+
+/***/ }),
+
+/***/ "./node_modules/index-of/index.js":
+/*!****************************************!*\
+  !*** ./node_modules/index-of/index.js ***!
+  \****************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+/*!
+ * index-of <https://github.com/jonschlinkert/index-of>
+ *
+ * Copyright (c) 2014-2015 Jon Schlinkert.
+ * Licensed under the MIT license.
+ */
+
+
+
+module.exports = function indexOf(arr, ele, start) {
+  start = start || 0;
+  var idx = -1;
+
+  if (arr == null) return idx;
+  var len = arr.length;
+  var i = start < 0
+    ? (len + start)
+    : start;
+
+  while (len--) {
+    if (arr[i++] === ele) {
+      idx = i - 1;
+      break;
+    }
+  }
+
+  return idx;
+};
+
+
+/***/ }),
+
 /***/ "./node_modules/is-buffer/index.js":
 /*!*****************************************!*\
   !*** ./node_modules/is-buffer/index.js ***!
@@ -6447,6 +13023,132 @@ module.exports = function isBuffer (obj) {
   return obj != null && obj.constructor != null &&
     typeof obj.constructor.isBuffer === 'function' && obj.constructor.isBuffer(obj)
 }
+
+
+/***/ }),
+
+/***/ "./node_modules/is-dotfile/index.js":
+/*!******************************************!*\
+  !*** ./node_modules/is-dotfile/index.js ***!
+  \******************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/*!
+ * is-dotfile <https://github.com/jonschlinkert/is-dotfile>
+ *
+ * Copyright (c) 2015-2017, Jon Schlinkert.
+ * Released under the MIT License.
+ */
+
+module.exports = function(str) {
+  if (str.charCodeAt(0) === 46 /* . */ && str.indexOf('/', 1) === -1) {
+    return true;
+  }
+  var slash = str.lastIndexOf('/');
+  return slash !== -1 ? str.charCodeAt(slash + 1) === 46  /* . */ : false;
+};
+
+
+/***/ }),
+
+/***/ "./node_modules/is-equal-shallow/index.js":
+/*!************************************************!*\
+  !*** ./node_modules/is-equal-shallow/index.js ***!
+  \************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+/*!
+ * is-equal-shallow <https://github.com/jonschlinkert/is-equal-shallow>
+ *
+ * Copyright (c) 2015, Jon Schlinkert.
+ * Licensed under the MIT License.
+ */
+
+
+
+var isPrimitive = __webpack_require__(/*! is-primitive */ "./node_modules/is-primitive/index.js");
+
+module.exports = function isEqual(a, b) {
+  if (!a && !b) { return true; }
+  if (!a && b || a && !b) { return false; }
+
+  var numKeysA = 0, numKeysB = 0, key;
+  for (key in b) {
+    numKeysB++;
+    if (!isPrimitive(b[key]) || !a.hasOwnProperty(key) || (a[key] !== b[key])) {
+      return false;
+    }
+  }
+  for (key in a) {
+    numKeysA++;
+  }
+  return numKeysA === numKeysB;
+};
+
+
+/***/ }),
+
+/***/ "./node_modules/is-posix-bracket/index.js":
+/*!************************************************!*\
+  !*** ./node_modules/is-posix-bracket/index.js ***!
+  \************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/*!
+ * is-posix-bracket <https://github.com/jonschlinkert/is-posix-bracket>
+ *
+ * Copyright (c) 2015-2016, Jon Schlinkert.
+ * Licensed under the MIT License.
+ */
+
+module.exports = function isPosixBracket(str) {
+  return typeof str === 'string' && /\[([:.=+])(?:[^\[\]]|)+\1\]/.test(str);
+};
+
+
+/***/ }),
+
+/***/ "./node_modules/is-primitive/index.js":
+/*!********************************************!*\
+  !*** ./node_modules/is-primitive/index.js ***!
+  \********************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+/*!
+ * is-primitive <https://github.com/jonschlinkert/is-primitive>
+ *
+ * Copyright (c) 2014-2015, Jon Schlinkert.
+ * Licensed under the MIT License.
+ */
+
+
+
+// see http://jsperf.com/testing-value-is-primitive/7
+module.exports = function isPrimitive(value) {
+  return value == null || (typeof value !== 'function' && typeof value !== 'object');
+};
+
+
+/***/ }),
+
+/***/ "./node_modules/isarray/index.js":
+/*!***************************************!*\
+  !*** ./node_modules/isarray/index.js ***!
+  \***************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+var toString = {}.toString;
+
+module.exports = Array.isArray || function (arr) {
+  return toString.call(arr) == '[object Array]';
+};
 
 
 /***/ }),
@@ -17057,6 +23759,146 @@ if ( !noGlobal ) {
 
 return jQuery;
 } );
+
+
+/***/ }),
+
+/***/ "./node_modules/kind-of/index.js":
+/*!***************************************!*\
+  !*** ./node_modules/kind-of/index.js ***!
+  \***************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+var toString = Object.prototype.toString;
+
+module.exports = function kindOf(val) {
+  if (val === void 0) return 'undefined';
+  if (val === null) return 'null';
+
+  var type = typeof val;
+  if (type === 'boolean') return 'boolean';
+  if (type === 'string') return 'string';
+  if (type === 'number') return 'number';
+  if (type === 'symbol') return 'symbol';
+  if (type === 'function') {
+    return isGeneratorFn(val) ? 'generatorfunction' : 'function';
+  }
+
+  if (isArray(val)) return 'array';
+  if (isBuffer(val)) return 'buffer';
+  if (isArguments(val)) return 'arguments';
+  if (isDate(val)) return 'date';
+  if (isError(val)) return 'error';
+  if (isRegexp(val)) return 'regexp';
+
+  switch (ctorName(val)) {
+    case 'Symbol': return 'symbol';
+    case 'Promise': return 'promise';
+
+    // Set, Map, WeakSet, WeakMap
+    case 'WeakMap': return 'weakmap';
+    case 'WeakSet': return 'weakset';
+    case 'Map': return 'map';
+    case 'Set': return 'set';
+
+    // 8-bit typed arrays
+    case 'Int8Array': return 'int8array';
+    case 'Uint8Array': return 'uint8array';
+    case 'Uint8ClampedArray': return 'uint8clampedarray';
+
+    // 16-bit typed arrays
+    case 'Int16Array': return 'int16array';
+    case 'Uint16Array': return 'uint16array';
+
+    // 32-bit typed arrays
+    case 'Int32Array': return 'int32array';
+    case 'Uint32Array': return 'uint32array';
+    case 'Float32Array': return 'float32array';
+    case 'Float64Array': return 'float64array';
+  }
+
+  if (isGeneratorObj(val)) {
+    return 'generator';
+  }
+
+  // Non-plain objects
+  type = toString.call(val);
+  switch (type) {
+    case '[object Object]': return 'object';
+    // iterators
+    case '[object Map Iterator]': return 'mapiterator';
+    case '[object Set Iterator]': return 'setiterator';
+    case '[object String Iterator]': return 'stringiterator';
+    case '[object Array Iterator]': return 'arrayiterator';
+  }
+
+  // other
+  return type.slice(8, -1).toLowerCase().replace(/\s/g, '');
+};
+
+function ctorName(val) {
+  return val.constructor ? val.constructor.name : null;
+}
+
+function isArray(val) {
+  if (Array.isArray) return Array.isArray(val);
+  return val instanceof Array;
+}
+
+function isError(val) {
+  return val instanceof Error || (typeof val.message === 'string' && val.constructor && typeof val.constructor.stackTraceLimit === 'number');
+}
+
+function isDate(val) {
+  if (val instanceof Date) return true;
+  return typeof val.toDateString === 'function'
+    && typeof val.getDate === 'function'
+    && typeof val.setDate === 'function';
+}
+
+function isRegexp(val) {
+  if (val instanceof RegExp) return true;
+  return typeof val.flags === 'string'
+    && typeof val.ignoreCase === 'boolean'
+    && typeof val.multiline === 'boolean'
+    && typeof val.global === 'boolean';
+}
+
+function isGeneratorFn(name, val) {
+  return ctorName(name) === 'GeneratorFunction';
+}
+
+function isGeneratorObj(val) {
+  return typeof val.throw === 'function'
+    && typeof val.return === 'function'
+    && typeof val.next === 'function';
+}
+
+function isArguments(val) {
+  try {
+    if (typeof val.length === 'number' && typeof val.callee === 'function') {
+      return true;
+    }
+  } catch (err) {
+    if (err.message.indexOf('callee') !== -1) {
+      return true;
+    }
+  }
+  return false;
+}
+
+/**
+ * If you need to support Safari 5-7 (8-10 yr-old browser),
+ * take a look at https://github.com/feross/is-buffer
+ */
+
+function isBuffer(val) {
+  if (val.constructor && typeof val.constructor.isBuffer === 'function') {
+    return val.constructor.isBuffer(val);
+  }
+  return false;
+}
 
 
 /***/ }),
@@ -34177,6 +41019,862 @@ return jQuery;
 
 /***/ }),
 
+/***/ "./node_modules/make-iterator/index.js":
+/*!*********************************************!*\
+  !*** ./node_modules/make-iterator/index.js ***!
+  \*********************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+/*!
+ * make-iterator <https://github.com/jonschlinkert/make-iterator>
+ *
+ * Copyright (c) 2014 Jon Schlinkert, contributors.
+ * Copyright (c) 2012, 2013 moutjs team and contributors (http://moutjs.com)
+ * Licensed under the MIT License
+ */
+
+
+
+var forOwn = __webpack_require__(/*! for-own */ "./node_modules/for-own/index.js");
+
+/**
+ * Convert an argument into a valid iterator.
+ * Used internally on most array/object/collection methods that receives a
+ * callback/iterator providing a shortcut syntax.
+ */
+
+module.exports = function makeIterator(src, thisArg) {
+  if (src == null) {
+    return noop;
+  }
+
+  switch (typeof src) {
+    // function is the first to improve perf (most common case)
+    // also avoid using `Function#call` if not needed, which boosts
+    // perf a lot in some cases
+    case 'function':
+      return (typeof thisArg !== 'undefined') ? function (val, i, arr) {
+        return src.call(thisArg, val, i, arr);
+      } : src;
+    case 'object':
+      return function (val) {
+        return deepMatches(val, src);
+      };
+    case 'string':
+    case 'number':
+      return prop(src);
+    }
+};
+
+function containsMatch(array, value) {
+  var len = array.length;
+  var i = -1;
+
+  while (++i < len) {
+    if (deepMatches(array[i], value)) {
+      return true;
+    }
+  }
+  return false;
+}
+
+function matchArray(o, value) {
+  var len = value.length;
+  var i = -1;
+
+  while (++i < len) {
+    if (!containsMatch(o, value[i])) {
+      return false;
+    }
+  }
+  return true;
+}
+
+function matchObject(o, value) {
+  var res = true;
+  forOwn(value, function (val, key) {
+    if (!deepMatches(o[key], val)) {
+      // Return false to break out of forOwn early
+      return (res = false);
+    }
+  });
+  return res;
+}
+
+/**
+ * Recursively compare objects
+ */
+
+function deepMatches(o, value) {
+  if (o && typeof o === 'object') {
+    if (Array.isArray(o) && Array.isArray(value)) {
+      return matchArray(o, value);
+    } else {
+      return matchObject(o, value);
+    }
+  } else {
+    return o === value;
+  }
+}
+
+function prop(name) {
+  return function(obj) {
+    return obj[name];
+  };
+}
+
+function noop(val) {
+  return val;
+}
+
+/***/ }),
+
+/***/ "./node_modules/math-random/browser.js":
+/*!*********************************************!*\
+  !*** ./node_modules/math-random/browser.js ***!
+  \*********************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = (function (global) {
+  var uint32 = 'Uint32Array' in global
+  var crypto = global.crypto || global.msCrypto
+  var rando = crypto && typeof crypto.getRandomValues === 'function'
+  var good = uint32 && rando
+  if (!good) return Math.random
+
+  var arr = new Uint32Array(1)
+  var max = Math.pow(2, 32)
+  function random () {
+    crypto.getRandomValues(arr)
+    return arr[0] / max
+  }
+
+  random.cryptographic = true
+  return random
+})(typeof self !== 'undefined' ? self : window)
+
+
+/***/ }),
+
+/***/ "./node_modules/merge/merge.js":
+/*!*************************************!*\
+  !*** ./node_modules/merge/merge.js ***!
+  \*************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+/* WEBPACK VAR INJECTION */(function(module) {/*!
+ * @name JavaScript/NodeJS Merge v1.2.1
+ * @author yeikos
+ * @repository https://github.com/yeikos/js.merge
+
+ * Copyright 2014 yeikos - MIT license
+ * https://raw.github.com/yeikos/js.merge/master/LICENSE
+ */
+
+;(function(isNode) {
+
+	/**
+	 * Merge one or more objects 
+	 * @param bool? clone
+	 * @param mixed,... arguments
+	 * @return object
+	 */
+
+	var Public = function(clone) {
+
+		return merge(clone === true, false, arguments);
+
+	}, publicName = 'merge';
+
+	/**
+	 * Merge two or more objects recursively 
+	 * @param bool? clone
+	 * @param mixed,... arguments
+	 * @return object
+	 */
+
+	Public.recursive = function(clone) {
+
+		return merge(clone === true, true, arguments);
+
+	};
+
+	/**
+	 * Clone the input removing any reference
+	 * @param mixed input
+	 * @return mixed
+	 */
+
+	Public.clone = function(input) {
+
+		var output = input,
+			type = typeOf(input),
+			index, size;
+
+		if (type === 'array') {
+
+			output = [];
+			size = input.length;
+
+			for (index=0;index<size;++index)
+
+				output[index] = Public.clone(input[index]);
+
+		} else if (type === 'object') {
+
+			output = {};
+
+			for (index in input)
+
+				output[index] = Public.clone(input[index]);
+
+		}
+
+		return output;
+
+	};
+
+	/**
+	 * Merge two objects recursively
+	 * @param mixed input
+	 * @param mixed extend
+	 * @return mixed
+	 */
+
+	function merge_recursive(base, extend) {
+
+		if (typeOf(base) !== 'object')
+
+			return extend;
+
+		for (var key in extend) {
+
+			if (typeOf(base[key]) === 'object' && typeOf(extend[key]) === 'object') {
+
+				base[key] = merge_recursive(base[key], extend[key]);
+
+			} else {
+
+				base[key] = extend[key];
+
+			}
+
+		}
+
+		return base;
+
+	}
+
+	/**
+	 * Merge two or more objects
+	 * @param bool clone
+	 * @param bool recursive
+	 * @param array argv
+	 * @return object
+	 */
+
+	function merge(clone, recursive, argv) {
+
+		var result = argv[0],
+			size = argv.length;
+
+		if (clone || typeOf(result) !== 'object')
+
+			result = {};
+
+		for (var index=0;index<size;++index) {
+
+			var item = argv[index],
+
+				type = typeOf(item);
+
+			if (type !== 'object') continue;
+
+			for (var key in item) {
+
+				if (key === '__proto__') continue;
+
+				var sitem = clone ? Public.clone(item[key]) : item[key];
+
+				if (recursive) {
+
+					result[key] = merge_recursive(result[key], sitem);
+
+				} else {
+
+					result[key] = sitem;
+
+				}
+
+			}
+
+		}
+
+		return result;
+
+	}
+
+	/**
+	 * Get type of variable
+	 * @param mixed input
+	 * @return string
+	 *
+	 * @see http://jsperf.com/typeofvar
+	 */
+
+	function typeOf(input) {
+
+		return ({}).toString.call(input).slice(8, -1).toLowerCase();
+
+	}
+
+	if (isNode) {
+
+		module.exports = Public;
+
+	} else {
+
+		window[publicName] = Public;
+
+	}
+
+})( true && module && typeof module.exports === 'object' && module.exports);
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../webpack/buildin/module.js */ "./node_modules/webpack/buildin/module.js")(module)))
+
+/***/ }),
+
+/***/ "./node_modules/parse-glob/index.js":
+/*!******************************************!*\
+  !*** ./node_modules/parse-glob/index.js ***!
+  \******************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+/*!
+ * parse-glob <https://github.com/jonschlinkert/parse-glob>
+ *
+ * Copyright (c) 2015, Jon Schlinkert.
+ * Licensed under the MIT License.
+ */
+
+
+
+var isGlob = __webpack_require__(/*! is-glob */ "./node_modules/parse-glob/node_modules/is-glob/index.js");
+var findBase = __webpack_require__(/*! glob-base */ "./node_modules/glob-base/index.js");
+var extglob = __webpack_require__(/*! is-extglob */ "./node_modules/parse-glob/node_modules/is-extglob/index.js");
+var dotfile = __webpack_require__(/*! is-dotfile */ "./node_modules/is-dotfile/index.js");
+
+/**
+ * Expose `cache`
+ */
+
+var cache = module.exports.cache = {};
+
+/**
+ * Parse a glob pattern into tokens.
+ *
+ * When no paths or '**' are in the glob, we use a
+ * different strategy for parsing the filename, since
+ * file names can contain braces and other difficult
+ * patterns. such as:
+ *
+ *  - `*.{a,b}`
+ *  - `(**|*.js)`
+ */
+
+module.exports = function parseGlob(glob) {
+  if (cache.hasOwnProperty(glob)) {
+    return cache[glob];
+  }
+
+  var tok = {};
+  tok.orig = glob;
+  tok.is = {};
+
+  // unescape dots and slashes in braces/brackets
+  glob = escape(glob);
+
+  var parsed = findBase(glob);
+  tok.is.glob = parsed.isGlob;
+
+  tok.glob = parsed.glob;
+  tok.base = parsed.base;
+  var segs = /([^\/]*)$/.exec(glob);
+
+  tok.path = {};
+  tok.path.dirname = '';
+  tok.path.basename = segs[1] || '';
+  tok.path.dirname = glob.split(tok.path.basename).join('') || '';
+  var basename = (tok.path.basename || '').split('.') || '';
+  tok.path.filename = basename[0] || '';
+  tok.path.extname = basename.slice(1).join('.') || '';
+  tok.path.ext = '';
+
+  if (isGlob(tok.path.dirname) && !tok.path.basename) {
+    if (!/\/$/.test(tok.glob)) {
+      tok.path.basename = tok.glob;
+    }
+    tok.path.dirname = tok.base;
+  }
+
+  if (glob.indexOf('/') === -1 && !tok.is.globstar) {
+    tok.path.dirname = '';
+    tok.path.basename = tok.orig;
+  }
+
+  var dot = tok.path.basename.indexOf('.');
+  if (dot !== -1) {
+    tok.path.filename = tok.path.basename.slice(0, dot);
+    tok.path.extname = tok.path.basename.slice(dot);
+  }
+
+  if (tok.path.extname.charAt(0) === '.') {
+    var exts = tok.path.extname.split('.');
+    tok.path.ext = exts[exts.length - 1];
+  }
+
+  // unescape dots and slashes in braces/brackets
+  tok.glob = unescape(tok.glob);
+  tok.path.dirname = unescape(tok.path.dirname);
+  tok.path.basename = unescape(tok.path.basename);
+  tok.path.filename = unescape(tok.path.filename);
+  tok.path.extname = unescape(tok.path.extname);
+
+  // Booleans
+  var is = (glob && tok.is.glob);
+  tok.is.negated  = glob && glob.charAt(0) === '!';
+  tok.is.extglob  = glob && extglob(glob);
+  tok.is.braces   = has(is, glob, '{');
+  tok.is.brackets = has(is, glob, '[:');
+  tok.is.globstar = has(is, glob, '**');
+  tok.is.dotfile  = dotfile(tok.path.basename) || dotfile(tok.path.filename);
+  tok.is.dotdir   = dotdir(tok.path.dirname);
+  return (cache[glob] = tok);
+}
+
+/**
+ * Returns true if the glob matches dot-directories.
+ *
+ * @param  {Object} `tok` The tokens object
+ * @param  {Object} `path` The path object
+ * @return {Object}
+ */
+
+function dotdir(base) {
+  if (base.indexOf('/.') !== -1) {
+    return true;
+  }
+  if (base.charAt(0) === '.' && base.charAt(1) !== '/') {
+    return true;
+  }
+  return false;
+}
+
+/**
+ * Returns true if the pattern has the given `ch`aracter(s)
+ *
+ * @param  {Object} `glob` The glob pattern.
+ * @param  {Object} `ch` The character to test for
+ * @return {Object}
+ */
+
+function has(is, glob, ch) {
+  return is && glob.indexOf(ch) !== -1;
+}
+
+/**
+ * Escape/unescape utils
+ */
+
+function escape(str) {
+  var re = /\{([^{}]*?)}|\(([^()]*?)\)|\[([^\[\]]*?)\]/g;
+  return str.replace(re, function (outter, braces, parens, brackets) {
+    var inner = braces || parens || brackets;
+    if (!inner) { return outter; }
+    return outter.split(inner).join(esc(inner));
+  });
+}
+
+function esc(str) {
+  str = str.split('/').join('__SLASH__');
+  str = str.split('.').join('__DOT__');
+  return str;
+}
+
+function unescape(str) {
+  str = str.split('__SLASH__').join('/');
+  str = str.split('__DOT__').join('.');
+  return str;
+}
+
+
+/***/ }),
+
+/***/ "./node_modules/parse-glob/node_modules/is-extglob/index.js":
+/*!******************************************************************!*\
+  !*** ./node_modules/parse-glob/node_modules/is-extglob/index.js ***!
+  \******************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/*!
+ * is-extglob <https://github.com/jonschlinkert/is-extglob>
+ *
+ * Copyright (c) 2014-2015, Jon Schlinkert.
+ * Licensed under the MIT License.
+ */
+
+module.exports = function isExtglob(str) {
+  return typeof str === 'string'
+    && /[@?!+*]\(/.test(str);
+};
+
+
+/***/ }),
+
+/***/ "./node_modules/parse-glob/node_modules/is-glob/index.js":
+/*!***************************************************************!*\
+  !*** ./node_modules/parse-glob/node_modules/is-glob/index.js ***!
+  \***************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+/*!
+ * is-glob <https://github.com/jonschlinkert/is-glob>
+ *
+ * Copyright (c) 2014-2015, Jon Schlinkert.
+ * Licensed under the MIT License.
+ */
+
+var isExtglob = __webpack_require__(/*! is-extglob */ "./node_modules/parse-glob/node_modules/is-extglob/index.js");
+
+module.exports = function isGlob(str) {
+  return typeof str === 'string'
+    && (/[*!?{}(|)[\]]/.test(str)
+     || isExtglob(str));
+};
+
+/***/ }),
+
+/***/ "./node_modules/path-browserify/index.js":
+/*!***********************************************!*\
+  !*** ./node_modules/path-browserify/index.js ***!
+  \***********************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+/* WEBPACK VAR INJECTION */(function(process) {// .dirname, .basename, and .extname methods are extracted from Node.js v8.11.1,
+// backported and transplited with Babel, with backwards-compat fixes
+
+// Copyright Joyent, Inc. and other Node contributors.
+//
+// Permission is hereby granted, free of charge, to any person obtaining a
+// copy of this software and associated documentation files (the
+// "Software"), to deal in the Software without restriction, including
+// without limitation the rights to use, copy, modify, merge, publish,
+// distribute, sublicense, and/or sell copies of the Software, and to permit
+// persons to whom the Software is furnished to do so, subject to the
+// following conditions:
+//
+// The above copyright notice and this permission notice shall be included
+// in all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+// OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN
+// NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+// DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
+// OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE
+// USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+// resolves . and .. elements in a path array with directory names there
+// must be no slashes, empty elements, or device names (c:\) in the array
+// (so also no leading and trailing slashes - it does not distinguish
+// relative and absolute paths)
+function normalizeArray(parts, allowAboveRoot) {
+  // if the path tries to go above the root, `up` ends up > 0
+  var up = 0;
+  for (var i = parts.length - 1; i >= 0; i--) {
+    var last = parts[i];
+    if (last === '.') {
+      parts.splice(i, 1);
+    } else if (last === '..') {
+      parts.splice(i, 1);
+      up++;
+    } else if (up) {
+      parts.splice(i, 1);
+      up--;
+    }
+  }
+
+  // if the path is allowed to go above the root, restore leading ..s
+  if (allowAboveRoot) {
+    for (; up--; up) {
+      parts.unshift('..');
+    }
+  }
+
+  return parts;
+}
+
+// path.resolve([from ...], to)
+// posix version
+exports.resolve = function() {
+  var resolvedPath = '',
+      resolvedAbsolute = false;
+
+  for (var i = arguments.length - 1; i >= -1 && !resolvedAbsolute; i--) {
+    var path = (i >= 0) ? arguments[i] : process.cwd();
+
+    // Skip empty and invalid entries
+    if (typeof path !== 'string') {
+      throw new TypeError('Arguments to path.resolve must be strings');
+    } else if (!path) {
+      continue;
+    }
+
+    resolvedPath = path + '/' + resolvedPath;
+    resolvedAbsolute = path.charAt(0) === '/';
+  }
+
+  // At this point the path should be resolved to a full absolute path, but
+  // handle relative paths to be safe (might happen when process.cwd() fails)
+
+  // Normalize the path
+  resolvedPath = normalizeArray(filter(resolvedPath.split('/'), function(p) {
+    return !!p;
+  }), !resolvedAbsolute).join('/');
+
+  return ((resolvedAbsolute ? '/' : '') + resolvedPath) || '.';
+};
+
+// path.normalize(path)
+// posix version
+exports.normalize = function(path) {
+  var isAbsolute = exports.isAbsolute(path),
+      trailingSlash = substr(path, -1) === '/';
+
+  // Normalize the path
+  path = normalizeArray(filter(path.split('/'), function(p) {
+    return !!p;
+  }), !isAbsolute).join('/');
+
+  if (!path && !isAbsolute) {
+    path = '.';
+  }
+  if (path && trailingSlash) {
+    path += '/';
+  }
+
+  return (isAbsolute ? '/' : '') + path;
+};
+
+// posix version
+exports.isAbsolute = function(path) {
+  return path.charAt(0) === '/';
+};
+
+// posix version
+exports.join = function() {
+  var paths = Array.prototype.slice.call(arguments, 0);
+  return exports.normalize(filter(paths, function(p, index) {
+    if (typeof p !== 'string') {
+      throw new TypeError('Arguments to path.join must be strings');
+    }
+    return p;
+  }).join('/'));
+};
+
+
+// path.relative(from, to)
+// posix version
+exports.relative = function(from, to) {
+  from = exports.resolve(from).substr(1);
+  to = exports.resolve(to).substr(1);
+
+  function trim(arr) {
+    var start = 0;
+    for (; start < arr.length; start++) {
+      if (arr[start] !== '') break;
+    }
+
+    var end = arr.length - 1;
+    for (; end >= 0; end--) {
+      if (arr[end] !== '') break;
+    }
+
+    if (start > end) return [];
+    return arr.slice(start, end - start + 1);
+  }
+
+  var fromParts = trim(from.split('/'));
+  var toParts = trim(to.split('/'));
+
+  var length = Math.min(fromParts.length, toParts.length);
+  var samePartsLength = length;
+  for (var i = 0; i < length; i++) {
+    if (fromParts[i] !== toParts[i]) {
+      samePartsLength = i;
+      break;
+    }
+  }
+
+  var outputParts = [];
+  for (var i = samePartsLength; i < fromParts.length; i++) {
+    outputParts.push('..');
+  }
+
+  outputParts = outputParts.concat(toParts.slice(samePartsLength));
+
+  return outputParts.join('/');
+};
+
+exports.sep = '/';
+exports.delimiter = ':';
+
+exports.dirname = function (path) {
+  if (typeof path !== 'string') path = path + '';
+  if (path.length === 0) return '.';
+  var code = path.charCodeAt(0);
+  var hasRoot = code === 47 /*/*/;
+  var end = -1;
+  var matchedSlash = true;
+  for (var i = path.length - 1; i >= 1; --i) {
+    code = path.charCodeAt(i);
+    if (code === 47 /*/*/) {
+        if (!matchedSlash) {
+          end = i;
+          break;
+        }
+      } else {
+      // We saw the first non-path separator
+      matchedSlash = false;
+    }
+  }
+
+  if (end === -1) return hasRoot ? '/' : '.';
+  if (hasRoot && end === 1) {
+    // return '//';
+    // Backwards-compat fix:
+    return '/';
+  }
+  return path.slice(0, end);
+};
+
+function basename(path) {
+  if (typeof path !== 'string') path = path + '';
+
+  var start = 0;
+  var end = -1;
+  var matchedSlash = true;
+  var i;
+
+  for (i = path.length - 1; i >= 0; --i) {
+    if (path.charCodeAt(i) === 47 /*/*/) {
+        // If we reached a path separator that was not part of a set of path
+        // separators at the end of the string, stop now
+        if (!matchedSlash) {
+          start = i + 1;
+          break;
+        }
+      } else if (end === -1) {
+      // We saw the first non-path separator, mark this as the end of our
+      // path component
+      matchedSlash = false;
+      end = i + 1;
+    }
+  }
+
+  if (end === -1) return '';
+  return path.slice(start, end);
+}
+
+// Uses a mixed approach for backwards-compatibility, as ext behavior changed
+// in new Node.js versions, so only basename() above is backported here
+exports.basename = function (path, ext) {
+  var f = basename(path);
+  if (ext && f.substr(-1 * ext.length) === ext) {
+    f = f.substr(0, f.length - ext.length);
+  }
+  return f;
+};
+
+exports.extname = function (path) {
+  if (typeof path !== 'string') path = path + '';
+  var startDot = -1;
+  var startPart = 0;
+  var end = -1;
+  var matchedSlash = true;
+  // Track the state of characters (if any) we see before our first dot and
+  // after any path separator we find
+  var preDotState = 0;
+  for (var i = path.length - 1; i >= 0; --i) {
+    var code = path.charCodeAt(i);
+    if (code === 47 /*/*/) {
+        // If we reached a path separator that was not part of a set of path
+        // separators at the end of the string, stop now
+        if (!matchedSlash) {
+          startPart = i + 1;
+          break;
+        }
+        continue;
+      }
+    if (end === -1) {
+      // We saw the first non-path separator, mark this as the end of our
+      // extension
+      matchedSlash = false;
+      end = i + 1;
+    }
+    if (code === 46 /*.*/) {
+        // If this is our first dot, mark it as the start of our extension
+        if (startDot === -1)
+          startDot = i;
+        else if (preDotState !== 1)
+          preDotState = 1;
+    } else if (startDot !== -1) {
+      // We saw a non-dot and non-path separator before our dot, so we should
+      // have a good chance at having a non-empty extension
+      preDotState = -1;
+    }
+  }
+
+  if (startDot === -1 || end === -1 ||
+      // We saw a non-dot character immediately before the dot
+      preDotState === 0 ||
+      // The (right-most) trimmed path component is exactly '..'
+      preDotState === 1 && startDot === end - 1 && startDot === startPart + 1) {
+    return '';
+  }
+  return path.slice(startDot, end);
+};
+
+function filter (xs, f) {
+    if (xs.filter) return xs.filter(f);
+    var res = [];
+    for (var i = 0; i < xs.length; i++) {
+        if (f(xs[i], i, xs)) res.push(xs[i]);
+    }
+    return res;
+}
+
+// String.prototype.substr - negative index don't work in IE8
+var substr = 'ab'.substr(-1) === 'b'
+    ? function (str, start, len) { return str.substr(start, len) }
+    : function (str, start, len) {
+        if (start < 0) start = str.length + start;
+        return str.substr(start, len);
+    }
+;
+
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../process/browser.js */ "./node_modules/process/browser.js")))
+
+/***/ }),
+
 /***/ "./node_modules/popper.js/dist/esm/popper.js":
 /*!***************************************************!*\
   !*** ./node_modules/popper.js/dist/esm/popper.js ***!
@@ -36795,6 +44493,71 @@ Popper.Defaults = Defaults;
 
 /***/ }),
 
+/***/ "./node_modules/preserve/index.js":
+/*!****************************************!*\
+  !*** ./node_modules/preserve/index.js ***!
+  \****************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+/*!
+ * preserve <https://github.com/jonschlinkert/preserve>
+ *
+ * Copyright (c) 2014-2015, Jon Schlinkert.
+ * Licensed under the MIT license.
+ */
+
+
+
+/**
+ * Replace tokens in `str` with a temporary, heuristic placeholder.
+ *
+ * ```js
+ * tokens.before('{a\\,b}');
+ * //=> '{__ID1__}'
+ * ```
+ *
+ * @param  {String} `str`
+ * @return {String} String with placeholders.
+ * @api public
+ */
+
+exports.before = function before(str, re) {
+  return str.replace(re, function (match) {
+    var id = randomize();
+    cache[id] = match;
+    return '__ID' + id + '__';
+  });
+};
+
+/**
+ * Replace placeholders in `str` with original tokens.
+ *
+ * ```js
+ * tokens.after('{__ID1__}');
+ * //=> '{a\\,b}'
+ * ```
+ *
+ * @param  {String} `str` String with placeholders
+ * @return {String} `str` String with original tokens.
+ * @api public
+ */
+
+exports.after = function after(str) {
+  return str.replace(/__ID(.{5})__/g, function (_, id) {
+    return cache[id];
+  });
+};
+
+function randomize() {
+  return Math.random().toString().slice(2, 7);
+}
+
+var cache = {};
+
+/***/ }),
+
 /***/ "./node_modules/process/browser.js":
 /*!*****************************************!*\
   !*** ./node_modules/process/browser.js ***!
@@ -36986,6 +44749,367 @@ process.chdir = function (dir) {
     throw new Error('process.chdir is not supported');
 };
 process.umask = function() { return 0; };
+
+
+/***/ }),
+
+/***/ "./node_modules/randomatic/index.js":
+/*!******************************************!*\
+  !*** ./node_modules/randomatic/index.js ***!
+  \******************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+/*!
+ * randomatic <https://github.com/jonschlinkert/randomatic>
+ *
+ * Copyright (c) 2014-2017, Jon Schlinkert.
+ * Released under the MIT License.
+ */
+
+
+
+var isNumber = __webpack_require__(/*! is-number */ "./node_modules/randomatic/node_modules/is-number/index.js");
+var typeOf = __webpack_require__(/*! kind-of */ "./node_modules/kind-of/index.js");
+var mathRandom = __webpack_require__(/*! math-random */ "./node_modules/math-random/browser.js");
+
+/**
+ * Expose `randomatic`
+ */
+
+module.exports = randomatic;
+module.exports.isCrypto = !!mathRandom.cryptographic;
+
+/**
+ * Available mask characters
+ */
+
+var type = {
+  lower: 'abcdefghijklmnopqrstuvwxyz',
+  upper: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ',
+  number: '0123456789',
+  special: '~!@#$%^&()_+-={}[];\',.'
+};
+
+type.all = type.lower + type.upper + type.number + type.special;
+
+/**
+ * Generate random character sequences of a specified `length`,
+ * based on the given `pattern`.
+ *
+ * @param {String} `pattern` The pattern to use for generating the random string.
+ * @param {String} `length` The length of the string to generate.
+ * @param {String} `options`
+ * @return {String}
+ * @api public
+ */
+
+function randomatic(pattern, length, options) {
+  if (typeof pattern === 'undefined') {
+    throw new Error('randomatic expects a string or number.');
+  }
+
+  var custom = false;
+  if (arguments.length === 1) {
+    if (typeof pattern === 'string') {
+      length = pattern.length;
+
+    } else if (isNumber(pattern)) {
+      options = {};
+      length = pattern;
+      pattern = '*';
+    }
+  }
+
+  if (typeOf(length) === 'object' && length.hasOwnProperty('chars')) {
+    options = length;
+    pattern = options.chars;
+    length = pattern.length;
+    custom = true;
+  }
+
+  var opts = options || {};
+  var mask = '';
+  var res = '';
+
+  // Characters to be used
+  if (pattern.indexOf('?') !== -1) mask += opts.chars;
+  if (pattern.indexOf('a') !== -1) mask += type.lower;
+  if (pattern.indexOf('A') !== -1) mask += type.upper;
+  if (pattern.indexOf('0') !== -1) mask += type.number;
+  if (pattern.indexOf('!') !== -1) mask += type.special;
+  if (pattern.indexOf('*') !== -1) mask += type.all;
+  if (custom) mask += pattern;
+
+  // Characters to exclude
+  if (opts.exclude) {
+    var exclude = typeOf(opts.exclude) === 'string' ? opts.exclude : opts.exclude.join('');
+    exclude = exclude.replace(new RegExp('[\\]]+', 'g'), '');
+    mask = mask.replace(new RegExp('[' + exclude + ']+', 'g'), '');
+    
+    if(opts.exclude.indexOf(']') !== -1) mask = mask.replace(new RegExp('[\\]]+', 'g'), '');
+  }
+
+  while (length--) {
+    res += mask.charAt(parseInt(mathRandom() * mask.length, 10));
+  }
+  return res;
+};
+
+
+/***/ }),
+
+/***/ "./node_modules/randomatic/node_modules/is-number/index.js":
+/*!*****************************************************************!*\
+  !*** ./node_modules/randomatic/node_modules/is-number/index.js ***!
+  \*****************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+/*!
+ * is-number <https://github.com/jonschlinkert/is-number>
+ *
+ * Copyright (c) 2014-2017, Jon Schlinkert.
+ * Released under the MIT License.
+ */
+
+
+
+module.exports = function isNumber(num) {
+  var type = typeof num;
+
+  if (type === 'string' || num instanceof String) {
+    // an empty string would be coerced to true with the below logic
+    if (!num.trim()) return false;
+  } else if (type !== 'number' && !(num instanceof Number)) {
+    return false;
+  }
+
+  return (num - num + 1) >= 0;
+};
+
+
+/***/ }),
+
+/***/ "./node_modules/regex-cache/index.js":
+/*!*******************************************!*\
+  !*** ./node_modules/regex-cache/index.js ***!
+  \*******************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+/*!
+ * regex-cache <https://github.com/jonschlinkert/regex-cache>
+ *
+ * Copyright (c) 2015-2017, Jon Schlinkert.
+ * Released under the MIT License.
+ */
+
+
+
+var equal = __webpack_require__(/*! is-equal-shallow */ "./node_modules/is-equal-shallow/index.js");
+var basic = {};
+var cache = {};
+
+/**
+ * Expose `regexCache`
+ */
+
+module.exports = regexCache;
+
+/**
+ * Memoize the results of a call to the new RegExp constructor.
+ *
+ * @param  {Function} fn [description]
+ * @param  {String} str [description]
+ * @param  {Options} options [description]
+ * @param  {Boolean} nocompare [description]
+ * @return {RegExp}
+ */
+
+function regexCache(fn, str, opts) {
+  var key = '_default_', regex, cached;
+
+  if (!str && !opts) {
+    if (typeof fn !== 'function') {
+      return fn;
+    }
+    return basic[key] || (basic[key] = fn(str));
+  }
+
+  var isString = typeof str === 'string';
+  if (isString) {
+    if (!opts) {
+      return basic[str] || (basic[str] = fn(str));
+    }
+    key = str;
+  } else {
+    opts = str;
+  }
+
+  cached = cache[key];
+  if (cached && equal(cached.opts, opts)) {
+    return cached.regex;
+  }
+
+  memo(key, opts, (regex = fn(str, opts)));
+  return regex;
+}
+
+function memo(key, opts, regex) {
+  cache[key] = {regex: regex, opts: opts};
+}
+
+/**
+ * Expose `cache`
+ */
+
+module.exports.cache = cache;
+module.exports.basic = basic;
+
+
+/***/ }),
+
+/***/ "./node_modules/remove-trailing-separator/index.js":
+/*!*********************************************************!*\
+  !*** ./node_modules/remove-trailing-separator/index.js ***!
+  \*********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+/* WEBPACK VAR INJECTION */(function(process) {var isWin = process.platform === 'win32';
+
+module.exports = function (str) {
+	var i = str.length - 1;
+	if (i < 2) {
+		return str;
+	}
+	while (isSeparator(str, i)) {
+		i--;
+	}
+	return str.substr(0, i + 1);
+};
+
+function isSeparator(str, i) {
+	var char = str[i];
+	return i > 0 && (char === '/' || (isWin && char === '\\'));
+}
+
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../process/browser.js */ "./node_modules/process/browser.js")))
+
+/***/ }),
+
+/***/ "./node_modules/repeat-element/index.js":
+/*!**********************************************!*\
+  !*** ./node_modules/repeat-element/index.js ***!
+  \**********************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+/*!
+ * repeat-element <https://github.com/jonschlinkert/repeat-element>
+ *
+ * Copyright (c) 2015-present, Jon Schlinkert.
+ * Licensed under the MIT license.
+ */
+
+
+
+module.exports = function repeat(ele, num) {
+  var arr = new Array(num);
+
+  for (var i = 0; i < num; i++) {
+    arr[i] = ele;
+  }
+
+  return arr;
+};
+
+
+/***/ }),
+
+/***/ "./node_modules/repeat-string/index.js":
+/*!*********************************************!*\
+  !*** ./node_modules/repeat-string/index.js ***!
+  \*********************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+/*!
+ * repeat-string <https://github.com/jonschlinkert/repeat-string>
+ *
+ * Copyright (c) 2014-2015, Jon Schlinkert.
+ * Licensed under the MIT License.
+ */
+
+
+
+/**
+ * Results cache
+ */
+
+var res = '';
+var cache;
+
+/**
+ * Expose `repeat`
+ */
+
+module.exports = repeat;
+
+/**
+ * Repeat the given `string` the specified `number`
+ * of times.
+ *
+ * **Example:**
+ *
+ * ```js
+ * var repeat = require('repeat-string');
+ * repeat('A', 5);
+ * //=> AAAAA
+ * ```
+ *
+ * @param {String} `string` The string to repeat
+ * @param {Number} `number` The number of times to repeat the string
+ * @return {String} Repeated string
+ * @api public
+ */
+
+function repeat(str, num) {
+  if (typeof str !== 'string') {
+    throw new TypeError('expected a string');
+  }
+
+  // cover common, quick use cases
+  if (num === 1) return str;
+  if (num === 2) return str + str;
+
+  var max = str.length * num;
+  if (cache !== str || typeof cache === 'undefined') {
+    cache = str;
+    res = '';
+  } else if (res.length >= max) {
+    return res.substr(0, max);
+  }
+
+  while (max > res.length && num > 1) {
+    if (num & 1) {
+      res += str;
+    }
+
+    num >>= 1;
+    str += str;
+  }
+
+  res += str;
+  res = res.substr(0, max);
+  return res;
+}
 
 
 /***/ }),
@@ -37188,6 +45312,630 @@ process.umask = function() { return 0; };
 
 /***/ }),
 
+/***/ "./node_modules/simple-line-icons/fonts/Simple-Line-Icons.eot?v=2.4.0":
+/*!****************************************************************************!*\
+  !*** ./node_modules/simple-line-icons/fonts/Simple-Line-Icons.eot?v=2.4.0 ***!
+  \****************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = "/fonts/vendor/simple-line-icons/Simple-Line-Icons.eot?f33df365d6d0255b586f2920355e94d7";
+
+/***/ }),
+
+/***/ "./node_modules/simple-line-icons/fonts/Simple-Line-Icons.svg?v=2.4.0":
+/*!****************************************************************************!*\
+  !*** ./node_modules/simple-line-icons/fonts/Simple-Line-Icons.svg?v=2.4.0 ***!
+  \****************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = "/fonts/vendor/simple-line-icons/Simple-Line-Icons.svg?2fe2efe63441d830b1acd106c1fe8734";
+
+/***/ }),
+
+/***/ "./node_modules/simple-line-icons/fonts/Simple-Line-Icons.ttf?v=2.4.0":
+/*!****************************************************************************!*\
+  !*** ./node_modules/simple-line-icons/fonts/Simple-Line-Icons.ttf?v=2.4.0 ***!
+  \****************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = "/fonts/vendor/simple-line-icons/Simple-Line-Icons.ttf?d2285965fe34b05465047401b8595dd0";
+
+/***/ }),
+
+/***/ "./node_modules/simple-line-icons/fonts/Simple-Line-Icons.woff2?v=2.4.0":
+/*!******************************************************************************!*\
+  !*** ./node_modules/simple-line-icons/fonts/Simple-Line-Icons.woff2?v=2.4.0 ***!
+  \******************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = "/fonts/vendor/simple-line-icons/Simple-Line-Icons.woff2?0cb0b9c589c0624c9c78dd3d83e946f6";
+
+/***/ }),
+
+/***/ "./node_modules/simple-line-icons/fonts/Simple-Line-Icons.woff?v=2.4.0":
+/*!*****************************************************************************!*\
+  !*** ./node_modules/simple-line-icons/fonts/Simple-Line-Icons.woff?v=2.4.0 ***!
+  \*****************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = "/fonts/vendor/simple-line-icons/Simple-Line-Icons.woff?78f07e2c2a535c26ef21d95e41bd7175";
+
+/***/ }),
+
+/***/ "./node_modules/style-loader/index.js!./node_modules/css-loader/dist/cjs.js!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/sass-loader/dist/cjs.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/DataTable.vue?vue&type=style&index=0&lang=scss&":
+/*!***********************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/style-loader!./node_modules/css-loader/dist/cjs.js!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--6-2!./node_modules/sass-loader/dist/cjs.js??ref--6-3!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/DataTable.vue?vue&type=style&index=0&lang=scss& ***!
+  \***********************************************************************************************************************************************************************************************************************************************************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+
+var content = __webpack_require__(/*! !../../../node_modules/css-loader/dist/cjs.js!../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../node_modules/postcss-loader/src??ref--6-2!../../../node_modules/sass-loader/dist/cjs.js??ref--6-3!../../../node_modules/vue-loader/lib??vue-loader-options!./DataTable.vue?vue&type=style&index=0&lang=scss& */ "./node_modules/css-loader/dist/cjs.js!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/sass-loader/dist/cjs.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/DataTable.vue?vue&type=style&index=0&lang=scss&");
+
+if(typeof content === 'string') content = [[module.i, content, '']];
+
+var transform;
+var insertInto;
+
+
+
+var options = {"hmr":true}
+
+options.transform = transform
+options.insertInto = undefined;
+
+var update = __webpack_require__(/*! ../../../node_modules/style-loader/lib/addStyles.js */ "./node_modules/style-loader/lib/addStyles.js")(content, options);
+
+if(content.locals) module.exports = content.locals;
+
+if(false) {}
+
+/***/ }),
+
+/***/ "./node_modules/style-loader/index.js!./node_modules/css-loader/dist/cjs.js!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/sass-loader/dist/cjs.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/layouts/Home.vue?vue&type=style&index=0&lang=scss&":
+/*!***************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/style-loader!./node_modules/css-loader/dist/cjs.js!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--6-2!./node_modules/sass-loader/dist/cjs.js??ref--6-3!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/layouts/Home.vue?vue&type=style&index=0&lang=scss& ***!
+  \***************************************************************************************************************************************************************************************************************************************************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+
+var content = __webpack_require__(/*! !../../../node_modules/css-loader/dist/cjs.js!../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../node_modules/postcss-loader/src??ref--6-2!../../../node_modules/sass-loader/dist/cjs.js??ref--6-3!../../../node_modules/vue-loader/lib??vue-loader-options!./Home.vue?vue&type=style&index=0&lang=scss& */ "./node_modules/css-loader/dist/cjs.js!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/sass-loader/dist/cjs.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/layouts/Home.vue?vue&type=style&index=0&lang=scss&");
+
+if(typeof content === 'string') content = [[module.i, content, '']];
+
+var transform;
+var insertInto;
+
+
+
+var options = {"hmr":true}
+
+options.transform = transform
+options.insertInto = undefined;
+
+var update = __webpack_require__(/*! ../../../node_modules/style-loader/lib/addStyles.js */ "./node_modules/style-loader/lib/addStyles.js")(content, options);
+
+if(content.locals) module.exports = content.locals;
+
+if(false) {}
+
+/***/ }),
+
+/***/ "./node_modules/style-loader/lib/addStyles.js":
+/*!****************************************************!*\
+  !*** ./node_modules/style-loader/lib/addStyles.js ***!
+  \****************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+/*
+	MIT License http://www.opensource.org/licenses/mit-license.php
+	Author Tobias Koppers @sokra
+*/
+
+var stylesInDom = {};
+
+var	memoize = function (fn) {
+	var memo;
+
+	return function () {
+		if (typeof memo === "undefined") memo = fn.apply(this, arguments);
+		return memo;
+	};
+};
+
+var isOldIE = memoize(function () {
+	// Test for IE <= 9 as proposed by Browserhacks
+	// @see http://browserhacks.com/#hack-e71d8692f65334173fee715c222cb805
+	// Tests for existence of standard globals is to allow style-loader
+	// to operate correctly into non-standard environments
+	// @see https://github.com/webpack-contrib/style-loader/issues/177
+	return window && document && document.all && !window.atob;
+});
+
+var getTarget = function (target, parent) {
+  if (parent){
+    return parent.querySelector(target);
+  }
+  return document.querySelector(target);
+};
+
+var getElement = (function (fn) {
+	var memo = {};
+
+	return function(target, parent) {
+                // If passing function in options, then use it for resolve "head" element.
+                // Useful for Shadow Root style i.e
+                // {
+                //   insertInto: function () { return document.querySelector("#foo").shadowRoot }
+                // }
+                if (typeof target === 'function') {
+                        return target();
+                }
+                if (typeof memo[target] === "undefined") {
+			var styleTarget = getTarget.call(this, target, parent);
+			// Special case to return head of iframe instead of iframe itself
+			if (window.HTMLIFrameElement && styleTarget instanceof window.HTMLIFrameElement) {
+				try {
+					// This will throw an exception if access to iframe is blocked
+					// due to cross-origin restrictions
+					styleTarget = styleTarget.contentDocument.head;
+				} catch(e) {
+					styleTarget = null;
+				}
+			}
+			memo[target] = styleTarget;
+		}
+		return memo[target]
+	};
+})();
+
+var singleton = null;
+var	singletonCounter = 0;
+var	stylesInsertedAtTop = [];
+
+var	fixUrls = __webpack_require__(/*! ./urls */ "./node_modules/style-loader/lib/urls.js");
+
+module.exports = function(list, options) {
+	if (typeof DEBUG !== "undefined" && DEBUG) {
+		if (typeof document !== "object") throw new Error("The style-loader cannot be used in a non-browser environment");
+	}
+
+	options = options || {};
+
+	options.attrs = typeof options.attrs === "object" ? options.attrs : {};
+
+	// Force single-tag solution on IE6-9, which has a hard limit on the # of <style>
+	// tags it will allow on a page
+	if (!options.singleton && typeof options.singleton !== "boolean") options.singleton = isOldIE();
+
+	// By default, add <style> tags to the <head> element
+        if (!options.insertInto) options.insertInto = "head";
+
+	// By default, add <style> tags to the bottom of the target
+	if (!options.insertAt) options.insertAt = "bottom";
+
+	var styles = listToStyles(list, options);
+
+	addStylesToDom(styles, options);
+
+	return function update (newList) {
+		var mayRemove = [];
+
+		for (var i = 0; i < styles.length; i++) {
+			var item = styles[i];
+			var domStyle = stylesInDom[item.id];
+
+			domStyle.refs--;
+			mayRemove.push(domStyle);
+		}
+
+		if(newList) {
+			var newStyles = listToStyles(newList, options);
+			addStylesToDom(newStyles, options);
+		}
+
+		for (var i = 0; i < mayRemove.length; i++) {
+			var domStyle = mayRemove[i];
+
+			if(domStyle.refs === 0) {
+				for (var j = 0; j < domStyle.parts.length; j++) domStyle.parts[j]();
+
+				delete stylesInDom[domStyle.id];
+			}
+		}
+	};
+};
+
+function addStylesToDom (styles, options) {
+	for (var i = 0; i < styles.length; i++) {
+		var item = styles[i];
+		var domStyle = stylesInDom[item.id];
+
+		if(domStyle) {
+			domStyle.refs++;
+
+			for(var j = 0; j < domStyle.parts.length; j++) {
+				domStyle.parts[j](item.parts[j]);
+			}
+
+			for(; j < item.parts.length; j++) {
+				domStyle.parts.push(addStyle(item.parts[j], options));
+			}
+		} else {
+			var parts = [];
+
+			for(var j = 0; j < item.parts.length; j++) {
+				parts.push(addStyle(item.parts[j], options));
+			}
+
+			stylesInDom[item.id] = {id: item.id, refs: 1, parts: parts};
+		}
+	}
+}
+
+function listToStyles (list, options) {
+	var styles = [];
+	var newStyles = {};
+
+	for (var i = 0; i < list.length; i++) {
+		var item = list[i];
+		var id = options.base ? item[0] + options.base : item[0];
+		var css = item[1];
+		var media = item[2];
+		var sourceMap = item[3];
+		var part = {css: css, media: media, sourceMap: sourceMap};
+
+		if(!newStyles[id]) styles.push(newStyles[id] = {id: id, parts: [part]});
+		else newStyles[id].parts.push(part);
+	}
+
+	return styles;
+}
+
+function insertStyleElement (options, style) {
+	var target = getElement(options.insertInto)
+
+	if (!target) {
+		throw new Error("Couldn't find a style target. This probably means that the value for the 'insertInto' parameter is invalid.");
+	}
+
+	var lastStyleElementInsertedAtTop = stylesInsertedAtTop[stylesInsertedAtTop.length - 1];
+
+	if (options.insertAt === "top") {
+		if (!lastStyleElementInsertedAtTop) {
+			target.insertBefore(style, target.firstChild);
+		} else if (lastStyleElementInsertedAtTop.nextSibling) {
+			target.insertBefore(style, lastStyleElementInsertedAtTop.nextSibling);
+		} else {
+			target.appendChild(style);
+		}
+		stylesInsertedAtTop.push(style);
+	} else if (options.insertAt === "bottom") {
+		target.appendChild(style);
+	} else if (typeof options.insertAt === "object" && options.insertAt.before) {
+		var nextSibling = getElement(options.insertAt.before, target);
+		target.insertBefore(style, nextSibling);
+	} else {
+		throw new Error("[Style Loader]\n\n Invalid value for parameter 'insertAt' ('options.insertAt') found.\n Must be 'top', 'bottom', or Object.\n (https://github.com/webpack-contrib/style-loader#insertat)\n");
+	}
+}
+
+function removeStyleElement (style) {
+	if (style.parentNode === null) return false;
+	style.parentNode.removeChild(style);
+
+	var idx = stylesInsertedAtTop.indexOf(style);
+	if(idx >= 0) {
+		stylesInsertedAtTop.splice(idx, 1);
+	}
+}
+
+function createStyleElement (options) {
+	var style = document.createElement("style");
+
+	if(options.attrs.type === undefined) {
+		options.attrs.type = "text/css";
+	}
+
+	if(options.attrs.nonce === undefined) {
+		var nonce = getNonce();
+		if (nonce) {
+			options.attrs.nonce = nonce;
+		}
+	}
+
+	addAttrs(style, options.attrs);
+	insertStyleElement(options, style);
+
+	return style;
+}
+
+function createLinkElement (options) {
+	var link = document.createElement("link");
+
+	if(options.attrs.type === undefined) {
+		options.attrs.type = "text/css";
+	}
+	options.attrs.rel = "stylesheet";
+
+	addAttrs(link, options.attrs);
+	insertStyleElement(options, link);
+
+	return link;
+}
+
+function addAttrs (el, attrs) {
+	Object.keys(attrs).forEach(function (key) {
+		el.setAttribute(key, attrs[key]);
+	});
+}
+
+function getNonce() {
+	if (false) {}
+
+	return __webpack_require__.nc;
+}
+
+function addStyle (obj, options) {
+	var style, update, remove, result;
+
+	// If a transform function was defined, run it on the css
+	if (options.transform && obj.css) {
+	    result = typeof options.transform === 'function'
+		 ? options.transform(obj.css) 
+		 : options.transform.default(obj.css);
+
+	    if (result) {
+	    	// If transform returns a value, use that instead of the original css.
+	    	// This allows running runtime transformations on the css.
+	    	obj.css = result;
+	    } else {
+	    	// If the transform function returns a falsy value, don't add this css.
+	    	// This allows conditional loading of css
+	    	return function() {
+	    		// noop
+	    	};
+	    }
+	}
+
+	if (options.singleton) {
+		var styleIndex = singletonCounter++;
+
+		style = singleton || (singleton = createStyleElement(options));
+
+		update = applyToSingletonTag.bind(null, style, styleIndex, false);
+		remove = applyToSingletonTag.bind(null, style, styleIndex, true);
+
+	} else if (
+		obj.sourceMap &&
+		typeof URL === "function" &&
+		typeof URL.createObjectURL === "function" &&
+		typeof URL.revokeObjectURL === "function" &&
+		typeof Blob === "function" &&
+		typeof btoa === "function"
+	) {
+		style = createLinkElement(options);
+		update = updateLink.bind(null, style, options);
+		remove = function () {
+			removeStyleElement(style);
+
+			if(style.href) URL.revokeObjectURL(style.href);
+		};
+	} else {
+		style = createStyleElement(options);
+		update = applyToTag.bind(null, style);
+		remove = function () {
+			removeStyleElement(style);
+		};
+	}
+
+	update(obj);
+
+	return function updateStyle (newObj) {
+		if (newObj) {
+			if (
+				newObj.css === obj.css &&
+				newObj.media === obj.media &&
+				newObj.sourceMap === obj.sourceMap
+			) {
+				return;
+			}
+
+			update(obj = newObj);
+		} else {
+			remove();
+		}
+	};
+}
+
+var replaceText = (function () {
+	var textStore = [];
+
+	return function (index, replacement) {
+		textStore[index] = replacement;
+
+		return textStore.filter(Boolean).join('\n');
+	};
+})();
+
+function applyToSingletonTag (style, index, remove, obj) {
+	var css = remove ? "" : obj.css;
+
+	if (style.styleSheet) {
+		style.styleSheet.cssText = replaceText(index, css);
+	} else {
+		var cssNode = document.createTextNode(css);
+		var childNodes = style.childNodes;
+
+		if (childNodes[index]) style.removeChild(childNodes[index]);
+
+		if (childNodes.length) {
+			style.insertBefore(cssNode, childNodes[index]);
+		} else {
+			style.appendChild(cssNode);
+		}
+	}
+}
+
+function applyToTag (style, obj) {
+	var css = obj.css;
+	var media = obj.media;
+
+	if(media) {
+		style.setAttribute("media", media)
+	}
+
+	if(style.styleSheet) {
+		style.styleSheet.cssText = css;
+	} else {
+		while(style.firstChild) {
+			style.removeChild(style.firstChild);
+		}
+
+		style.appendChild(document.createTextNode(css));
+	}
+}
+
+function updateLink (link, options, obj) {
+	var css = obj.css;
+	var sourceMap = obj.sourceMap;
+
+	/*
+		If convertToAbsoluteUrls isn't defined, but sourcemaps are enabled
+		and there is no publicPath defined then lets turn convertToAbsoluteUrls
+		on by default.  Otherwise default to the convertToAbsoluteUrls option
+		directly
+	*/
+	var autoFixUrls = options.convertToAbsoluteUrls === undefined && sourceMap;
+
+	if (options.convertToAbsoluteUrls || autoFixUrls) {
+		css = fixUrls(css);
+	}
+
+	if (sourceMap) {
+		// http://stackoverflow.com/a/26603875
+		css += "\n/*# sourceMappingURL=data:application/json;base64," + btoa(unescape(encodeURIComponent(JSON.stringify(sourceMap)))) + " */";
+	}
+
+	var blob = new Blob([css], { type: "text/css" });
+
+	var oldSrc = link.href;
+
+	link.href = URL.createObjectURL(blob);
+
+	if(oldSrc) URL.revokeObjectURL(oldSrc);
+}
+
+
+/***/ }),
+
+/***/ "./node_modules/style-loader/lib/urls.js":
+/*!***********************************************!*\
+  !*** ./node_modules/style-loader/lib/urls.js ***!
+  \***********************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+
+/**
+ * When source maps are enabled, `style-loader` uses a link element with a data-uri to
+ * embed the css on the page. This breaks all relative urls because now they are relative to a
+ * bundle instead of the current page.
+ *
+ * One solution is to only use full urls, but that may be impossible.
+ *
+ * Instead, this function "fixes" the relative urls to be absolute according to the current page location.
+ *
+ * A rudimentary test suite is located at `test/fixUrls.js` and can be run via the `npm test` command.
+ *
+ */
+
+module.exports = function (css) {
+  // get current location
+  var location = typeof window !== "undefined" && window.location;
+
+  if (!location) {
+    throw new Error("fixUrls requires window.location");
+  }
+
+	// blank or null?
+	if (!css || typeof css !== "string") {
+	  return css;
+  }
+
+  var baseUrl = location.protocol + "//" + location.host;
+  var currentDir = baseUrl + location.pathname.replace(/\/[^\/]*$/, "/");
+
+	// convert each url(...)
+	/*
+	This regular expression is just a way to recursively match brackets within
+	a string.
+
+	 /url\s*\(  = Match on the word "url" with any whitespace after it and then a parens
+	   (  = Start a capturing group
+	     (?:  = Start a non-capturing group
+	         [^)(]  = Match anything that isn't a parentheses
+	         |  = OR
+	         \(  = Match a start parentheses
+	             (?:  = Start another non-capturing groups
+	                 [^)(]+  = Match anything that isn't a parentheses
+	                 |  = OR
+	                 \(  = Match a start parentheses
+	                     [^)(]*  = Match anything that isn't a parentheses
+	                 \)  = Match a end parentheses
+	             )  = End Group
+              *\) = Match anything and then a close parens
+          )  = Close non-capturing group
+          *  = Match anything
+       )  = Close capturing group
+	 \)  = Match a close parens
+
+	 /gi  = Get all matches, not the first.  Be case insensitive.
+	 */
+	var fixedCss = css.replace(/url\s*\(((?:[^)(]|\((?:[^)(]+|\([^)(]*\))*\))*)\)/gi, function(fullMatch, origUrl) {
+		// strip quotes (if they exist)
+		var unquotedOrigUrl = origUrl
+			.trim()
+			.replace(/^"(.*)"$/, function(o, $1){ return $1; })
+			.replace(/^'(.*)'$/, function(o, $1){ return $1; });
+
+		// already a full url? no change
+		if (/^(#|data:|http:\/\/|https:\/\/|file:\/\/\/|\s*$)/i.test(unquotedOrigUrl)) {
+		  return fullMatch;
+		}
+
+		// convert the url to a full url
+		var newUrl;
+
+		if (unquotedOrigUrl.indexOf("//") === 0) {
+		  	//TODO: should we add protocol?
+			newUrl = unquotedOrigUrl;
+		} else if (unquotedOrigUrl.indexOf("/") === 0) {
+			// path should be relative to the base url
+			newUrl = baseUrl + unquotedOrigUrl; // already starts with '/'
+		} else {
+			// path should be relative to current directory
+			newUrl = currentDir + unquotedOrigUrl.replace(/^\.\//, ""); // Strip leading './'
+		}
+
+		// send back the fixed url(...)
+		return "url(" + JSON.stringify(newUrl) + ")";
+	});
+
+	// send back the fixed css
+	return fixedCss;
+};
+
+
+/***/ }),
+
 /***/ "./node_modules/timers-browserify/main.js":
 /*!************************************************!*\
   !*** ./node_modules/timers-browserify/main.js ***!
@@ -37260,6 +46008,100 @@ exports.clearImmediate = (typeof self !== "undefined" && self.clearImmediate) ||
                          (this && this.clearImmediate);
 
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../webpack/buildin/global.js */ "./node_modules/webpack/buildin/global.js")))
+
+/***/ }),
+
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/DataTable.vue?vue&type=template&id=4b997e69&":
+/*!************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/DataTable.vue?vue&type=template&id=4b997e69& ***!
+  \************************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", { staticClass: "animated fadeIn" }, [
+    _c("div", { staticClass: "card" }, [
+      _c("div", { staticClass: "card-header" }, [
+        _c("h2", [
+          _c("i", { staticClass: "fa fa-list" }),
+          _vm._v(_vm._s(_vm.t_title))
+        ]),
+        _vm._v(" "),
+        _vm._m(0)
+      ]),
+      _vm._v(" "),
+      _vm._m(1)
+    ])
+  ])
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "card-header-actions" }, [
+      _c("button", { staticClass: "btn btn-success" }, [
+        _c("i", { staticClass: "fa fa-search-plus" })
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "card-body" }, [
+      _c(
+        "table",
+        { staticClass: "table table-striped table-bordered datatable" },
+        [
+          _c("thead", [
+            _c("tr", [
+              _c("th", [_vm._v("STT")]),
+              _vm._v(" "),
+              _c("th", [_vm._v("Mã")]),
+              _vm._v(" "),
+              _c("th", [_vm._v("Tên")]),
+              _vm._v(" "),
+              _c("th", [_vm._v("Thao tác")])
+            ])
+          ]),
+          _vm._v(" "),
+          _c("tbody", [
+            _c("tr", [
+              _c("td", [_vm._v("Anton Phunihel")]),
+              _vm._v(" "),
+              _c("td", [_vm._v("2012/01/01")]),
+              _vm._v(" "),
+              _c("td", [_vm._v("Member")]),
+              _vm._v(" "),
+              _c("td", [
+                _c("a", { staticClass: "btn btn-info", attrs: { href: "#" } }, [
+                  _c("i", { staticClass: "fa fa-edit" })
+                ]),
+                _vm._v(" "),
+                _c(
+                  "a",
+                  { staticClass: "btn btn-danger", attrs: { href: "#" } },
+                  [_c("i", { staticClass: "fa fa-trash-o" })]
+                )
+              ])
+            ])
+          ])
+        ]
+      )
+    ])
+  }
+]
+render._withStripped = true
+
+
 
 /***/ }),
 
@@ -37378,51 +46220,56 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c("div", { staticClass: "sidebar" }, [
     _c("nav", { staticClass: "sidebar-nav" }, [
-      _c(
-        "ul",
-        { staticClass: "nav" },
-        [
-          _c("li", { staticClass: "nav-title" }, [_vm._v("Dashboard")]),
-          _vm._v(" "),
-          _c(
-            "router-link",
-            {
-              staticClass: "nav-item",
-              attrs: {
-                tag: "li",
-                to: "/du-an",
-                "exact-active-class": "active",
-                exact: ""
-              }
-            },
-            [
-              _c("a", { staticClass: "nav-link" }, [
+      _c("ul", { staticClass: "nav" }, [
+        _c("li", { staticClass: "nav-title" }, [_vm._v("Dashboard")]),
+        _vm._v(" "),
+        _c(
+          "li",
+          { staticClass: "nav-item" },
+          [
+            _c(
+              "router-link",
+              {
+                staticClass: "nav-link",
+                attrs: {
+                  tag: "a",
+                  to: "/don-vi",
+                  "exact-active-class": "active",
+                  exact: ""
+                }
+              },
+              [
                 _c("i", { staticClass: "nav-icon icon-drop" }),
-                _vm._v("Dự Án\n        ")
-              ])
-            ]
-          ),
-          _vm._v(" "),
-          _c(
-            "router-link",
-            {
-              staticClass: "nav-item",
-              attrs: {
-                tag: "li",
-                to: "/don-vi",
-                "exact-active-class": "active"
-              }
-            },
-            [
-              _c("a", { staticClass: "nav-link" }, [
+                _vm._v("Đơn Vị\n      ")
+              ]
+            )
+          ],
+          1
+        ),
+        _vm._v(" "),
+        _c(
+          "li",
+          { staticClass: "nav-item" },
+          [
+            _c(
+              "router-link",
+              {
+                staticClass: "nav-link",
+                attrs: {
+                  tag: "a",
+                  to: "/du-an",
+                  "exact-active-class": "active"
+                }
+              },
+              [
                 _c("i", { staticClass: "nav-icon icon-drop" }),
-                _vm._v("Đơn Vị\n        ")
-              ])
-            ]
-          )
-        ],
-        1
-      )
+                _vm._v("Dự Án\n      ")
+              ]
+            )
+          ],
+          1
+        )
+      ])
     ]),
     _vm._v(" "),
     _c("button", {
@@ -37468,7 +46315,14 @@ var render = function() {
         [
           _c("sidebar"),
           _vm._v(" "),
-          _c("div", { staticClass: "container-fluid" }, [_c("router-view")], 1)
+          _c("main", { staticClass: "main" }, [
+            _c(
+              "div",
+              { staticClass: "container-fluid" },
+              [_c("router-view")],
+              1
+            )
+          ])
         ],
         1
       ),
@@ -37531,16 +46385,13 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _vm._m(0)
+  return _c(
+    "div",
+    [_c("data-table", { attrs: { t_title: " Danh sách dự án" } })],
+    1
+  )
 }
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", [_c("h1", [_vm._v("Danh sách dự án")])])
-  }
-]
+var staticRenderFns = []
 render._withStripped = true
 
 
@@ -37649,6 +46500,564 @@ function normalizeComponent (
     exports: scriptExports,
     options: options
   }
+}
+
+
+/***/ }),
+
+/***/ "./node_modules/vue-pagination-2/compiled/Pagination.js":
+/*!**************************************************************!*\
+  !*** ./node_modules/vue-pagination-2/compiled/Pagination.js ***!
+  \**************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
+var _config = __webpack_require__(/*! ./config */ "./node_modules/vue-pagination-2/compiled/config.js");
+
+var _config2 = _interopRequireDefault(_config);
+
+var _merge = __webpack_require__(/*! merge */ "./node_modules/merge/merge.js");
+
+var _merge2 = _interopRequireDefault(_merge);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+var template = __webpack_require__(/*! ./template.js */ "./node_modules/vue-pagination-2/compiled/template.js");
+var bus = __webpack_require__(/*! ./bus */ "./node_modules/vue-pagination-2/compiled/bus.js");
+
+
+module.exports = {
+  render: template.call(undefined),
+  props: {
+    for: {
+      type: String,
+      required: false
+    },
+    records: {
+      type: Number,
+      required: true
+    },
+    perPage: {
+      type: Number,
+      default: 25
+    },
+    vuex: {
+      type: Boolean
+    },
+    options: {
+      type: Object
+    }
+  },
+  created: function created() {
+
+    if (!this.vuex) return;
+
+    if (!this.for) {
+      throw new Error('vue-pagination-2: The "for" prop is required when using vuex');
+    }
+
+    var name = this.for;
+
+    if (this.$store.state[name]) return;
+
+    this.$store.registerModule(this.for, {
+      state: {
+        page: 1
+      },
+      mutations: _defineProperty({}, name + '/PAGINATE', function undefined(state, page) {
+        state.page = page;
+      })
+    });
+  },
+  data: function data() {
+    return {
+      Page: 1,
+      firstPage: 1
+    };
+  },
+  computed: {
+    opts: function opts() {
+      return (0, _merge2.default)((0, _config2.default)(), this.options);
+    },
+    Theme: function Theme() {
+
+      if (_typeof(this.opts.theme) === 'object') {
+        return this.opts.theme;
+      }
+
+      var themes = {
+        bootstrap3: __webpack_require__(/*! ./themes/bootstrap3 */ "./node_modules/vue-pagination-2/compiled/themes/bootstrap3.js"),
+        bootstrap4: __webpack_require__(/*! ./themes/bootstrap4 */ "./node_modules/vue-pagination-2/compiled/themes/bootstrap4.js"),
+        bulma: __webpack_require__(/*! ./themes/bulma */ "./node_modules/vue-pagination-2/compiled/themes/bulma.js")
+      };
+
+      if (_typeof(themes[this.opts.theme]) === undefined) {
+        throw 'vue-pagination-2: the theme ' + this.opts.theme + ' does not exist';
+      }
+
+      return themes[this.opts.theme];
+    },
+    page: function page() {
+      return this.vuex ? this.$store.state[this.for].page : this.Page;
+    },
+
+    pages: function pages() {
+      if (!this.records) return [];
+
+      return range(this.paginationStart, this.pagesInCurrentChunk);
+    },
+    totalPages: function totalPages() {
+      return this.records ? Math.ceil(this.records / this.perPage) : 1;
+    },
+    totalChunks: function totalChunks() {
+      return Math.ceil(this.totalPages / this.opts.chunk);
+    },
+    currentChunk: function currentChunk() {
+      return Math.ceil(this.page / this.opts.chunk);
+    },
+    paginationStart: function paginationStart() {
+
+      if (this.opts.chunksNavigation === 'scroll') {
+        return this.firstPage;
+      }
+
+      return (this.currentChunk - 1) * this.opts.chunk + 1;
+    },
+    pagesInCurrentChunk: function pagesInCurrentChunk() {
+      return this.paginationStart + this.opts.chunk <= this.totalPages ? this.opts.chunk : this.totalPages - this.paginationStart + 1;
+    },
+    count: function count() {
+
+      if (/{page}/.test(this.opts.texts.count)) {
+
+        if (this.totalPages <= 1) return '';
+
+        return this.opts.texts.count.replace('{page}', this.page).replace('{pages}', this.totalPages);
+      }
+
+      var parts = this.opts.texts.count.split('|');
+      var from = (this.page - 1) * this.perPage + 1;
+      var to = this.page == this.totalPages ? this.records : from + this.perPage - 1;
+      var i = Math.min(this.records == 1 ? 2 : this.totalPages == 1 ? 1 : 0, parts.length - 1);
+
+      return parts[i].replace('{count}', this.formatNumber(this.records)).replace('{from}', this.formatNumber(from)).replace('{to}', this.formatNumber(to));
+    }
+  },
+  methods: {
+    setPage: function setPage(page) {
+      if (this.allowedPage(page)) {
+        this.paginate(page);
+      }
+    },
+    paginate: function paginate(page) {
+      if (this.vuex) {
+        this.$store.commit(this.for + '/PAGINATE', page);
+      } else {
+        this.Page = page;
+      }
+
+      this.$emit('paginate', page);
+
+      if (this.for) {
+        bus.$emit('vue-pagination::' + this.for, page);
+      }
+    },
+
+    next: function next() {
+      var page = this.page + 1;
+      if (this.opts.chunksNavigation === 'scroll' && this.allowedPage(page) && !this.inDisplay(page)) {
+        this.firstPage++;
+      }
+      return this.setPage(page);
+    },
+    prev: function prev() {
+      var page = this.page - 1;
+
+      if (this.opts.chunksNavigation === 'scroll' && this.allowedPage(page) && !this.inDisplay(page)) {
+        this.firstPage--;
+      }
+
+      return this.setPage(page);
+    },
+    inDisplay: function inDisplay(page) {
+
+      var start = this.firstPage;
+      var end = start + this.opts.chunk - 1;
+
+      return page >= start && page <= end;
+    },
+
+    nextChunk: function nextChunk() {
+      return this.setChunk(1);
+    },
+    prevChunk: function prevChunk() {
+      return this.setChunk(-1);
+    },
+    setChunk: function setChunk(direction) {
+      this.setPage((this.currentChunk - 1 + direction) * this.opts.chunk + 1);
+    },
+    allowedPage: function allowedPage(page) {
+      return page >= 1 && page <= this.totalPages;
+    },
+    allowedChunk: function allowedChunk(direction) {
+      return direction == 1 && this.currentChunk < this.totalChunks || direction == -1 && this.currentChunk > 1;
+    },
+    allowedPageClass: function allowedPageClass(direction) {
+      return this.allowedPage(direction) ? '' : this.Theme.disabled;
+    },
+    allowedChunkClass: function allowedChunkClass(direction) {
+      return this.allowedChunk(direction) ? '' : this.Theme.disabled;
+    },
+    activeClass: function activeClass(page) {
+      return this.page == page ? this.Theme.active : '';
+    },
+    formatNumber: function formatNumber(num) {
+
+      if (!this.opts.format) return num;
+
+      return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    }
+  },
+  beforeDestroy: function beforeDestroy() {
+    bus.$off();
+    bus.$destroy();
+  }
+};
+
+function range(start, count) {
+  return Array.apply(0, Array(count)).map(function (element, index) {
+    return index + start;
+  });
+}
+
+/***/ }),
+
+/***/ "./node_modules/vue-pagination-2/compiled/bus.js":
+/*!*******************************************************!*\
+  !*** ./node_modules/vue-pagination-2/compiled/bus.js ***!
+  \*******************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _vue = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.common.js");
+
+var _vue2 = _interopRequireDefault(_vue);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var bus = new _vue2.default();
+
+module.exports = bus;
+
+/***/ }),
+
+/***/ "./node_modules/vue-pagination-2/compiled/config.js":
+/*!**********************************************************!*\
+  !*** ./node_modules/vue-pagination-2/compiled/config.js ***!
+  \**********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+exports.default = function () {
+    return {
+        format: true,
+        chunk: 10,
+        chunksNavigation: 'fixed',
+        edgeNavigation: false,
+        theme: 'bootstrap3',
+        texts: {
+            count: 'Showing {from} to {to} of {count} records|{count} records|One record',
+            first: 'First',
+            last: 'Last'
+        }
+    };
+};
+
+/***/ }),
+
+/***/ "./node_modules/vue-pagination-2/compiled/template.js":
+/*!************************************************************!*\
+  !*** ./node_modules/vue-pagination-2/compiled/template.js ***!
+  \************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+module.exports = function () {
+
+  return function (h) {
+
+    var theme = this.Theme;
+    var prevChunk = '';
+    var nextChunk = '';
+    var firstPage = '';
+    var lastPage = '';
+    var items = this.pages.map(function (page) {
+
+      return h(
+        'li',
+        { 'class': 'VuePagination__pagination-item ' + theme.item + ' ' + this.activeClass(page),
+          on: {
+            'click': this.setPage.bind(this, page)
+          }
+        },
+        [h(
+          'a',
+          { 'class': theme.link + ' ' + this.activeClass(page),
+            attrs: { href: 'javascript:void(0)',
+              role: 'button' }
+          },
+          [page]
+        )]
+      );
+    }.bind(this));
+
+    if (this.opts.edgeNavigation && this.totalChunks > 1) {
+      firstPage = h(
+        'li',
+        { 'class': 'VuePagination__pagination-item ' + theme.item + ' ' + (this.page === 1 ? theme.disabled : '') + ' VuePagination__pagination-item-prev-chunk',
+          on: {
+            'click': this.setPage.bind(this, 1)
+          }
+        },
+        [h(
+          'a',
+          { 'class': theme.link,
+            attrs: { href: 'javascript:void(0);',
+              disabled: this.page === 1 }
+          },
+          [this.opts.texts.first]
+        )]
+      );
+
+      lastPage = h(
+        'li',
+        { 'class': 'VuePagination__pagination-item ' + theme.item + ' ' + (this.page === this.totalPages ? theme.disabled : '') + ' VuePagination__pagination-item-prev-chunk',
+          on: {
+            'click': this.setPage.bind(this, this.totalPages)
+          }
+        },
+        [h(
+          'a',
+          { 'class': theme.link,
+            attrs: { href: 'javascript:void(0);',
+              disabled: this.page === this.totalPages }
+          },
+          [this.opts.texts.last]
+        )]
+      );
+    }
+
+    if (this.opts.chunksNavigation === 'fixed') {
+
+      prevChunk = h(
+        'li',
+        { 'class': 'VuePagination__pagination-item ' + theme.item + ' ' + theme.prev + ' VuePagination__pagination-item-prev-chunk ' + this.allowedChunkClass(-1),
+          on: {
+            'click': this.setChunk.bind(this, -1)
+          }
+        },
+        [h(
+          'a',
+          { 'class': theme.link,
+            attrs: { href: 'javascript:void(0);',
+              disabled: !!this.allowedChunkClass(-1) }
+          },
+          ['<<']
+        )]
+      );
+
+      nextChunk = h(
+        'li',
+        { 'class': 'VuePagination__pagination-item ' + theme.item + ' ' + theme.next + ' VuePagination__pagination-item-next-chunk ' + this.allowedChunkClass(1),
+          on: {
+            'click': this.setChunk.bind(this, 1)
+          }
+        },
+        [h(
+          'a',
+          { 'class': theme.link,
+            attrs: { href: 'javascript:void(0);',
+              disabled: !!this.allowedChunkClass(1) }
+          },
+          ['>>']
+        )]
+      );
+    }
+
+    return h(
+      'div',
+      { 'class': 'VuePagination ' + theme.wrapper },
+      [h(
+        'nav',
+        { 'class': '' + theme.nav },
+        [h(
+          'ul',
+          {
+            directives: [{
+              name: 'show',
+              value: this.totalPages > 1
+            }],
+
+            'class': theme.list + ' VuePagination__pagination' },
+          [firstPage, prevChunk, h(
+            'li',
+            { 'class': 'VuePagination__pagination-item ' + theme.item + ' ' + theme.prev + ' VuePagination__pagination-item-prev-page ' + this.allowedPageClass(this.page - 1),
+              on: {
+                'click': this.prev.bind(this)
+              }
+            },
+            [h(
+              'a',
+              { 'class': theme.link,
+                attrs: { href: 'javascript:void(0);',
+                  disabled: !!this.allowedPageClass(this.page - 1)
+                }
+              },
+              ['<']
+            )]
+          ), items, h(
+            'li',
+            { 'class': 'VuePagination__pagination-item ' + theme.item + ' ' + theme.next + ' VuePagination__pagination-item-next-page ' + this.allowedPageClass(this.page + 1),
+              on: {
+                'click': this.next.bind(this)
+              }
+            },
+            [h(
+              'a',
+              { 'class': theme.link,
+                attrs: { href: 'javascript:void(0);',
+                  disabled: !!this.allowedPageClass(this.page + 1)
+                }
+              },
+              ['>']
+            )]
+          ), nextChunk, lastPage]
+        ), h(
+          'p',
+          {
+            directives: [{
+              name: 'show',
+              value: parseInt(this.records)
+            }],
+
+            'class': 'VuePagination__count ' + theme.count },
+          [this.count]
+        )]
+      )]
+    );
+  };
+};
+
+/***/ }),
+
+/***/ "./node_modules/vue-pagination-2/compiled/themes/bootstrap3.js":
+/*!*********************************************************************!*\
+  !*** ./node_modules/vue-pagination-2/compiled/themes/bootstrap3.js ***!
+  \*********************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+module.exports = {
+    nav: '',
+    count: '',
+    wrapper: '',
+    list: 'pagination',
+    item: 'page-item',
+    link: 'page-link',
+    next: '',
+    prev: '',
+    active: 'active',
+    disabled: 'disabled'
+};
+
+/***/ }),
+
+/***/ "./node_modules/vue-pagination-2/compiled/themes/bootstrap4.js":
+/*!*********************************************************************!*\
+  !*** ./node_modules/vue-pagination-2/compiled/themes/bootstrap4.js ***!
+  \*********************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+module.exports = {
+    nav: '',
+    count: '',
+    wrapper: '',
+    list: 'pagination',
+    item: 'page-item',
+    link: 'page-link',
+    next: '',
+    prev: '',
+    active: 'active',
+    disabled: 'disabled'
+};
+
+/***/ }),
+
+/***/ "./node_modules/vue-pagination-2/compiled/themes/bulma.js":
+/*!****************************************************************!*\
+  !*** ./node_modules/vue-pagination-2/compiled/themes/bulma.js ***!
+  \****************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+module.exports = {
+    nav: '',
+    count: '',
+    wrapper: 'pagination',
+    list: 'pagination-list',
+    item: '',
+    link: 'pagination-link',
+    next: '',
+    prev: '',
+    active: 'is-current',
+    disabled: '' // uses the disabled HTML attirbute
+};
+
+/***/ }),
+
+/***/ "./node_modules/vue-pagination-2/index.js":
+/*!************************************************!*\
+  !*** ./node_modules/vue-pagination-2/index.js ***!
+  \************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+var Pagination = __webpack_require__(/*! ./compiled/Pagination */ "./node_modules/vue-pagination-2/compiled/Pagination.js");
+var PaginationEvent = __webpack_require__(/*! ./compiled/bus */ "./node_modules/vue-pagination-2/compiled/bus.js");
+
+module.exports = {
+  Pagination:Pagination,
+  PaginationEvent:PaginationEvent
 }
 
 
@@ -40546,6 +49955,5107 @@ if (inBrowser && window.Vue) {
 
 /* harmony default export */ __webpack_exports__["default"] = (VueRouter);
 
+
+/***/ }),
+
+/***/ "./node_modules/vue-tables-2/compiled/bus.js":
+/*!***************************************************!*\
+  !*** ./node_modules/vue-tables-2/compiled/bus.js ***!
+  \***************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _vue = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.common.js");
+
+var _vue2 = _interopRequireDefault(_vue);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var bus = new _vue2.default();
+
+exports.default = bus;
+
+/***/ }),
+
+/***/ "./node_modules/vue-tables-2/compiled/computed/all-columns.js":
+/*!********************************************************************!*\
+  !*** ./node_modules/vue-tables-2/compiled/computed/all-columns.js ***!
+  \********************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+module.exports = function () {
+  var _this = this;
+
+  var display = this.columnsDisplay;
+
+  // default - return all columns
+
+  if (!display && !this.userControlsColumns) {
+    return this.Columns;
+  }
+
+  // user toggled columns - return user selected columns
+
+  if (this.userControlsColumns) {
+    return this.columns.filter(function (column) {
+      return _this.userColumnsDisplay.includes(column);
+    });
+  }
+
+  if (this.opts.ssr) return this.Columns;
+
+  // developer defined columns display
+
+  return this.Columns.filter(function (column) {
+
+    if (!display[column]) return true;
+
+    var range = display[column];
+    var operator = range[2];
+
+    var inRange = (!range[0] || _this.windowWidth >= range[0]) && (!range[1] || _this.windowWidth < range[1]);
+
+    return operator == 'not' ? !inRange : inRange;
+  });
+};
+
+/***/ }),
+
+/***/ "./node_modules/vue-tables-2/compiled/computed/colspan.js":
+/*!****************************************************************!*\
+  !*** ./node_modules/vue-tables-2/compiled/computed/colspan.js ***!
+  \****************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+module.exports = function () {
+    return this.hasChildRow ? this.allColumns.length + 1 : this.allColumns.length;
+};
+
+/***/ }),
+
+/***/ "./node_modules/vue-tables-2/compiled/computed/custom-q.js":
+/*!*****************************************************************!*\
+  !*** ./node_modules/vue-tables-2/compiled/computed/custom-q.js ***!
+  \*****************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+module.exports = function () {
+  return JSON.stringify(this.customQueries);
+};
+
+/***/ }),
+
+/***/ "./node_modules/vue-tables-2/compiled/computed/filterable-columns.js":
+/*!***************************************************************************!*\
+  !*** ./node_modules/vue-tables-2/compiled/computed/filterable-columns.js ***!
+  \***************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+module.exports = function () {
+       return this.opts.filterable && this.opts.filterable.length ? this.opts.filterable : this.Columns;
+};
+
+/***/ }),
+
+/***/ "./node_modules/vue-tables-2/compiled/computed/filtered-data.js":
+/*!**********************************************************************!*\
+  !*** ./node_modules/vue-tables-2/compiled/computed/filtered-data.js ***!
+  \**********************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var search = __webpack_require__(/*! ../methods/client-search */ "./node_modules/vue-tables-2/compiled/methods/client-search.js");
+var clone = __webpack_require__(/*! clone */ "./node_modules/clone/clone.js");
+
+module.exports = function () {
+
+  var data = clone(this.tableData);
+
+  var column = this.orderBy.column;
+
+  data = this.search(data);
+
+  if (column) {
+    // dummy var to force compilation
+    if (this.time) this.time = this.time;
+
+    data = this.opts.sortingAlgorithm.call(this, data, column);
+  } else if (this.opts.groupBy) {
+    data = this.opts.sortingAlgorithm.call(this, data, this.opts.groupBy);
+  }
+
+  if (this.vuex) {
+    if (this.count != data.length) this.commit('SET_COUNT', data.length);
+  } else {
+    this.count = data.length;
+  }
+
+  var offset = (this.page - 1) * this.limit;
+
+  this.allFilteredData = JSON.parse(JSON.stringify(data));
+
+  data = data.splice(offset, this.limit);
+
+  return this.applyFilters(data);
+};
+
+/***/ }),
+
+/***/ "./node_modules/vue-tables-2/compiled/computed/filtered-query.js":
+/*!***********************************************************************!*\
+  !*** ./node_modules/vue-tables-2/compiled/computed/filtered-query.js ***!
+  \***********************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
+module.exports = function () {
+
+    if (_typeof(this.query) !== 'object' || this.opts.sendEmptyFilters) {
+        return this.query;
+    }
+
+    var result = {};
+
+    for (var key in this.query) {
+        if (this.query[key] !== '') {
+            result[key] = this.query[key];
+        }
+    }
+
+    return result;
+};
+
+/***/ }),
+
+/***/ "./node_modules/vue-tables-2/compiled/computed/has-child-row.js":
+/*!**********************************************************************!*\
+  !*** ./node_modules/vue-tables-2/compiled/computed/has-child-row.js ***!
+  \**********************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+module.exports = function () {
+  return this.opts.childRow || this.$scopedSlots.child_row;
+};
+
+/***/ }),
+
+/***/ "./node_modules/vue-tables-2/compiled/computed/has-generic-filter.js":
+/*!***************************************************************************!*\
+  !*** ./node_modules/vue-tables-2/compiled/computed/has-generic-filter.js ***!
+  \***************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
+module.exports = function () {
+    return !this.opts.filterByColumn && (typeof this.opts.filterable === 'boolean' && this.opts.filterable || _typeof(this.opts.filterable) === 'object' && this.opts.filterable.length);
+};
+
+/***/ }),
+
+/***/ "./node_modules/vue-tables-2/compiled/computed/list-columns-object.js":
+/*!****************************************************************************!*\
+  !*** ./node_modules/vue-tables-2/compiled/computed/list-columns-object.js ***!
+  \****************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+module.exports = function () {
+  var columns = Object.keys(this.opts.listColumns);
+
+  var res = {};
+
+  columns.forEach(function (column) {
+    res[column] = {};
+
+    this.opts.listColumns[column].forEach(function (item) {
+      res[column][item.id] = item.text;
+    });
+  }.bind(this));
+
+  return res;
+};
+
+/***/ }),
+
+/***/ "./node_modules/vue-tables-2/compiled/computed/opts.js":
+/*!*************************************************************!*\
+  !*** ./node_modules/vue-tables-2/compiled/computed/opts.js ***!
+  \*************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+module.exports = function () {
+  var defaults = __webpack_require__(/*! ../config/defaults */ "./node_modules/vue-tables-2/compiled/config/defaults.js")();
+  return this.initOptions(defaults, this.globalOptions, this.options);
+};
+
+/***/ }),
+
+/***/ "./node_modules/vue-tables-2/compiled/computed/q.js":
+/*!**********************************************************!*\
+  !*** ./node_modules/vue-tables-2/compiled/computed/q.js ***!
+  \**********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+module.exports = function () {
+  return this.opts.filterByColumn ? JSON.stringify(this.query) : this.query;
+};
+
+/***/ }),
+
+/***/ "./node_modules/vue-tables-2/compiled/computed/storage.js":
+/*!****************************************************************!*\
+  !*** ./node_modules/vue-tables-2/compiled/computed/storage.js ***!
+  \****************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+module.exports = function () {
+
+  if (typeof localStorage === 'undefined') return {};
+
+  return this.opts.storage === 'local' ? localStorage : sessionStorage;
+};
+
+/***/ }),
+
+/***/ "./node_modules/vue-tables-2/compiled/computed/table-data.js":
+/*!*******************************************************************!*\
+  !*** ./node_modules/vue-tables-2/compiled/computed/table-data.js ***!
+  \*******************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+module.exports = function () {
+  return this.data;
+};
+
+/***/ }),
+
+/***/ "./node_modules/vue-tables-2/compiled/computed/templates-keys.js":
+/*!***********************************************************************!*\
+  !*** ./node_modules/vue-tables-2/compiled/computed/templates-keys.js ***!
+  \***********************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+module.exports = function () {
+      return Object.keys(this.opts.templates);
+};
+
+/***/ }),
+
+/***/ "./node_modules/vue-tables-2/compiled/computed/total-pages.js":
+/*!********************************************************************!*\
+  !*** ./node_modules/vue-tables-2/compiled/computed/total-pages.js ***!
+  \********************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+module.exports = function () {
+  return Math.ceil(this.count / this.limit);
+};
+
+/***/ }),
+
+/***/ "./node_modules/vue-tables-2/compiled/config/defaults.js":
+/*!***************************************************************!*\
+  !*** ./node_modules/vue-tables-2/compiled/config/defaults.js ***!
+  \***************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+module.exports = function () {
+  return {
+    dateColumns: [],
+    listColumns: {},
+    datepickerOptions: {
+      locale: {
+        cancelLabel: 'Clear'
+      }
+    },
+    datepickerPerColumnOptions: {},
+    initialPage: 1,
+    perPage: 10,
+    perPageValues: [10, 25, 50, 100],
+    groupBy: false,
+    collapseGroups: false,
+    destroyEventBus: false,
+    sendEmptyFilters: false,
+    params: {},
+    sortable: true,
+    filterable: true,
+    groupMeta: [],
+    initFilters: {},
+    customFilters: [],
+    templates: {},
+    debounce: 250,
+    dateFormat: "DD/MM/YYYY",
+    dateFormatPerColumn: {},
+    toMomentFormat: false,
+    skin: false,
+    columnsDisplay: {},
+    columnsDropdown: false,
+    texts: {
+      count: "Showing {from} to {to} of {count} records|{count} records|One record",
+      first: 'First',
+      last: 'Last',
+      filter: "Filter:",
+      filterPlaceholder: "Search query",
+      limit: "Records:",
+      page: "Page:",
+      noResults: "No matching records",
+      filterBy: "Filter by {column}",
+      loading: 'Loading...',
+      defaultOption: 'Select {column}',
+      columns: 'Columns'
+    },
+    sortIcon: {
+      is: 'glyphicon-sort',
+      base: 'glyphicon',
+      up: 'glyphicon-chevron-up',
+      down: 'glyphicon-chevron-down'
+    },
+    sortingAlgorithm: function sortingAlgorithm(data, column) {
+      return data.sort(this.getSortFn(column));
+    },
+
+    customSorting: {},
+    multiSorting: {},
+    clientMultiSorting: true,
+    serverMultiSorting: false,
+    filterByColumn: false,
+    highlightMatches: false,
+    orderBy: false,
+    descOrderColumns: [],
+    footerHeadings: false,
+    headings: {},
+    headingsTooltips: {},
+    pagination: {
+      dropdown: false,
+      chunk: 10,
+      edge: false,
+      align: 'center',
+      nav: 'fixed'
+    },
+    childRow: false,
+    childRowTogglerFirst: true,
+    uniqueKey: 'id',
+    requestFunction: false,
+    requestAdapter: function requestAdapter(data) {
+      return data;
+    },
+    responseAdapter: function responseAdapter(resp) {
+
+      var data = this.getResponseData(resp);
+
+      return {
+        data: data.data,
+        count: data.count
+      };
+    },
+    requestKeys: {
+      query: 'query',
+      limit: 'limit',
+      orderBy: 'orderBy',
+      ascending: 'ascending',
+      page: 'page',
+      byColumn: 'byColumn'
+    },
+    rowClassCallback: false,
+    preserveState: false,
+    saveState: false,
+    storage: 'local',
+    columnsClasses: {}
+  };
+};
+
+/***/ }),
+
+/***/ "./node_modules/vue-tables-2/compiled/directives/input.js":
+/*!****************************************************************!*\
+  !*** ./node_modules/vue-tables-2/compiled/directives/input.js ***!
+  \****************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+module.exports = {
+    twoWay: true,
+    bind: function bind(el, binding, vnode) {
+
+        el.addEventListener('keydown', function (e) {
+            vnode.context[binding.value] = e.target.value;
+        });
+    },
+
+    update: function update(el, binding, vnode, oldVnode) {}
+
+};
+
+/***/ }),
+
+/***/ "./node_modules/vue-tables-2/compiled/directives/select.js":
+/*!*****************************************************************!*\
+  !*** ./node_modules/vue-tables-2/compiled/directives/select.js ***!
+  \*****************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+module.exports = {
+  twoWay: true,
+  bind: function bind(el, binding, vnode) {
+    el.addEventListener('change', function (e) {
+      console.log("SELECT CHANGE");
+      vnode.context[binding.value.name] = e.target.value;
+      binding.value.cb.call(this, binding.value.params);
+    });
+  },
+
+  update: function update(el, binding, vnode, oldVnode) {
+    // el.value = vnode.context[binding.value];
+    // console.log(binding.value + " was updated");
+    //  vnode.context[binding.value] = el.value;
+
+  }
+
+};
+
+/***/ }),
+
+/***/ "./node_modules/vue-tables-2/compiled/filters/custom-filters.js":
+/*!**********************************************************************!*\
+  !*** ./node_modules/vue-tables-2/compiled/filters/custom-filters.js ***!
+  \**********************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+module.exports = function (data, customFilters, customQueries) {
+
+  var passing;
+
+  return data.filter(function (row) {
+
+    passing = true;
+
+    customFilters.forEach(function (filter) {
+      var value = customQueries[filter.name];
+      if (value && !filter.callback(row, value)) passing = false;
+    });
+
+    return passing;
+  });
+};
+
+/***/ }),
+
+/***/ "./node_modules/vue-tables-2/compiled/filters/format-date.js":
+/*!*******************************************************************!*\
+  !*** ./node_modules/vue-tables-2/compiled/filters/format-date.js ***!
+  \*******************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var validMoment = __webpack_require__(/*! ../helpers/is-valid-moment-object */ "./node_modules/vue-tables-2/compiled/helpers/is-valid-moment-object.js");
+
+module.exports = function (value, dateFormat) {
+
+  if (!validMoment(value)) return value;
+
+  return value.format(dateFormat);
+};
+
+/***/ }),
+
+/***/ "./node_modules/vue-tables-2/compiled/filters/highlight-matches.js":
+/*!*************************************************************************!*\
+  !*** ./node_modules/vue-tables-2/compiled/filters/highlight-matches.js ***!
+  \*************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+module.exports = function (value, column, h) {
+
+  var query = this.opts.filterByColumn ? this.query[column] : this.query;
+
+  if (!query) return value;
+
+  query = new RegExp("(" + escapeRegex(query) + ")", "i");
+
+  return h("span", { class: 'VueTables__highlight' }, matches(value, query, h));
+};
+
+function matches(value, query, h) {
+  var pieces = String(value).split(query);
+
+  return pieces.map(function (piece) {
+    if (query.test(piece)) {
+      return h("b", {}, piece);
+    }
+
+    return piece;
+  });
+}
+
+function escapeRegex(s) {
+  return typeof s === 'string' ? s.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&') : s;
+};
+
+/***/ }),
+
+/***/ "./node_modules/vue-tables-2/compiled/filters/option-text.js":
+/*!*******************************************************************!*\
+  !*** ./node_modules/vue-tables-2/compiled/filters/option-text.js ***!
+  \*******************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+module.exports = function (value, column) {
+
+  var list = this.listColumnsObject[column];
+
+  if (typeof list[value] == 'undefined') return value;
+
+  return list[value];
+};
+
+/***/ }),
+
+/***/ "./node_modules/vue-tables-2/compiled/helpers/is-empty.js":
+/*!****************************************************************!*\
+  !*** ./node_modules/vue-tables-2/compiled/helpers/is-empty.js ***!
+  \****************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+module.exports = function (obj) {
+    // null and undefined are "empty"
+    if (obj == null) return true;
+
+    // Assume if it has a length property with a non-zero value
+    // that that property is correct.
+    if (obj.length > 0) return false;
+    if (obj.length === 0) return true;
+
+    // Otherwise, does it have any properties of its own?
+    for (var key in obj) {
+        if (Object.prototype.hasOwnProperty.call(obj, key)) return false;
+    }
+
+    return true;
+};
+
+/***/ }),
+
+/***/ "./node_modules/vue-tables-2/compiled/helpers/is-valid-moment-object.js":
+/*!******************************************************************************!*\
+  !*** ./node_modules/vue-tables-2/compiled/helpers/is-valid-moment-object.js ***!
+  \******************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+module.exports = function (val) {
+  return val && typeof val.isValid == 'function' && val.isValid();
+};
+
+/***/ }),
+
+/***/ "./node_modules/vue-tables-2/compiled/helpers/object-filled-keys-count.js":
+/*!********************************************************************************!*\
+  !*** ./node_modules/vue-tables-2/compiled/helpers/object-filled-keys-count.js ***!
+  \********************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
+module.exports = function (obj) {
+  var count = 0;
+  for (var prop in obj) {
+    var isDateRange = _typeof(obj[prop]) == 'object';
+    if (isDateRange || obj[prop] && (!isNaN(obj[prop]) || obj[prop].trim())) count++;
+  }
+  return count;
+};
+
+/***/ }),
+
+/***/ "./node_modules/vue-tables-2/compiled/helpers/ucfirst.js":
+/*!***************************************************************!*\
+  !*** ./node_modules/vue-tables-2/compiled/helpers/ucfirst.js ***!
+  \***************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+exports.default = function (str) {
+    return str.charAt(0).toUpperCase() + str.slice(1);
+};
+
+/***/ }),
+
+/***/ "./node_modules/vue-tables-2/compiled/index.js":
+/*!*****************************************************!*\
+  !*** ./node_modules/vue-tables-2/compiled/index.js ***!
+  \*****************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _bus = __webpack_require__(/*! ./bus */ "./node_modules/vue-tables-2/compiled/bus.js");
+
+var _bus2 = _interopRequireDefault(_bus);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var ClientTable = __webpack_require__(/*! ./v-client-table */ "./node_modules/vue-tables-2/compiled/v-client-table.js");
+var ServerTable = __webpack_require__(/*! ./v-server-table */ "./node_modules/vue-tables-2/compiled/v-server-table.js");
+
+
+module.exports = {
+  ClientTable: ClientTable,
+  ServerTable: ServerTable,
+  Event: _bus2.default
+};
+
+/***/ }),
+
+/***/ "./node_modules/vue-tables-2/compiled/methods/apply-filters.js":
+/*!*********************************************************************!*\
+  !*** ./node_modules/vue-tables-2/compiled/methods/apply-filters.js ***!
+  \*********************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
+module.exports = function (data) {
+  var _this = this;
+
+  try {
+    return data.map(function (row) {
+      for (var column in row) {
+
+        if (_this.source === 'client') row[column] = _this.formatDate(row[column], _this.dateFormat(column));
+
+        if (_this.isListFilter(column) && !_this.opts.templates[column] && !_this.$scopedSlots[column]) {
+          row[column] = _this.optionText(row[column], column);
+        }
+      }
+
+      return row;
+    });
+  } catch (e) {
+    console.error('vue-tables-2: non-iterable data property. Expected array, got ' + (typeof data === 'undefined' ? 'undefined' : _typeof(data)) + '. Make sure that your response conforms to the expected format, or use the \'responseAdapter\' option to match the currently returned format');
+    console.error('Data equals', data);
+    throw new Error();
+  }
+};
+
+/***/ }),
+
+/***/ "./node_modules/vue-tables-2/compiled/methods/child-row-toggler-class.js":
+/*!*******************************************************************************!*\
+  !*** ./node_modules/vue-tables-2/compiled/methods/child-row-toggler-class.js ***!
+  \*******************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+module.exports = function (rowId) {
+  return this.openChildRows.includes(rowId) ? 'VueTables__child-row-toggler--open' : 'VueTables__child-row-toggler--closed';
+};
+
+/***/ }),
+
+/***/ "./node_modules/vue-tables-2/compiled/methods/client-search.js":
+/*!*********************************************************************!*\
+  !*** ./node_modules/vue-tables-2/compiled/methods/client-search.js ***!
+  \*********************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
+var object_filled_keys_count = __webpack_require__(/*! ../helpers/object-filled-keys-count */ "./node_modules/vue-tables-2/compiled/helpers/object-filled-keys-count.js");
+var is_valid_moment_object = __webpack_require__(/*! ../helpers/is-valid-moment-object */ "./node_modules/vue-tables-2/compiled/helpers/is-valid-moment-object.js");
+var filterByCustomFilters = __webpack_require__(/*! ../filters/custom-filters */ "./node_modules/vue-tables-2/compiled/filters/custom-filters.js");
+
+module.exports = function (data, e) {
+
+  if (e) {
+
+    var _query = this.query;
+
+    this.setPage(1, true);
+
+    var name = this.getName(e.target.name);
+    var value = _typeof(e.target.value) === 'object' ? e.target.value : '' + e.target.value;
+
+    if (name) {
+      _query[name] = value;
+    } else {
+      _query = value;
+    }
+
+    this.vuex ? this.commit('SET_FILTER', _query) : this.query = _query;
+
+    this.updateState('query', _query);
+
+    if (name) {
+      this.dispatch('filter', { name: name, value: value });
+      this.dispatch('filter::' + name, value);
+    } else {
+      this.dispatch('filter', value);
+    }
+  }
+
+  var query = this.query;
+
+  var totalQueries = !query ? 0 : 1;
+
+  if (!this.opts) return data;
+
+  if (this.opts.filterByColumn) {
+    totalQueries = object_filled_keys_count(query);
+  }
+
+  var value;
+  var found;
+  var currentQuery;
+  var dateFormat;
+  var filterByDate;
+  var isListFilter;
+
+  var data = filterByCustomFilters(data, this.opts.customFilters, this.customQueries);
+
+  if (!totalQueries) return data;
+
+  return data.filter(function (row, index) {
+
+    found = 0;
+
+    this.filterableColumns.forEach(function (column) {
+
+      filterByDate = this.opts.dateColumns.indexOf(column) > -1 && this.opts.filterByColumn;
+      isListFilter = this.isListFilter(column) && this.opts.filterByColumn;
+      dateFormat = this.dateFormat(column);
+
+      value = this._getValue(row, column);
+
+      if (is_valid_moment_object(value) && !filterByDate) {
+        value = value.format(dateFormat);
+      }
+
+      currentQuery = this.opts.filterByColumn ? query[column] : query;
+
+      currentQuery = setCurrentQuery(currentQuery);
+
+      if (currentQuery && foundMatch(currentQuery, value, isListFilter)) found++;
+    }.bind(this));
+
+    return found >= totalQueries;
+  }.bind(this));
+};
+
+function setCurrentQuery(query) {
+
+  if (!query) return '';
+
+  if (typeof query == 'string') return query.toLowerCase();
+
+  // Date Range
+
+  return query;
+}
+
+function foundMatch(query, value, isListFilter) {
+
+  if (['string', 'number', 'boolean'].indexOf(typeof value === 'undefined' ? 'undefined' : _typeof(value)) > -1) {
+    value = String(value).toLowerCase();
+  }
+
+  // List Filter
+  if (isListFilter) {
+    return value == query;
+  }
+
+  //Text Filter
+  if (typeof value === 'string') {
+    return value.indexOf(query) > -1;
+  }
+
+  // Date range
+
+  if (is_valid_moment_object(value)) {
+    var start = moment(query.start, 'YYYY-MM-DD HH:mm:ss');
+    var end = moment(query.end, 'YYYY-MM-DD HH:mm:ss');
+
+    return value >= start && value <= end;
+  }
+
+  if ((typeof value === 'undefined' ? 'undefined' : _typeof(value)) === 'object') {
+
+    for (var key in value) {
+      if (foundMatch(query, value[key])) return true;
+    }
+
+    return false;
+  }
+
+  return value >= start && value <= end;
+}
+
+/***/ }),
+
+/***/ "./node_modules/vue-tables-2/compiled/methods/column-class.js":
+/*!********************************************************************!*\
+  !*** ./node_modules/vue-tables-2/compiled/methods/column-class.js ***!
+  \********************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+module.exports = function (column) {
+  var c = this.opts.columnsClasses;
+
+  return c.hasOwnProperty(column) ? c[column] : '';
+};
+
+/***/ }),
+
+/***/ "./node_modules/vue-tables-2/compiled/methods/currently-sorted.js":
+/*!************************************************************************!*\
+  !*** ./node_modules/vue-tables-2/compiled/methods/currently-sorted.js ***!
+  \************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+module.exports = function (column) {
+  var userMultiSort = Object.keys(this.userMultiSorting);
+
+  if (!userMultiSort.length || this.orderBy.column === column) return this.orderBy.column === column;
+
+  return !!this.userMultiSorting[userMultiSort[0]].filter(function (col) {
+    return col.column == column;
+  }).length;
+};
+
+/***/ }),
+
+/***/ "./node_modules/vue-tables-2/compiled/methods/date-format.js":
+/*!*******************************************************************!*\
+  !*** ./node_modules/vue-tables-2/compiled/methods/date-format.js ***!
+  \*******************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+module.exports = function (column) {
+
+    if (this.opts.dateFormatPerColumn.hasOwnProperty(column)) {
+        return this.opts.dateFormatPerColumn[column];
+    }
+
+    return this.opts.dateFormat;
+};
+
+/***/ }),
+
+/***/ "./node_modules/vue-tables-2/compiled/methods/default-sort.js":
+/*!********************************************************************!*\
+  !*** ./node_modules/vue-tables-2/compiled/methods/default-sort.js ***!
+  \********************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+module.exports = function (column, ascending) {
+    var multiIndex = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : -1;
+
+
+    var sort = this.defaultSort;
+    var multiSort = this.userMultiSorting[this.currentlySorting.column] ? this.userMultiSorting[this.currentlySorting.column] : this.opts.multiSorting[this.currentlySorting.column];
+    var asc = this.currentlySorting.ascending;
+    var self = this;
+
+    return function (a, b) {
+
+        var aVal = self._getValue(a, column) || '';
+        var bVal = self._getValue(b, column) || '';
+        var dir = ascending ? 1 : -1;
+        var secondaryAsc;
+
+        if (typeof aVal === 'string') aVal = aVal.toLowerCase();
+        if (typeof bVal === 'string') bVal = bVal.toLowerCase();
+
+        if (aVal === bVal && multiSort && multiSort[multiIndex + 1]) {
+            var sortData = multiSort[multiIndex + 1];
+            if (typeof sortData.ascending !== 'undefined') {
+                secondaryAsc = sortData.ascending;
+            } else {
+                secondaryAsc = sortData.matchDir ? asc : !asc;
+            }
+
+            return sort(sortData.column, secondaryAsc, multiIndex + 1)(a, b);
+        }
+
+        return aVal > bVal ? dir : -dir;
+    };
+};
+
+/***/ }),
+
+/***/ "./node_modules/vue-tables-2/compiled/methods/dispatch.js":
+/*!****************************************************************!*\
+  !*** ./node_modules/vue-tables-2/compiled/methods/dispatch.js ***!
+  \****************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _bus = __webpack_require__(/*! ../bus */ "./node_modules/vue-tables-2/compiled/bus.js");
+
+var _bus2 = _interopRequireDefault(_bus);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+module.exports = function (event, payload) {
+
+  if (this.vuex) {
+    if (event.split('::').length > 1) return;
+    this.commit(event.toUpperCase().replace('-', '_'), payload);
+  }
+
+  this.$emit(event, payload);
+
+  _bus2.default.$emit('vue-tables.' + event, payload);
+
+  if (this.name) {
+    _bus2.default.$emit('vue-tables.' + this.name + '.' + event, payload);
+  }
+};
+
+/***/ }),
+
+/***/ "./node_modules/vue-tables-2/compiled/methods/display.js":
+/*!***************************************************************!*\
+  !*** ./node_modules/vue-tables-2/compiled/methods/display.js ***!
+  \***************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+module.exports = function (text, replacements) {
+
+   if (!this.opts.texts) return '';
+
+   var text = this.opts.texts[text];
+
+   if (replacements) for (var key in replacements) {
+      // console.log(key)
+      text = text.replace('{' + key + '}', replacements[key]);
+   }
+
+   return text;
+};
+
+/***/ }),
+
+/***/ "./node_modules/vue-tables-2/compiled/methods/filterable.js":
+/*!******************************************************************!*\
+  !*** ./node_modules/vue-tables-2/compiled/methods/filterable.js ***!
+  \******************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+module.exports = function (column) {
+
+  if (!this.opts.filterable) return false;
+
+  return typeof this.opts.filterable == 'boolean' && this.opts.filterable || this.opts.filterable.indexOf(column) > -1;
+};
+
+/***/ }),
+
+/***/ "./node_modules/vue-tables-2/compiled/methods/get-child-row-template.js":
+/*!******************************************************************************!*\
+  !*** ./node_modules/vue-tables-2/compiled/methods/get-child-row-template.js ***!
+  \******************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+module.exports = function (h, row) {
+  // scoped slot
+  if (this.$scopedSlots.child_row) return this.$scopedSlots.child_row({ row: row });
+
+  var childRow = this.opts.childRow;
+
+  // function
+  if (typeof childRow === 'function') return childRow.apply(this, [h, row]);
+
+  // component
+  return h(childRow, {
+    attrs: {
+      data: row
+    }
+  });
+};
+
+/***/ }),
+
+/***/ "./node_modules/vue-tables-2/compiled/methods/get-column-name.js":
+/*!***********************************************************************!*\
+  !*** ./node_modules/vue-tables-2/compiled/methods/get-column-name.js ***!
+  \***********************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+module.exports = function (column) {
+    return 'vf__' + column.split('.').join('@@@');
+};
+
+/***/ }),
+
+/***/ "./node_modules/vue-tables-2/compiled/methods/get-data.js":
+/*!****************************************************************!*\
+  !*** ./node_modules/vue-tables-2/compiled/methods/get-data.js ***!
+  \****************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+var merge = __webpack_require__(/*! merge */ "./node_modules/merge/merge.js");
+
+module.exports = function (promiseOnly) {
+  var _data;
+
+  var additionalData = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+  var emitLoading = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : true;
+
+
+  var keys = this.opts.requestKeys;
+
+  var data = (_data = {}, _defineProperty(_data, keys.query, this.filteredQuery), _defineProperty(_data, keys.limit, this.limit), _defineProperty(_data, keys.ascending, this.orderBy.ascending ? 1 : 0), _defineProperty(_data, keys.page, this.page), _defineProperty(_data, keys.byColumn, this.opts.filterByColumn ? 1 : 0), _data);
+
+  if (this.orderBy.hasOwnProperty('column') && this.orderBy.column) data[keys.orderBy] = this.orderBy.column;
+
+  data = merge(data, this.opts.params, this.customQueries, additionalData);
+
+  if (this.hasMultiSort && this.orderBy.column && this.userMultiSorting[this.orderBy.column]) {
+    data.multiSort = this.userMultiSorting[this.orderBy.column];
+  }
+
+  data = this.opts.requestAdapter(data);
+
+  if (emitLoading) {
+    this.dispatch('loading', data);
+  }
+
+  var promise = this.sendRequest(data);
+
+  if (promiseOnly) return promise;
+
+  return promise.then(function (response) {
+    return this.setData(response);
+  }.bind(this));
+};
+
+/***/ }),
+
+/***/ "./node_modules/vue-tables-2/compiled/methods/get-group-slot.js":
+/*!**********************************************************************!*\
+  !*** ./node_modules/vue-tables-2/compiled/methods/get-group-slot.js ***!
+  \**********************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+module.exports = function (value) {
+
+    if (this.$scopedSlots && this.$scopedSlots['__group_meta']) {
+        var data = this.opts.groupMeta.find(function (val) {
+            return val.value === value;
+        });
+
+        if (!data) return '';
+
+        return this.$scopedSlots['__group_meta'](data);
+    }
+
+    return '';
+};
+
+/***/ }),
+
+/***/ "./node_modules/vue-tables-2/compiled/methods/get-heading-tooltip.js":
+/*!***************************************************************************!*\
+  !*** ./node_modules/vue-tables-2/compiled/methods/get-heading-tooltip.js ***!
+  \***************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+module.exports = function (value, h) {
+
+	if (typeof value !== 'string') return '';
+
+	var derivedHeadingTooltip = '';
+
+	if (!this.opts.headingsTooltips.hasOwnProperty(value)) return derivedHeadingTooltip;
+
+	if (typeof this.opts.headingsTooltips[value] === 'function') {
+		if (h) return this.opts.headingsTooltips[value].call(this.$parent, h);
+
+		return derivedHeadingTooltip;
+	}
+
+	return this.opts.headingsTooltips[value];
+};
+
+/***/ }),
+
+/***/ "./node_modules/vue-tables-2/compiled/methods/get-heading.js":
+/*!*******************************************************************!*\
+  !*** ./node_modules/vue-tables-2/compiled/methods/get-heading.js ***!
+  \*******************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _ucfirst = __webpack_require__(/*! ../helpers/ucfirst */ "./node_modules/vue-tables-2/compiled/helpers/ucfirst.js");
+
+var _ucfirst2 = _interopRequireDefault(_ucfirst);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+module.exports = function (value, h) {
+
+	if (typeof value !== 'string') return '';
+
+	if (typeof this.$slots['h__' + value] !== 'undefined') {
+		return this.$slots['h__' + value];
+	}
+
+	var derivedHeading = (0, _ucfirst2.default)(value.split("_").join(" "));
+
+	if (!this.opts.headings.hasOwnProperty(value)) return derivedHeading;
+
+	if (typeof this.opts.headings[value] === 'function') {
+		if (h) return this.opts.headings[value].call(this.$parent, h);
+
+		return derivedHeading;
+	}
+
+	return this.opts.headings[value];
+};
+
+/***/ }),
+
+/***/ "./node_modules/vue-tables-2/compiled/methods/get-initial-date-range.js":
+/*!******************************************************************************!*\
+  !*** ./node_modules/vue-tables-2/compiled/methods/get-initial-date-range.js ***!
+  \******************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+module.exports = function (column) {
+    if (typeof this.opts.initFilters[column] !== 'undefined') {
+        return this.opts.initFilters[column];
+    }
+
+    if (typeof this.query[column] !== 'undefined' && this.query[column].start) {
+        return {
+            start: moment(this.query[column].start, 'YYYY-MM-DD HH:mm:ss'),
+            end: moment(this.query[column].end, 'YYYY-MM-DD HH:mm:ss')
+        };
+    }
+
+    return false;
+};
+
+/***/ }),
+
+/***/ "./node_modules/vue-tables-2/compiled/methods/get-name.js":
+/*!****************************************************************!*\
+  !*** ./node_modules/vue-tables-2/compiled/methods/get-name.js ***!
+  \****************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+module.exports = function (name) {
+  if (!name) return name;
+
+  name = name.split('__');
+  name.shift();
+
+  return name.join('__').split('@@@').join('.');
+};
+
+/***/ }),
+
+/***/ "./node_modules/vue-tables-2/compiled/methods/get-open-child-rows.js":
+/*!***************************************************************************!*\
+  !*** ./node_modules/vue-tables-2/compiled/methods/get-open-child-rows.js ***!
+  \***************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+module.exports = function () {
+    var _this = this;
+
+    var rows = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
+
+
+    if (!this.opts.childRow || typeof this.opts.childRow === 'function') {
+        throw new Error('vue-tables-2: Child row undefined or not a component');
+    }
+
+    var Rows = rows ? this.openChildRows.filter(function (row) {
+        return rows.includes(row);
+    }) : this.openChildRows;
+
+    if (!Rows.length) return [];
+
+    var components = this.$children.filter(function (child) {
+        return child.$options.name === 'ChildRow' && Rows.includes(child.data[_this.opts.uniqueKey]);
+    });
+
+    return components;
+};
+
+/***/ }),
+
+/***/ "./node_modules/vue-tables-2/compiled/methods/get-response-data.js":
+/*!*************************************************************************!*\
+  !*** ./node_modules/vue-tables-2/compiled/methods/get-response-data.js ***!
+  \*************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+module.exports = function (response) {
+
+  if (typeof axios !== 'undefined') return response.data;
+
+  return response;
+};
+
+/***/ }),
+
+/***/ "./node_modules/vue-tables-2/compiled/methods/get-sort-fn.js":
+/*!*******************************************************************!*\
+  !*** ./node_modules/vue-tables-2/compiled/methods/get-sort-fn.js ***!
+  \*******************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+module.exports = function (column) {
+
+  var ascending = this.orderBy.ascending;
+
+  this.currentlySorting = { column: column, ascending: ascending };
+
+  if (typeof this.opts.customSorting[column] == 'undefined') return this.defaultSort(column, ascending);
+
+  return this.opts.customSorting[column](ascending);
+};
+
+/***/ }),
+
+/***/ "./node_modules/vue-tables-2/compiled/methods/get-value.js":
+/*!*****************************************************************!*\
+  !*** ./node_modules/vue-tables-2/compiled/methods/get-value.js ***!
+  \*****************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+module.exports = function (row, column) {
+
+  if (column.indexOf('.') === -1) return row[column];
+
+  var p = column.split('.');
+
+  var value = row[p[0]];
+
+  if (!value) return '';
+
+  for (var i = 1; i < p.length; i++) {
+    value = value[p[i]];
+
+    // If the nested structure doesn't exist return an empty string
+    if (typeof value === 'undefined') return '';
+  }
+
+  return value;
+};
+
+/***/ }),
+
+/***/ "./node_modules/vue-tables-2/compiled/methods/has-date-filters.js":
+/*!************************************************************************!*\
+  !*** ./node_modules/vue-tables-2/compiled/methods/has-date-filters.js ***!
+  \************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
+var intersection = __webpack_require__(/*! array-intersection */ "./node_modules/array-intersection/index.js");
+
+module.exports = function () {
+
+  var opts = this.opts;
+
+  return opts.dateColumns.length && opts.filterByColumn && (typeof opts.filterable == 'boolean' && opts.filterable || _typeof(opts.filterable) == 'object' && intersection(opts.filterable, opts.dateColumns).length);
+};
+
+/***/ }),
+
+/***/ "./node_modules/vue-tables-2/compiled/methods/init-custom-filters.js":
+/*!***************************************************************************!*\
+  !*** ./node_modules/vue-tables-2/compiled/methods/init-custom-filters.js ***!
+  \***************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+module.exports = function () {
+
+  var customQueries = {};
+
+  var init = this.opts.initFilters;
+  var key = void 0;
+
+  this.opts.customFilters.forEach(function (filter) {
+
+    key = this.source == 'client' ? filter.name : filter;
+
+    customQueries[key] = init.hasOwnProperty(key) ? init[key] : '';
+  }.bind(this));
+
+  return customQueries;
+};
+
+/***/ }),
+
+/***/ "./node_modules/vue-tables-2/compiled/methods/init-date-filters.js":
+/*!*************************************************************************!*\
+  !*** ./node_modules/vue-tables-2/compiled/methods/init-date-filters.js ***!
+  \*************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var merge = __webpack_require__(/*! merge */ "./node_modules/merge/merge.js");
+
+module.exports = function () {
+
+  if (typeof $ === 'undefined' || typeof $(this.$el).daterangepicker === 'undefined') {
+    console.error('Date filters require jquery and daterangepicker');
+    return;
+  }
+
+  var el;
+  var that = this;
+  var query = this.vuex ? JSON.parse(JSON.stringify(this.query)) : this.query;
+  var columnOptions;
+  var dpOptions;
+
+  var search = function search(query, e) {
+    return that.source == 'client' ? that.search(that.data, e) : that.serverSearch(query, e);
+  };
+
+  var datepickerOptions = merge.recursive(this.opts.datepickerOptions, {
+    autoUpdateInput: false,
+    singleDatePicker: false
+  });
+
+  that.opts.dateColumns.forEach(function (column) {
+
+    var range = that._getInitialDateRange(column);
+
+    if (range) {
+
+      that._setDatepickerText(column, range.start, range.end);
+
+      range = {
+        startDate: range.start,
+        endDate: range.end
+      };
+    } else {
+      range = {};
+    }
+
+    el = $(that.$el).find("#VueTables__" + column + "-filter");
+
+    columnOptions = typeof that.opts.datepickerPerColumnOptions[column] !== 'undefined' ? that.opts.datepickerPerColumnOptions[column] : {};
+
+    columnOptions = merge.recursive(columnOptions, {
+      locale: {
+        format: that.dateFormat(column)
+      }
+    });
+
+    dpOptions = merge(true, datepickerOptions);
+
+    if (columnOptions.ranges === false) {
+      dpOptions.ranges = {};
+    }
+
+    el.daterangepicker(merge.recursive(dpOptions, columnOptions, range));
+
+    el.on('apply.daterangepicker', function (ev, picker) {
+
+      query[column] = {
+        start: picker.startDate.format('YYYY-MM-DD HH:mm:ss'),
+        end: picker.endDate.format('YYYY-MM-DD HH:mm:ss')
+      };
+
+      if (!that.vuex) that.query = query;
+
+      that._setDatepickerText(column, picker.startDate, picker.endDate);
+
+      that.updateState('query', query);
+
+      search(query, { target: { name: that._getColumnName(column), value: query[column] } });
+    });
+
+    el.on('cancel.daterangepicker', function (ev, picker) {
+
+      query[column] = '';
+
+      if (!that.vuex) that.query = query;
+
+      picker.setStartDate(moment());
+      picker.setEndDate(moment());
+
+      that.updateState('query', query);
+
+      $(this).html("<span class='VueTables__filter-placeholder'>" + that.display('filterBy', { column: that.getHeading(column) }) + "</span>");
+
+      search(query, { target: { name: that._getColumnName(column), value: query[column] } });
+    });
+  });
+};
+
+/***/ }),
+
+/***/ "./node_modules/vue-tables-2/compiled/methods/init-options.js":
+/*!********************************************************************!*\
+  !*** ./node_modules/vue-tables-2/compiled/methods/init-options.js ***!
+  \********************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var merge = __webpack_require__(/*! merge */ "./node_modules/merge/merge.js");
+
+module.exports = function (defaults, globalOptions, localOptions) {
+
+     if (globalOptions) defaults = merge.recursive(defaults, globalOptions);
+
+     localOptions = merge.recursive(defaults, localOptions);
+
+     return localOptions;
+};
+
+/***/ }),
+
+/***/ "./node_modules/vue-tables-2/compiled/methods/init-order-by.js":
+/*!*********************************************************************!*\
+  !*** ./node_modules/vue-tables-2/compiled/methods/init-order-by.js ***!
+  \*********************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+module.exports = function () {
+
+  if (!this.opts.orderBy) return;
+
+  this.orderBy.column = this.opts.orderBy.column;
+  this.orderBy.ascending = this.opts.orderBy.hasOwnProperty('ascending') ? this.opts.orderBy.ascending : true;
+};
+
+/***/ }),
+
+/***/ "./node_modules/vue-tables-2/compiled/methods/init-pagination.js":
+/*!***********************************************************************!*\
+  !*** ./node_modules/vue-tables-2/compiled/methods/init-pagination.js ***!
+  \***********************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+module.exports = function () {
+
+  this.page = 1;
+
+  if (!this.opts.pagination.dropdown) {
+    this.$refs.pagination.setPage(1);
+  }
+};
+
+/***/ }),
+
+/***/ "./node_modules/vue-tables-2/compiled/methods/init-query.js":
+/*!******************************************************************!*\
+  !*** ./node_modules/vue-tables-2/compiled/methods/init-query.js ***!
+  \******************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
+module.exports = function () {
+
+  var init = this.opts.initFilters;
+
+  if (!this.opts.filterByColumn) return init.hasOwnProperty('GENERIC') ? init.GENERIC : '';
+
+  var query = {};
+
+  var filterable = this.opts.filterable && _typeof(this.opts.filterable) == 'object' ? this.opts.filterable : this.columns;
+
+  filterable.forEach(function (column) {
+    query[column] = getInitialValue(init, column);
+  }.bind(this));
+
+  return query;
+};
+
+function getInitialValue(init, column) {
+
+  if (!init.hasOwnProperty(column)) return '';
+
+  if (typeof init[column].start == 'undefined') return init[column];
+
+  return {
+    start: init[column].start.format('YYYY-MM-DD HH:mm:ss'),
+    end: init[column].end.format('YYYY-MM-DD HH:mm:ss')
+  };
+}
+
+/***/ }),
+
+/***/ "./node_modules/vue-tables-2/compiled/methods/init-state.js":
+/*!******************************************************************!*\
+  !*** ./node_modules/vue-tables-2/compiled/methods/init-state.js ***!
+  \******************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+module.exports = function () {
+  var state = {
+    page: 1,
+    query: this.query,
+    orderBy: this.orderBy,
+    perPage: this.opts.perPage,
+    customQueries: this.customQueries
+  };
+
+  this.storage.setItem(this.stateKey, JSON.stringify(state));
+
+  return state;
+};
+
+/***/ }),
+
+/***/ "./node_modules/vue-tables-2/compiled/methods/initial-order-ascending.js":
+/*!*******************************************************************************!*\
+  !*** ./node_modules/vue-tables-2/compiled/methods/initial-order-ascending.js ***!
+  \*******************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+module.exports = function (column) {
+    return !this.opts.descOrderColumns.includes(column);
+};
+
+/***/ }),
+
+/***/ "./node_modules/vue-tables-2/compiled/methods/is-date-filter.js":
+/*!**********************************************************************!*\
+  !*** ./node_modules/vue-tables-2/compiled/methods/is-date-filter.js ***!
+  \**********************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+module.exports = function (column) {
+  return this.query.hasOwnProperty(column) && this.opts.dateColumns.indexOf(column) > -1;
+};
+
+/***/ }),
+
+/***/ "./node_modules/vue-tables-2/compiled/methods/is-list-filter.js":
+/*!**********************************************************************!*\
+  !*** ./node_modules/vue-tables-2/compiled/methods/is-list-filter.js ***!
+  \**********************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+module.exports = function (column) {
+  return this.query.hasOwnProperty(column) && this.opts.listColumns.hasOwnProperty(column);
+};
+
+/***/ }),
+
+/***/ "./node_modules/vue-tables-2/compiled/methods/is-text-filter.js":
+/*!**********************************************************************!*\
+  !*** ./node_modules/vue-tables-2/compiled/methods/is-text-filter.js ***!
+  \**********************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+module.exports = function (column) {
+
+  return this.query.hasOwnProperty(column) && this.opts.dateColumns.indexOf(column) == -1 && !this.opts.listColumns.hasOwnProperty(column);
+};
+
+/***/ }),
+
+/***/ "./node_modules/vue-tables-2/compiled/methods/on-pagination.js":
+/*!*********************************************************************!*\
+  !*** ./node_modules/vue-tables-2/compiled/methods/on-pagination.js ***!
+  \*********************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+module.exports = function (page) {
+
+    if (this.vuex) return;
+
+    this.setPage(page);
+    this.dispatch('pagination', page);
+};
+
+/***/ }),
+
+/***/ "./node_modules/vue-tables-2/compiled/methods/only-column.js":
+/*!*******************************************************************!*\
+  !*** ./node_modules/vue-tables-2/compiled/methods/only-column.js ***!
+  \*******************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+module.exports = function (column) {
+    return this.userColumnsDisplay.length === 1 && this.userColumnsDisplay[0] === column;
+};
+
+/***/ }),
+
+/***/ "./node_modules/vue-tables-2/compiled/methods/order-by-column.js":
+/*!***********************************************************************!*\
+  !*** ./node_modules/vue-tables-2/compiled/methods/order-by-column.js ***!
+  \***********************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+module.exports = function (colName, ev) {
+
+  if (!this.sortable(colName)) return;
+
+  if (ev.shiftKey && this.orderBy.column && this.hasMultiSort) {
+    this.setUserMultiSort(colName);
+  } else {
+    this.userMultiSorting = {};
+    this.orderBy.ascending = colName == this.orderBy.column ? !this.orderBy.ascending : this._initialOrderAscending(colName);
+    this.orderBy.column = colName;
+
+    this.updateState('orderBy', this.orderBy);
+    this.dispatch('sorted', JSON.parse(JSON.stringify(this.orderBy)));
+  }
+
+  if (this.source == 'server') {
+    this.getData();
+  }
+};
+
+/***/ }),
+
+/***/ "./node_modules/vue-tables-2/compiled/methods/refresh.js":
+/*!***************************************************************!*\
+  !*** ./node_modules/vue-tables-2/compiled/methods/refresh.js ***!
+  \***************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+module.exports = function () {
+  this.serverSearch();
+};
+
+/***/ }),
+
+/***/ "./node_modules/vue-tables-2/compiled/methods/register-client-filters.js":
+/*!*******************************************************************************!*\
+  !*** ./node_modules/vue-tables-2/compiled/methods/register-client-filters.js ***!
+  \*******************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _bus = __webpack_require__(/*! ../bus */ "./node_modules/vue-tables-2/compiled/bus.js");
+
+var _bus2 = _interopRequireDefault(_bus);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+module.exports = function () {
+  var _this = this;
+
+  var event = 'vue-tables';
+  if (this.name) event += '.' + this.name;
+
+  this.opts.customFilters.forEach(function (filter) {
+    _bus2.default.$off(event + '.filter::' + filter.name);
+    _bus2.default.$on(event + '.filter::' + filter.name, function (value) {
+      _this.customQueries[filter.name] = value;
+      _this.updateState('customQueries', _this.customQueries);
+    });
+  });
+};
+
+/***/ }),
+
+/***/ "./node_modules/vue-tables-2/compiled/methods/register-server-filters.js":
+/*!*******************************************************************************!*\
+  !*** ./node_modules/vue-tables-2/compiled/methods/register-server-filters.js ***!
+  \*******************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _bus = __webpack_require__(/*! ../bus */ "./node_modules/vue-tables-2/compiled/bus.js");
+
+var _bus2 = _interopRequireDefault(_bus);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+module.exports = function () {
+
+  var event = 'vue-tables';
+  if (this.name) event += '.' + this.name;
+
+  this.opts.customFilters.forEach(function (filter) {
+    _bus2.default.$off(event + '.filter::' + filter);
+    _bus2.default.$on(event + '.filter::' + filter, function (value) {
+      this.customQueries[filter] = value;
+      this.updateState('customQueries', this.customQueries);
+      this.refresh();
+    }.bind(this));
+  }.bind(this));
+};
+
+/***/ }),
+
+/***/ "./node_modules/vue-tables-2/compiled/methods/render.js":
+/*!**************************************************************!*\
+  !*** ./node_modules/vue-tables-2/compiled/methods/render.js ***!
+  \**************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+module.exports = function (row, column, index, h) {
+
+  var value = this._getValue(row, column);
+
+  if (this.templatesKeys.indexOf(column) == -1) {
+
+    if (typeof value === 'undefined' || !this.opts.highlightMatches || this.filterableColumns.indexOf(column) === -1) {
+      return value;
+    }
+
+    return this.highlightMatch(value, column, h);
+  }
+
+  var template = this.opts.templates[column];
+
+  template = typeof template == 'function' ? template.apply(this.$root, [h, row, index, column]) : h(template, {
+    attrs: {
+      data: row,
+      column: column,
+      index: index
+    }
+  });
+
+  return template;
+};
+
+/***/ }),
+
+/***/ "./node_modules/vue-tables-2/compiled/methods/row-was-clicked.js":
+/*!***********************************************************************!*\
+  !*** ./node_modules/vue-tables-2/compiled/methods/row-was-clicked.js ***!
+  \***********************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+module.exports = function (row, event) {
+
+  var data;
+  var id = this.opts.uniqueKey;
+
+  if (this.source == 'client' && typeof row[id] !== 'undefined') {
+    data = this.tableData.filter(function (r) {
+      return row[id] === r[id];
+    })[0];
+  } else {
+    data = row;
+  }
+
+  this.dispatch('row-click', { row: data, event: event });
+};
+
+/***/ }),
+
+/***/ "./node_modules/vue-tables-2/compiled/methods/send-request.js":
+/*!********************************************************************!*\
+  !*** ./node_modules/vue-tables-2/compiled/methods/send-request.js ***!
+  \********************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+module.exports = function (data) {
+
+  if (typeof this.opts.requestFunction === 'function') {
+    return this.opts.requestFunction.call(this, data);
+  }
+
+  if (typeof axios !== 'undefined') return axios.get(this.url, { params: data }).catch(function (e) {
+    this.dispatch('error', e);
+  }.bind(this));
+
+  if (typeof this.$http !== 'undefined') return this.$http.get(this.url, { params: data }).then(function (data) {
+    return data.json();
+  }.bind(this), function (e) {
+    this.dispatch('error', e);
+  }.bind(this));
+
+  if (typeof $ != 'undefined') return $.getJSON(this.url, data).fail(function (e) {
+    this.dispatch('error', e);
+  }.bind(this));
+
+  throw "vue-tables: No supported ajax library was found. (jQuery, axios or vue-resource). To use a different library you can write your own request function (see the `requestFunction` option)";
+};
+
+/***/ }),
+
+/***/ "./node_modules/vue-tables-2/compiled/methods/server-search.js":
+/*!*********************************************************************!*\
+  !*** ./node_modules/vue-tables-2/compiled/methods/server-search.js ***!
+  \*********************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+module.exports = function (e, dateEvent) {
+
+  // we need to handle the store this.query to make sure we're not mutating outside of it
+  var query = this.vuex ? JSON.parse(JSON.stringify(this.query)) : this.query;
+
+  // in case we pass an object manually (mostly used for init-date-filters should refactor
+  if (Object.prototype.toString.call(e).slice(8, -1) == 'Object') {
+    query = this.vuex ? JSON.parse(JSON.stringify(e)) : e;
+
+    if (!this.vuex) this.query = query;
+
+    var name = dateEvent.target.name;
+    var value = dateEvent.target.value;
+
+    if (name) {
+      this.dispatch('filter', { name: name, value: value });
+      this.dispatch('filter::' + name, value);
+    } else {
+      this.dispatch('filter', value);
+    }
+
+    this.updateState('query', query);
+  } else if (e) {
+    var _name = this.getName(e.target.name);
+    var _value = e.target.value;
+
+    if (_name) {
+      query[_name] = _value;
+    } else {
+      query = _value;
+    }
+
+    if (!this.vuex) this.query = query;
+
+    if (_name) {
+      this.dispatch('filter', { name: _name, value: _value });
+      this.dispatch('filter::' + _name, _value);
+    } else {
+      this.dispatch('filter', _value);
+    }
+
+    this.updateState('query', query);
+  }
+
+  return search(this, query);
+};
+
+function search(that, query) {
+
+  if (that.vuex) {
+    that.commit('SET_FILTER', query);
+  } else {
+    that.initPagination();
+
+    if (that.opts.pagination.dropdown) {
+      that.getData();
+    }
+  }
+}
+
+function noDebounce(e, name, opts) {
+  return !e || name && (opts.dateColumns.indexOf(name) > -1 || Object.keys(opts.listColumns).indexOf(name) > -1);
+}
+
+/***/ }),
+
+/***/ "./node_modules/vue-tables-2/compiled/methods/set-columns-dropdown-close-listener.js":
+/*!*******************************************************************************************!*\
+  !*** ./node_modules/vue-tables-2/compiled/methods/set-columns-dropdown-close-listener.js ***!
+  \*******************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+module.exports = function () {
+  var _this = this;
+
+  if (this.opts.columnsDropdown) {
+
+    var stopProp = function stopProp(e) {
+      return e.stopPropagation();
+    };
+    var handler = function handler() {
+      if (_this.displayColumnsDropdown) {
+        _this.displayColumnsDropdown = false;
+      }
+    };
+
+    this.$refs.columnsdropdown.addEventListener('click', stopProp);
+    document.addEventListener('click', handler);
+
+    this.$once('hook:beforeDestroy', function () {
+      document.removeEventListener('click', handler);
+      _this.$refs.columnsdropdown.removeEventListener('click', stopProp);
+    });
+  }
+};
+
+/***/ }),
+
+/***/ "./node_modules/vue-tables-2/compiled/methods/set-data.js":
+/*!****************************************************************!*\
+  !*** ./node_modules/vue-tables-2/compiled/methods/set-data.js ***!
+  \****************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
+module.exports = function (response) {
+
+  var data = this.opts.responseAdapter.call(this, response);
+
+  this.data = this.applyFilters(data.data);
+
+  if (isNaN(data.count)) {
+    console.error('vue-tables-2: invalid \'count\' property. Expected number, got ' + _typeof(data.count));
+    console.error('count equals', data.count);
+    throw new Error();
+  }
+
+  this.count = parseInt(data.count);
+
+  setTimeout(function () {
+    this.dispatch('loaded', response);
+  }.bind(this), 0);
+};
+
+/***/ }),
+
+/***/ "./node_modules/vue-tables-2/compiled/methods/set-datepicker-text.js":
+/*!***************************************************************************!*\
+  !*** ./node_modules/vue-tables-2/compiled/methods/set-datepicker-text.js ***!
+  \***************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+module.exports = function (column, start, end) {
+
+    var dateFormat = this.dateFormat(column);
+    var el = typeof column === 'string' ? $(this.$el).find("#VueTables__" + column + "-filter") : column;
+
+    el.text(start.format(dateFormat) + " - " + end.format(dateFormat));
+};
+
+/***/ }),
+
+/***/ "./node_modules/vue-tables-2/compiled/methods/set-filter.js":
+/*!******************************************************************!*\
+  !*** ./node_modules/vue-tables-2/compiled/methods/set-filter.js ***!
+  \******************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var merge = __webpack_require__(/*! merge */ "./node_modules/merge/merge.js");
+
+module.exports = function (filter) {
+
+  if (!this.opts.filterable) {
+    console.warn("vue-tables-2: Unable to set filter. Filtering is disabled (filterable: false)");
+    return;
+  };
+
+  if (this.opts.filterByColumn && typeof filter === 'string') {
+    console.warn("vue-tables-2: Unable to set filter. Filter value must be an object (`filterByColumn` is set to `true`)");
+    return;
+  };
+
+  if (!this.opts.filterByColumn && typeof filter !== 'string') {
+    console.warn("vue-tables-2: Unable to set filter. Filter value must be a string (`filterByColumn` is set to `false`)");
+    return;
+  };
+
+  var mergedFilter = this.opts.filterByColumn ? merge(this.query, filter) : filter;
+
+  if (this.vuex) {
+    this.commit('SET_FILTER', mergedFilter);
+  } else {
+    this.query = mergedFilter;
+    this.setPage(1, true);
+  }
+
+  this.updateState('query', mergedFilter);
+
+  this._setFiltersDOM(filter);
+
+  if (this.source == 'server') {
+    this.getData();
+  }
+};
+
+/***/ }),
+
+/***/ "./node_modules/vue-tables-2/compiled/methods/set-filters-dom.js":
+/*!***********************************************************************!*\
+  !*** ./node_modules/vue-tables-2/compiled/methods/set-filters-dom.js ***!
+  \***********************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
+module.exports = function (query) {
+
+  var el;
+
+  if (this.opts.filterByColumn) {
+
+    for (var column in query) {
+
+      var columnName = this._getColumnName(column);
+
+      if (this.isDateFilter(column)) {
+        if (query[column] && _typeof(query[column]) === 'object') {
+          var start = typeof query[column].start === 'string' ? moment(query[column].start, 'YYYY-MM-DD') : query[column].start;
+          var end = typeof query[column].end === 'string' ? moment(query[column].end, 'YYYY-MM-DD') : query[column].end;
+
+          this._setDatepickerText(column, start, end);
+        } else {
+          $(this.$el).find('#VueTables__' + column + '-filter').html("<span class='VueTables__filter-placeholder'>" + this.display('filterBy', { column: this.getHeading(column) }) + "</span>");
+        }
+        continue;
+      }
+      el = this.$el.querySelector('[name=\'' + columnName + '\']');
+
+      if (el) {
+        el.value = query[column];
+      } else if (this.columns.indexOf(column) === -1) {
+        console.error('vue-tables-2: Error in setting filter value. Column \'' + column + '\' does not exist.');
+      }
+    }
+  } else {
+    this.$el.querySelector('.VueTables__search input').value = query;
+  }
+};
+
+/***/ }),
+
+/***/ "./node_modules/vue-tables-2/compiled/methods/set-limit.js":
+/*!*****************************************************************!*\
+  !*** ./node_modules/vue-tables-2/compiled/methods/set-limit.js ***!
+  \*****************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
+module.exports = function (e) {
+  this.limit = (typeof e === 'undefined' ? 'undefined' : _typeof(e)) === 'object' ? e.target.value : e;
+  this.updateState('perPage', this.limit);
+  this.dispatch('limit', parseInt(this.limit));
+  this.setPage(1);
+};
+
+/***/ }),
+
+/***/ "./node_modules/vue-tables-2/compiled/methods/set-order.js":
+/*!*****************************************************************!*\
+  !*** ./node_modules/vue-tables-2/compiled/methods/set-order.js ***!
+  \*****************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+module.exports = function (column, ascending) {
+
+  this.orderBy.column = column;
+  this.orderBy.ascending = ascending;
+
+  this.updateState('orderBy', { column: column, ascending: ascending });
+
+  if (this.source == 'server') {
+    this.getData();
+  }
+};
+
+/***/ }),
+
+/***/ "./node_modules/vue-tables-2/compiled/methods/set-page.js":
+/*!****************************************************************!*\
+  !*** ./node_modules/vue-tables-2/compiled/methods/set-page.js ***!
+  \****************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+module.exports = function (page, preventRequest) {
+
+  page = page ? page : this.$refs.page.value;
+
+  if (!this.opts.pagination.dropdown) this.$refs.pagination.Page = page;
+
+  this.page = page;
+
+  this.updateState('page', page);
+
+  if (this.source == 'server' && !preventRequest) this.getData();
+};
+
+/***/ }),
+
+/***/ "./node_modules/vue-tables-2/compiled/methods/set-user-multi-sort.js":
+/*!***************************************************************************!*\
+  !*** ./node_modules/vue-tables-2/compiled/methods/set-user-multi-sort.js ***!
+  \***************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+module.exports = function (secondaryCol) {
+
+  var primaryCol = this.orderBy.column;
+  var primaryAsc = this.orderBy.ascending;
+
+  if (!this.userMultiSorting[primaryCol]) this.userMultiSorting[primaryCol] = [];
+
+  var multi = this.userMultiSorting[primaryCol];
+
+  if (primaryCol === secondaryCol) {
+    if (!multi.length || primaryAsc) {
+      // primary is the only sorted column or is ascending
+      this.orderBy.ascending = !this.orderBy.ascending;
+    } else {
+      // remove primary column and make secondary primary
+      this.orderBy = multi.shift();
+      this.userMultiSorting = {};
+      this.userMultiSorting[this.orderBy.column] = multi;
+    }
+  } else {
+    var secondary = multi.filter(function (col) {
+      return col.column == secondaryCol;
+    })[0];
+
+    if (secondary) {
+      if (!secondary.ascending) {
+        // remove sort
+        this.userMultiSorting[primaryCol] = multi.filter(function (col) {
+          return col.column != secondaryCol;
+        });
+        if (!this.userMultiSorting[primaryCol].length) this.userMultiSorting = {};
+      } else {
+        // change direction
+        secondary.ascending = !secondary.ascending;
+      }
+    } else {
+      // add sort
+      multi.push({
+        column: secondaryCol,
+        ascending: true
+      });
+    }
+  }
+  // force re-compilation of the filteredData computed property
+  this.time = Date.now();
+
+  this.dispatch('sorted', getMultiSortData(this.orderBy, this.userMultiSorting));
+};
+
+function getMultiSortData(main, secondary) {
+  var cols = [JSON.parse(JSON.stringify(main))];
+  cols = cols.concat(secondary[main.column]);
+  return cols;
+};
+
+/***/ }),
+
+/***/ "./node_modules/vue-tables-2/compiled/methods/sortable-chevron-class.js":
+/*!******************************************************************************!*\
+  !*** ./node_modules/vue-tables-2/compiled/methods/sortable-chevron-class.js ***!
+  \******************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+module.exports = function (column) {
+
+  var cls = this.opts.sortIcon.base + ' ';
+
+  if (!this.sortable(column)) return;
+
+  if (this.opts.sortIcon.is && !this._currentlySorted(column)) {
+    cls += this.opts.sortIcon.is + ' ';
+  }
+
+  if (this.hasMultiSort && this.orderBy.column && this.userMultiSorting[this.orderBy.column]) {
+    var col = this.userMultiSorting[this.orderBy.column].filter(function (c) {
+      return c.column === column;
+    })[0];
+    if (col) cls += col.ascending ? this.opts.sortIcon.up : this.opts.sortIcon.down;
+  }
+
+  if (column == this.orderBy.column) {
+    cls += this.orderBy.ascending == 1 ? this.opts.sortIcon.up : this.opts.sortIcon.down;
+  }
+
+  return cls;
+};
+
+/***/ }),
+
+/***/ "./node_modules/vue-tables-2/compiled/methods/sortable-class.js":
+/*!**********************************************************************!*\
+  !*** ./node_modules/vue-tables-2/compiled/methods/sortable-class.js ***!
+  \**********************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+module.exports = function (column) {
+
+  var c = this.sortable(column) ? 'VueTables__sortable ' : '';
+
+  c += this.columnClass(column);
+
+  return c;
+};
+
+/***/ }),
+
+/***/ "./node_modules/vue-tables-2/compiled/methods/sortable.js":
+/*!****************************************************************!*\
+  !*** ./node_modules/vue-tables-2/compiled/methods/sortable.js ***!
+  \****************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+module.exports = function (column) {
+
+    var sortAll = typeof this.opts.sortable == 'boolean' && this.opts.sortable;
+
+    if (sortAll) return true;
+
+    return this.opts.sortable.indexOf(column) > -1;
+};
+
+/***/ }),
+
+/***/ "./node_modules/vue-tables-2/compiled/methods/toggle-child-row.js":
+/*!************************************************************************!*\
+  !*** ./node_modules/vue-tables-2/compiled/methods/toggle-child-row.js ***!
+  \************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+module.exports = function (rowId, e) {
+
+  if (e) e.stopPropagation();
+
+  if (this.openChildRows.includes(rowId)) {
+    var index = this.openChildRows.indexOf(rowId);
+    this.openChildRows.splice(index, 1);
+  } else {
+    this.openChildRows.push(rowId);
+  }
+};
+
+/***/ }),
+
+/***/ "./node_modules/vue-tables-2/compiled/methods/toggle-column.js":
+/*!*********************************************************************!*\
+  !*** ./node_modules/vue-tables-2/compiled/methods/toggle-column.js ***!
+  \*********************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+module.exports = function (column) {
+    var _this = this;
+
+    if (!this.userControlsColumns) {
+        this.userColumnsDisplay = JSON.parse(JSON.stringify(this.allColumns));
+        this.userControlsColumns = true;
+    }
+
+    if (this.userColumnsDisplay.includes(column)) {
+
+        // can't have no columns
+        if (this.userColumnsDisplay.length === 1) return;
+
+        var index = this.userColumnsDisplay.indexOf(column);
+        this.userColumnsDisplay.splice(index, 1);
+    } else {
+        this.userColumnsDisplay.push(column);
+    }
+
+    this.updateState('userControlsColumns', true);
+    this.updateState('userColumnsDisplay', this.userColumnsDisplay);
+
+    this.$nextTick(function () {
+        _this._setFiltersDOM(_this.query);
+    });
+};
+
+/***/ }),
+
+/***/ "./node_modules/vue-tables-2/compiled/methods/toggle-columns-dropdown.js":
+/*!*******************************************************************************!*\
+  !*** ./node_modules/vue-tables-2/compiled/methods/toggle-columns-dropdown.js ***!
+  \*******************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+module.exports = function () {
+    this.displayColumnsDropdown = !this.displayColumnsDropdown;
+};
+
+/***/ }),
+
+/***/ "./node_modules/vue-tables-2/compiled/methods/toggle-group-direction.js":
+/*!******************************************************************************!*\
+  !*** ./node_modules/vue-tables-2/compiled/methods/toggle-group-direction.js ***!
+  \******************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+module.exports = function () {
+
+    if (this.orderBy.column != this.opts.groupBy) {
+        this.setOrder(this.opts.groupBy, true);
+    } else {
+        this.setOrder(this.opts.groupBy, !this.orderBy.ascending);
+    }
+};
+
+/***/ }),
+
+/***/ "./node_modules/vue-tables-2/compiled/methods/transform-date-strings-to-moment.js":
+/*!****************************************************************************************!*\
+  !*** ./node_modules/vue-tables-2/compiled/methods/transform-date-strings-to-moment.js ***!
+  \****************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+module.exports = function () {
+  this.data.forEach(function (row, index) {
+    this.opts.dateColumns.forEach(function (column) {
+      row[column] = row[column] ? moment(row[column], this.opts.toMomentFormat) : '';
+    }.bind(this));
+  }.bind(this));
+};
+
+/***/ }),
+
+/***/ "./node_modules/vue-tables-2/compiled/methods/update-state.js":
+/*!********************************************************************!*\
+  !*** ./node_modules/vue-tables-2/compiled/methods/update-state.js ***!
+  \********************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+module.exports = function (key, value) {
+
+  if (!this.opts.saveState || !this.activeState) return;
+
+  try {
+    var currentState = JSON.parse(this.storage.getItem(this.stateKey));
+  } catch (e) {
+    var currentState = this.initState();
+  }
+
+  currentState[key] = value;
+
+  this.storage.setItem(this.stateKey, JSON.stringify(currentState));
+};
+
+/***/ }),
+
+/***/ "./node_modules/vue-tables-2/compiled/mixins/before-destroy.js":
+/*!*********************************************************************!*\
+  !*** ./node_modules/vue-tables-2/compiled/mixins/before-destroy.js ***!
+  \*********************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _bus = __webpack_require__(/*! ../bus */ "./node_modules/vue-tables-2/compiled/bus.js");
+
+var _bus2 = _interopRequireDefault(_bus);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+module.exports = function () {
+    var _this = this;
+
+    var el;
+
+    if (this.opts.destroyEventBus) {
+        _bus2.default.$off();
+        _bus2.default.$destroy();
+    }
+
+    if (this.vuex && !this.opts.preserveState) {
+        this.$store.unregisterModule(this.name);
+    }
+
+    if (this.opts.filterByColumn) {
+        this.opts.dateColumns.forEach(function (column) {
+            el = $(_this.$el).find("#VueTables__" + column + "-filter").data('daterangepicker');
+            if (el) el.remove();
+        });
+    }
+};
+
+/***/ }),
+
+/***/ "./node_modules/vue-tables-2/compiled/mixins/computed.js":
+/*!***************************************************************!*\
+  !*** ./node_modules/vue-tables-2/compiled/mixins/computed.js ***!
+  \***************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+module.exports = {
+    listColumnsObject: __webpack_require__(/*! ../computed/list-columns-object */ "./node_modules/vue-tables-2/compiled/computed/list-columns-object.js"),
+    allColumns: __webpack_require__(/*! ../computed/all-columns */ "./node_modules/vue-tables-2/compiled/computed/all-columns.js"),
+    templatesKeys: __webpack_require__(/*! ../computed/templates-keys */ "./node_modules/vue-tables-2/compiled/computed/templates-keys.js"),
+    opts: __webpack_require__(/*! ../computed/opts */ "./node_modules/vue-tables-2/compiled/computed/opts.js"),
+    tableData: __webpack_require__(/*! ../computed/table-data */ "./node_modules/vue-tables-2/compiled/computed/table-data.js"),
+    storage: __webpack_require__(/*! ../computed/storage */ "./node_modules/vue-tables-2/compiled/computed/storage.js"),
+    filterableColumns: __webpack_require__(/*! ../computed/filterable-columns */ "./node_modules/vue-tables-2/compiled/computed/filterable-columns.js"),
+    hasChildRow: __webpack_require__(/*! ../computed/has-child-row */ "./node_modules/vue-tables-2/compiled/computed/has-child-row.js"),
+    colspan: __webpack_require__(/*! ../computed/colspan */ "./node_modules/vue-tables-2/compiled/computed/colspan.js"),
+    hasGenericFilter: __webpack_require__(/*! ../computed/has-generic-filter */ "./node_modules/vue-tables-2/compiled/computed/has-generic-filter.js"),
+    stateKey: function stateKey() {
+        var key = this.name ? this.name : this.id;
+        return 'vuetables_' + key;
+    },
+
+    Page: function Page() {
+        return this.page;
+    }
+};
+
+/***/ }),
+
+/***/ "./node_modules/vue-tables-2/compiled/mixins/created.js":
+/*!**************************************************************!*\
+  !*** ./node_modules/vue-tables-2/compiled/mixins/created.js ***!
+  \**************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var is_empty = __webpack_require__(/*! ../helpers/is-empty */ "./node_modules/vue-tables-2/compiled/helpers/is-empty.js");
+
+var registerVuexModule = __webpack_require__(/*! ../state/register-module */ "./node_modules/vue-tables-2/compiled/state/register-module.js");
+
+module.exports = function (self) {
+
+  if (self.vuex) {
+    registerVuexModule(self);
+  } else {
+    self.limit = self.opts.perPage;
+  }
+
+  if (is_empty(self.opts.columnsDisplay) || typeof window === 'undefined') return;
+
+  self.columnsDisplay = getColumnsDisplay(self.opts.columnsDisplay);
+
+  window.addEventListener('resize', function () {
+    self.windowWidth = window.innerWidth;
+  }.bind(self));
+};
+
+function getColumnsDisplay(columnsDisplay) {
+  var res = {};
+  var range;
+  var device;
+  var operator;
+
+  for (var column in columnsDisplay) {
+    operator = getOperator(columnsDisplay[column]);
+    try {
+      device = getDevice(columnsDisplay[column]);
+      range = getRange(device, operator);
+      res[column] = range.concat([operator]);
+    } catch (err) {
+      console.warn('Unknown device ' + device);
+    }
+  }
+
+  return res;
+}
+
+function getRange(device, operator) {
+
+  var devices = {
+    desktop: [1024, null],
+    tablet: [480, 1024],
+    mobile: [0, 480],
+    tabletL: [768, 1024],
+    tabletP: [480, 768],
+    mobileL: [320, 480],
+    mobileP: [0, 320]
+  };
+
+  switch (operator) {
+    case 'min':
+      return [devices[device][0], null];
+    case 'max':
+      return [0, devices[device][1]];
+    default:
+      return devices[device];
+  }
+}
+
+function getOperator(val) {
+
+  var pieces = val.split('_');
+
+  if (['not', 'min', 'max'].indexOf(pieces[0]) > -1) return pieces[0];
+
+  return false;
+}
+
+function getDevice(val) {
+  var pieces = val.split('_');
+  return pieces.length > 1 ? pieces[1] : pieces[0];
+}
+
+/***/ }),
+
+/***/ "./node_modules/vue-tables-2/compiled/mixins/data.js":
+/*!***********************************************************!*\
+  !*** ./node_modules/vue-tables-2/compiled/mixins/data.js ***!
+  \***********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+module.exports = function () {
+  return {
+    id: makeId(),
+    allFilteredData: [],
+    openChildRows: [],
+    windowWidth: typeof window !== 'undefined' ? window.innerWidth : null,
+    userMultiSorting: {}
+  };
+};
+
+function makeId() {
+  var text = "";
+  var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+  for (var i = 0; i < 5; i++) {
+    text += possible.charAt(Math.floor(Math.random() * possible.length));
+  }return text;
+}
+
+/***/ }),
+
+/***/ "./node_modules/vue-tables-2/compiled/mixins/directives.js":
+/*!*****************************************************************!*\
+  !*** ./node_modules/vue-tables-2/compiled/mixins/directives.js ***!
+  \*****************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+module.exports = {
+    input: __webpack_require__(/*! ../directives/input */ "./node_modules/vue-tables-2/compiled/directives/input.js"),
+    select: __webpack_require__(/*! ../directives/select */ "./node_modules/vue-tables-2/compiled/directives/select.js")
+};
+
+/***/ }),
+
+/***/ "./node_modules/vue-tables-2/compiled/mixins/methods.js":
+/*!**************************************************************!*\
+  !*** ./node_modules/vue-tables-2/compiled/mixins/methods.js ***!
+  \**************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+module.exports = {
+      initQuery: __webpack_require__(/*! ../methods/init-query */ "./node_modules/vue-tables-2/compiled/methods/init-query.js"),
+      initCustomFilters: __webpack_require__(/*! ../methods/init-custom-filters */ "./node_modules/vue-tables-2/compiled/methods/init-custom-filters.js"),
+      initOptions: __webpack_require__(/*! ../methods/init-options */ "./node_modules/vue-tables-2/compiled/methods/init-options.js"),
+      sortableClass: __webpack_require__(/*! ../methods/sortable-class */ "./node_modules/vue-tables-2/compiled/methods/sortable-class.js"),
+      sortableChevronClass: __webpack_require__(/*! ../methods/sortable-chevron-class */ "./node_modules/vue-tables-2/compiled/methods/sortable-chevron-class.js"),
+      display: __webpack_require__(/*! ../methods/display */ "./node_modules/vue-tables-2/compiled/methods/display.js"),
+      orderByColumn: __webpack_require__(/*! ../methods/order-by-column */ "./node_modules/vue-tables-2/compiled/methods/order-by-column.js"),
+      getHeading: __webpack_require__(/*! ../methods/get-heading */ "./node_modules/vue-tables-2/compiled/methods/get-heading.js"),
+      getHeadingTooltip: __webpack_require__(/*! ../methods/get-heading-tooltip */ "./node_modules/vue-tables-2/compiled/methods/get-heading-tooltip.js"),
+      sortable: __webpack_require__(/*! ../methods/sortable */ "./node_modules/vue-tables-2/compiled/methods/sortable.js"),
+      serverSearch: __webpack_require__(/*! ../methods/server-search */ "./node_modules/vue-tables-2/compiled/methods/server-search.js"),
+      initOrderBy: __webpack_require__(/*! ../methods/init-order-by */ "./node_modules/vue-tables-2/compiled/methods/init-order-by.js"),
+      initDateFilters: __webpack_require__(/*! ../methods/init-date-filters */ "./node_modules/vue-tables-2/compiled/methods/init-date-filters.js"),
+      setFilter: __webpack_require__(/*! ../methods/set-filter */ "./node_modules/vue-tables-2/compiled/methods/set-filter.js"),
+      setPage: __webpack_require__(/*! ../methods/set-page */ "./node_modules/vue-tables-2/compiled/methods/set-page.js"),
+      setOrder: __webpack_require__(/*! ../methods/set-order */ "./node_modules/vue-tables-2/compiled/methods/set-order.js"),
+      initPagination: __webpack_require__(/*! ../methods/init-pagination */ "./node_modules/vue-tables-2/compiled/methods/init-pagination.js"),
+      filterable: __webpack_require__(/*! ../methods/filterable */ "./node_modules/vue-tables-2/compiled/methods/filterable.js"),
+      isTextFilter: __webpack_require__(/*! ../methods/is-text-filter */ "./node_modules/vue-tables-2/compiled/methods/is-text-filter.js"),
+      isDateFilter: __webpack_require__(/*! ../methods/is-date-filter */ "./node_modules/vue-tables-2/compiled/methods/is-date-filter.js"),
+      isListFilter: __webpack_require__(/*! ../methods/is-list-filter */ "./node_modules/vue-tables-2/compiled/methods/is-list-filter.js"),
+      highlightMatch: __webpack_require__(/*! ../filters/highlight-matches */ "./node_modules/vue-tables-2/compiled/filters/highlight-matches.js"),
+      formatDate: __webpack_require__(/*! ../filters/format-date */ "./node_modules/vue-tables-2/compiled/filters/format-date.js"),
+      hasDateFilters: __webpack_require__(/*! ../methods/has-date-filters */ "./node_modules/vue-tables-2/compiled/methods/has-date-filters.js"),
+      applyFilters: __webpack_require__(/*! ../methods/apply-filters */ "./node_modules/vue-tables-2/compiled/methods/apply-filters.js"),
+      optionText: __webpack_require__(/*! ../filters/option-text */ "./node_modules/vue-tables-2/compiled/filters/option-text.js"),
+      render: __webpack_require__(/*! ../methods/render */ "./node_modules/vue-tables-2/compiled/methods/render.js"),
+      rowWasClicked: __webpack_require__(/*! ../methods/row-was-clicked */ "./node_modules/vue-tables-2/compiled/methods/row-was-clicked.js"),
+      setLimit: __webpack_require__(/*! ../methods/set-limit */ "./node_modules/vue-tables-2/compiled/methods/set-limit.js"),
+      getOpenChildRows: __webpack_require__(/*! ../methods/get-open-child-rows */ "./node_modules/vue-tables-2/compiled/methods/get-open-child-rows.js"),
+      dispatch: __webpack_require__(/*! ../methods/dispatch */ "./node_modules/vue-tables-2/compiled/methods/dispatch.js"),
+      toggleChildRow: __webpack_require__(/*! ../methods/toggle-child-row */ "./node_modules/vue-tables-2/compiled/methods/toggle-child-row.js"),
+      childRowTogglerClass: __webpack_require__(/*! ../methods/child-row-toggler-class */ "./node_modules/vue-tables-2/compiled/methods/child-row-toggler-class.js"),
+      sendRequest: __webpack_require__(/*! ../methods/send-request */ "./node_modules/vue-tables-2/compiled/methods/send-request.js"),
+      getResponseData: __webpack_require__(/*! ../methods/get-response-data */ "./node_modules/vue-tables-2/compiled/methods/get-response-data.js"),
+      getSortFn: __webpack_require__(/*! ../methods/get-sort-fn */ "./node_modules/vue-tables-2/compiled/methods/get-sort-fn.js"),
+      initState: __webpack_require__(/*! ../methods/init-state */ "./node_modules/vue-tables-2/compiled/methods/init-state.js"),
+      updateState: __webpack_require__(/*! ../methods/update-state */ "./node_modules/vue-tables-2/compiled/methods/update-state.js"),
+      columnClass: __webpack_require__(/*! ../methods/column-class */ "./node_modules/vue-tables-2/compiled/methods/column-class.js"),
+      getName: __webpack_require__(/*! ../methods/get-name */ "./node_modules/vue-tables-2/compiled/methods/get-name.js"),
+      toggleColumn: __webpack_require__(/*! ../methods/toggle-column */ "./node_modules/vue-tables-2/compiled/methods/toggle-column.js"),
+      setUserMultiSort: __webpack_require__(/*! ../methods/set-user-multi-sort */ "./node_modules/vue-tables-2/compiled/methods/set-user-multi-sort.js"),
+      _setFiltersDOM: __webpack_require__(/*! ../methods/set-filters-dom */ "./node_modules/vue-tables-2/compiled/methods/set-filters-dom.js"),
+      _currentlySorted: __webpack_require__(/*! ../methods/currently-sorted */ "./node_modules/vue-tables-2/compiled/methods/currently-sorted.js"),
+      _getChildRowTemplate: __webpack_require__(/*! ../methods/get-child-row-template */ "./node_modules/vue-tables-2/compiled/methods/get-child-row-template.js"),
+      _toggleColumnsDropdown: __webpack_require__(/*! ../methods/toggle-columns-dropdown */ "./node_modules/vue-tables-2/compiled/methods/toggle-columns-dropdown.js"),
+      _onlyColumn: __webpack_require__(/*! ../methods/only-column */ "./node_modules/vue-tables-2/compiled/methods/only-column.js"),
+      _onPagination: __webpack_require__(/*! ../methods/on-pagination */ "./node_modules/vue-tables-2/compiled/methods/on-pagination.js"),
+      _toggleGroupDirection: __webpack_require__(/*! ../methods/toggle-group-direction */ "./node_modules/vue-tables-2/compiled/methods/toggle-group-direction.js"),
+      _getInitialDateRange: __webpack_require__(/*! ../methods/get-initial-date-range */ "./node_modules/vue-tables-2/compiled/methods/get-initial-date-range.js"),
+      _setDatepickerText: __webpack_require__(/*! ../methods/set-datepicker-text */ "./node_modules/vue-tables-2/compiled/methods/set-datepicker-text.js"),
+      _initialOrderAscending: __webpack_require__(/*! ../methods/initial-order-ascending */ "./node_modules/vue-tables-2/compiled/methods/initial-order-ascending.js"),
+      dateFormat: __webpack_require__(/*! ../methods/date-format */ "./node_modules/vue-tables-2/compiled/methods/date-format.js"),
+      _setColumnsDropdownCloseListener: __webpack_require__(/*! ../methods/set-columns-dropdown-close-listener */ "./node_modules/vue-tables-2/compiled/methods/set-columns-dropdown-close-listener.js"),
+      _getValue: __webpack_require__(/*! ../methods/get-value */ "./node_modules/vue-tables-2/compiled/methods/get-value.js"),
+      _getColumnName: __webpack_require__(/*! ../methods/get-column-name */ "./node_modules/vue-tables-2/compiled/methods/get-column-name.js")
+};
+
+/***/ }),
+
+/***/ "./node_modules/vue-tables-2/compiled/modules/column-filters.js":
+/*!**********************************************************************!*\
+  !*** ./node_modules/vue-tables-2/compiled/modules/column-filters.js ***!
+  \**********************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _merge = __webpack_require__(/*! merge */ "./node_modules/merge/merge.js");
+
+var _merge2 = _interopRequireDefault(_merge);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+module.exports = function (h) {
+  var _this = this;
+
+  return function (classes) {
+    if (!_this.opts.filterByColumn || !_this.opts.filterable) return '';
+
+    var textFilter = __webpack_require__(/*! ./text-filter */ "./node_modules/vue-tables-2/compiled/modules/text-filter.js").call(_this, h, classes.input);
+    var dateFilter = __webpack_require__(/*! ./date-filter */ "./node_modules/vue-tables-2/compiled/modules/date-filter.js").call(_this, h);
+    var listFilter = __webpack_require__(/*! ./list-filter */ "./node_modules/vue-tables-2/compiled/modules/list-filter.js").call(_this, h, classes.select);
+
+    var filters = [];
+    var filter;
+
+    if (_this.hasChildRow && _this.opts.childRowTogglerFirst) filters.push(h('th'));
+
+    _this.allColumns.map(function (column) {
+
+      var filter = '';
+
+      if (_this.filterable(column)) {
+        switch (true) {
+          case _this.isTextFilter(column):
+            filter = textFilter(column);break;
+          case _this.isDateFilter(column):
+            filter = dateFilter(column);break;
+          case _this.isListFilter(column):
+            filter = listFilter(column);break;
+        }
+      }
+
+      if (typeof _this.$slots['filter__' + column] !== 'undefined') {
+        filter = filter ? h('div', [filter, _this.$slots['filter__' + column]]) : _this.$slots['filter__' + column];
+      }
+
+      filters.push(h(
+        'th',
+        { 'class': _this.columnClass(column) },
+        [h(
+          'div',
+          _defineProperty({ 'class': 'VueTables__column-filter' }, 'class', 'VueTables__' + column + '-filter-wrapper'),
+          [filter]
+        )]
+      ));
+    });
+
+    if (_this.hasChildRow && !_this.opts.childRowTogglerFirst) filters.push(h('th'));
+
+    return h(
+      'tr',
+      { 'class': 'VueTables__filters-row' },
+      [filters]
+    );
+  };
+};
+
+/***/ }),
+
+/***/ "./node_modules/vue-tables-2/compiled/modules/columns-dropdown.js":
+/*!************************************************************************!*\
+  !*** ./node_modules/vue-tables-2/compiled/modules/columns-dropdown.js ***!
+  \************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var dropdownWrapper = __webpack_require__(/*! ./dropdown-wrapper */ "./node_modules/vue-tables-2/compiled/modules/dropdown-wrapper.js");
+var dropdownItemWrapper = __webpack_require__(/*! ./dropdown-item-wrapper */ "./node_modules/vue-tables-2/compiled/modules/dropdown-item-wrapper.js");
+
+module.exports = function (h) {
+    var _this = this;
+
+    return function (classes) {
+
+        var cols = _this.columns.map(function (column) {
+            return dropdownItemWrapper(h, classes, h(
+                'a',
+                { 'class': classes.dropdown.item,
+                    attrs: { href: '#'
+                    },
+                    on: {
+                        'click': function click() {
+                            return _this.toggleColumn(column);
+                        }
+                    }
+                },
+                [h('input', {
+                    attrs: { type: 'checkbox',
+                        disabled: _this._onlyColumn(column)
+                    },
+                    domProps: {
+                        'value': column,
+                        'checked': _this.allColumns.includes(column)
+                    }
+                }), _this.getHeading(column)]
+            ));
+        });
+
+        return h(
+            'div',
+            { ref: 'columnsdropdown', 'class': classes.dropdown.container + ' ' + classes.right + ' VueTables__columns-dropdown' },
+            [h(
+                'button',
+                {
+                    attrs: { type: 'button' },
+                    'class': classes.button + ' ' + classes.dropdown.trigger,
+                    on: {
+                        'click': _this._toggleColumnsDropdown.bind(_this)
+                    }
+                },
+                [_this.display('columns'), h(
+                    'span',
+                    { 'class': classes.icon + ' ' + classes.small },
+                    [h('i', { 'class': classes.dropdown.caret })]
+                )]
+            ), dropdownWrapper.call(_this, h, classes, cols)]
+        );
+    };
+};
+
+/***/ }),
+
+/***/ "./node_modules/vue-tables-2/compiled/modules/date-filter.js":
+/*!*******************************************************************!*\
+  !*** ./node_modules/vue-tables-2/compiled/modules/date-filter.js ***!
+  \*******************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+module.exports = function (h) {
+  var _this = this;
+
+  return function (column) {
+    return h(
+      'div',
+      { 'class': 'VueTables__date-filter',
+        attrs: { id: 'VueTables__' + column + '-filter' }
+      },
+      [h(
+        'span',
+        { 'class': 'VueTables__filter-placeholder' },
+        [_this.display('filterBy', { column: _this.getHeading(column) })]
+      )]
+    );
+  };
+};
+
+/***/ }),
+
+/***/ "./node_modules/vue-tables-2/compiled/modules/dropdown-item-wrapper.js":
+/*!*****************************************************************************!*\
+  !*** ./node_modules/vue-tables-2/compiled/modules/dropdown-item-wrapper.js ***!
+  \*****************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+module.exports = function (h, classes, item) {
+    if (classes.framework === 'bulma') {
+        return item;
+    }
+
+    return h('li', [item]);
+};
+
+/***/ }),
+
+/***/ "./node_modules/vue-tables-2/compiled/modules/dropdown-pagination-count.js":
+/*!*********************************************************************************!*\
+  !*** ./node_modules/vue-tables-2/compiled/modules/dropdown-pagination-count.js ***!
+  \*********************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+module.exports = function (h) {
+  var _this = this;
+
+  return function () {
+    if (_this.count > 0 && _this.opts.pagination.dropdown) {
+
+      var perPage = parseInt(_this.limit);
+
+      var from = (_this.Page - 1) * perPage + 1;
+      var to = _this.Page == _this.totalPages ? _this.count : from + perPage - 1;
+
+      var parts = _this.opts.texts.count.split('|');
+      var i = Math.min(_this.count == 1 ? 2 : _this.totalPages == 1 ? 1 : 0, parts.length - 1);
+
+      var count = parts[i].replace('{count}', _this.count).replace('{from}', from).replace('{to}', to);
+
+      return h(
+        'div',
+        { 'class': 'VuePagination' },
+        [h(
+          'p',
+          { 'class': 'VuePagination__count' },
+          [count]
+        )]
+      );
+    }
+
+    return '';
+  };
+};
+
+/***/ }),
+
+/***/ "./node_modules/vue-tables-2/compiled/modules/dropdown-pagination.js":
+/*!***************************************************************************!*\
+  !*** ./node_modules/vue-tables-2/compiled/modules/dropdown-pagination.js ***!
+  \***************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var debounce = __webpack_require__(/*! debounce */ "./node_modules/debounce/index.js");
+
+module.exports = function (h) {
+  var _this = this;
+
+  return function (selectClass, id) {
+
+    var pages = [];
+    var selected;
+
+    for (var pag = 1; pag <= _this.totalPages; pag++) {
+      var selected = _this.page == pag;
+      pages.push(h(
+        "option",
+        {
+          domProps: {
+            "value": pag,
+            "selected": selected
+          }
+        },
+        [pag]
+      ));
+    }
+    return h(
+      "select",
+      { "class": selectClass + " dropdown-pagination",
+        directives: [{
+          name: "show",
+          value: _this.totalPages > 1
+        }],
+        attrs: {
+          name: "page",
+
+          id: id
+        },
+        ref: "page",
+        domProps: {
+          "value": _this.page
+        },
+        on: {
+          "change": _this.setPage.bind(_this, null, false)
+        }
+      },
+      [pages]
+    );
+  };
+};
+
+/***/ }),
+
+/***/ "./node_modules/vue-tables-2/compiled/modules/dropdown-wrapper.js":
+/*!************************************************************************!*\
+  !*** ./node_modules/vue-tables-2/compiled/modules/dropdown-wrapper.js ***!
+  \************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+module.exports = function (h, classes, columns) {
+    if (classes.framework === 'bulma') {
+        return h(
+            'div',
+            { 'class': classes.dropdown.menu, style: this.displayColumnsDropdown ? 'display:block' : 'display:none' },
+            [h(
+                'div',
+                { 'class': classes.dropdown.content },
+                [columns]
+            )]
+        );
+    }
+
+    if (classes.framework === 'bootstrap4') {
+        return h(
+            'div',
+            { 'class': classes.dropdown.menu, style: this.displayColumnsDropdown ? 'display:block' : 'display:none' },
+            [columns]
+        );
+    }
+
+    return h(
+        'ul',
+        { 'class': classes.dropdown.menu, style: this.displayColumnsDropdown ? 'display:block' : 'display:none' },
+        [columns]
+    );
+};
+
+/***/ }),
+
+/***/ "./node_modules/vue-tables-2/compiled/modules/headings.js":
+/*!****************************************************************!*\
+  !*** ./node_modules/vue-tables-2/compiled/modules/headings.js ***!
+  \****************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+module.exports = function (h) {
+  var _this = this;
+
+  return function (right) {
+    var sortControl = __webpack_require__(/*! ./sort-control */ "./node_modules/vue-tables-2/compiled/modules/sort-control.js")(h, right);
+
+    var headings = [];
+
+    if (_this.hasChildRow && _this.opts.childRowTogglerFirst) headings.push(h("th"));
+
+    _this.allColumns.map(function (column) {
+      headings.push(h(
+        "th",
+        {
+          on: {
+            "click": this.orderByColumn.bind(this, column)
+          },
+
+          "class": this.sortableClass(column) },
+        [h(
+          "span",
+          { "class": "VueTables__heading", attrs: { title: this.getHeadingTooltip(column, h) }
+          },
+          [this.getHeading(column, h)]
+        ), sortControl.call(this, column)]
+      ));
+    }.bind(_this));
+
+    if (_this.hasChildRow && !_this.opts.childRowTogglerFirst) headings.push(h("th"));
+
+    return headings;
+  };
+};
+
+/***/ }),
+
+/***/ "./node_modules/vue-tables-2/compiled/modules/list-filter.js":
+/*!*******************************************************************!*\
+  !*** ./node_modules/vue-tables-2/compiled/modules/list-filter.js ***!
+  \*******************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+module.exports = function (h, selectClass) {
+      var _this = this;
+
+      return function (column) {
+
+            var options = [];
+            var selected = void 0;
+
+            var search = _this.source == 'client' ? _this.search.bind(_this, _this.data) : _this.serverSearch.bind(_this);
+
+            var displayable = _this.opts.listColumns[column].filter(function (item) {
+                  return !item.hide;
+            });
+
+            displayable.map(function (option) {
+                  selected = option.id == _this.query[column] && _this.query[column] !== '';
+                  options.push(h(
+                        'option',
+                        {
+                              domProps: {
+                                    'value': option.id,
+                                    'selected': selected
+                              }
+                        },
+                        [option.text]
+                  ));
+            });
+
+            return h(
+                  'div',
+                  { 'class': 'VueTables__list-filter',
+                        attrs: { id: 'VueTables__' + column + '-filter' }
+                  },
+                  [h(
+                        'select',
+                        { 'class': selectClass,
+                              on: {
+                                    'change': search
+                              },
+                              attrs: {
+                                    name: _this._getColumnName(column)
+                              },
+                              domProps: {
+                                    'value': _this.query[column]
+                              }
+                        },
+                        [h(
+                              'option',
+                              {
+                                    attrs: { value: '' }
+                              },
+                              [_this.display('defaultOption', { column: _this.opts.headings[column] ? _this.opts.headings[column] : column })]
+                        ), options]
+                  )]
+            );
+      };
+};
+
+/***/ }),
+
+/***/ "./node_modules/vue-tables-2/compiled/modules/normal-filter.js":
+/*!*********************************************************************!*\
+  !*** ./node_modules/vue-tables-2/compiled/modules/normal-filter.js ***!
+  \*********************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var debounce = __webpack_require__(/*! debounce */ "./node_modules/debounce/index.js");
+
+module.exports = function (h) {
+    var _this = this;
+
+    return function (classes, id) {
+
+        var search = _this.source == 'client' ? _this.search.bind(_this, _this.data) : _this.serverSearch.bind(_this);
+
+        return h('input', { 'class': classes.input + ' ' + classes.small,
+            attrs: { type: 'text',
+
+                placeholder: _this.display('filterPlaceholder'),
+
+                id: id
+            },
+            domProps: {
+                'value': _this.query
+            },
+            on: {
+                'keyup': _this.opts.debounce ? debounce(search, _this.opts.debounce) : search
+            }
+        });
+    };
+};
+
+/***/ }),
+
+/***/ "./node_modules/vue-tables-2/compiled/modules/pagination.js":
+/*!******************************************************************!*\
+  !*** ./node_modules/vue-tables-2/compiled/modules/pagination.js ***!
+  \******************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+module.exports = function (h) {
+  var _this = this;
+
+  return function (theme) {
+
+    if (_this.opts.pagination && _this.opts.pagination.dropdown) return '';
+
+    var options = {
+      theme: theme,
+      chunk: _this.opts.pagination.chunk,
+      chunksNavigation: _this.opts.pagination.nav,
+      edgeNavigation: _this.opts.pagination.edge,
+      texts: {
+        count: _this.opts.texts.count,
+        first: _this.opts.texts.first,
+        last: _this.opts.texts.last
+      }
+    };
+
+    var name = _this.vuex ? _this.name : _this.id;
+
+    return h("pagination", {
+      ref: "pagination",
+      attrs: { options: options,
+        "for": name,
+        vuex: _this.vuex,
+        records: _this.count,
+        "per-page": parseInt(_this.limit)
+      },
+      on: {
+        "paginate": _this._onPagination.bind(_this)
+      }
+    });
+  };
+};
+
+/***/ }),
+
+/***/ "./node_modules/vue-tables-2/compiled/modules/per-page-values.js":
+/*!***********************************************************************!*\
+  !*** ./node_modules/vue-tables-2/compiled/modules/per-page-values.js ***!
+  \***********************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+module.exports = function (h) {
+  var _this = this;
+
+  var perpageValues = [];
+
+  this.opts.perPageValues.every(function (value) {
+    var isLastEntry = value >= _this.count;
+    var selected = _this.limit == value || isLastEntry && _this.limit > value;
+    perpageValues.push(h(
+      "option",
+      {
+        domProps: {
+          "value": value,
+          "selected": selected
+        }
+      },
+      [value]
+    ));
+    return !isLastEntry;
+  });
+
+  return perpageValues;
+};
+
+/***/ }),
+
+/***/ "./node_modules/vue-tables-2/compiled/modules/per-page.js":
+/*!****************************************************************!*\
+  !*** ./node_modules/vue-tables-2/compiled/modules/per-page.js ***!
+  \****************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+module.exports = function (h) {
+  var _this = this;
+
+  return function (perpageValues, cls, id) {
+
+    return perpageValues.length > 1 ? h(
+      "select",
+      { "class": cls,
+        attrs: { name: "limit",
+
+          id: id
+        },
+        domProps: {
+          "value": _this.limit
+        },
+        on: {
+          "change": _this.setLimit.bind(_this)
+        }
+      },
+      [perpageValues]
+    ) : '';
+  };
+};
+
+/***/ }),
+
+/***/ "./node_modules/vue-tables-2/compiled/modules/rows.js":
+/*!************************************************************!*\
+  !*** ./node_modules/vue-tables-2/compiled/modules/rows.js ***!
+  \************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+module.exports = function (h) {
+  var _this = this;
+
+  return function (classes) {
+
+    var data;
+
+    if (_this.source === 'client') {
+      data = _this.filteredData;
+
+      if (!data.length && _this.source === 'client' && _this.page !== 1) {
+        // data was dynamically removed go to last page
+        _this.setPage(_this.totalPages ? _this.totalPages : 1);
+      }
+    } else {
+      data = _this.tableData;
+    }
+
+    if (_this.count === 0) {
+
+      var colspan = _this.allColumns.length;
+      if (_this.hasChildRow) colspan++;
+
+      return h(
+        'tr',
+        { 'class': 'VueTables__no-results' },
+        [h(
+          'td',
+          { 'class': 'text-center',
+            attrs: { colspan: _this.colspan }
+          },
+          [_this.display(_this.loading ? 'loading' : 'noResults')]
+        )]
+      );
+    }
+
+    var rows = [];
+    var columns;
+    var rowKey = _this.opts.uniqueKey;
+
+    var rowClass;
+    var recordCount = (_this.Page - 1) * _this.limit;
+    var currentGroup;
+    var groupSlot;
+    var groupValue;
+    var groupByContent;
+
+    data.map(function (row, index) {
+
+      if (_this.opts.groupBy && _this.source === 'client' && row[_this.opts.groupBy] !== currentGroup) {
+        groupSlot = _this.getGroupSlot(row[_this.opts.groupBy]);
+        groupValue = row[_this.opts.groupBy];
+
+        groupByContent = _this.opts.toggleGroups ? h(
+          'button',
+          { 'class': classes.button, on: {
+              'click': _this.toggleGroup.bind(_this, groupValue)
+            }
+          },
+          [groupValue, h('span', { 'class': _this.groupToggleIcon(groupValue) })]
+        ) : groupValue;
+
+        rows.push(h(
+          'tr',
+          { 'class': classes.groupTr, on: {
+              'click': _this._toggleGroupDirection.bind(_this)
+            }
+          },
+          [h(
+            'td',
+            {
+              attrs: { colspan: _this.colspan }
+            },
+            [groupByContent, groupSlot]
+          )]
+        ));
+        currentGroup = row[_this.opts.groupBy];
+      }
+
+      if (_this.opts.toggleGroups && _this.collapsedGroups.includes(currentGroup)) {
+        return;
+      }
+
+      index = recordCount + index + 1;
+
+      columns = [];
+
+      if (_this.hasChildRow) {
+        var childRowToggler = h('td', [h('span', {
+          on: {
+            'click': _this.toggleChildRow.bind(_this, row[rowKey])
+          },
+          'class': 'VueTables__child-row-toggler ' + _this.childRowTogglerClass(row[rowKey]) })]);
+        if (_this.opts.childRowTogglerFirst) columns.push(childRowToggler);
+      }
+
+      _this.allColumns.map(function (column) {
+        var rowTemplate = _this.$scopedSlots && _this.$scopedSlots[column];
+
+        columns.push(h(
+          'td',
+          { 'class': _this.columnClass(column) },
+          [rowTemplate ? rowTemplate({ row: row, column: column, index: index }) : _this.render(row, column, index, h)]
+        ));
+      });
+
+      if (_this.hasChildRow && !_this.opts.childRowTogglerFirst) columns.push(childRowToggler);
+
+      rowClass = _this.opts.rowClassCallback ? _this.opts.rowClassCallback(row) : '';
+
+      rows.push(h(
+        'tr',
+        { 'class': rowClass, on: {
+            'click': _this.rowWasClicked.bind(_this, row),
+            'dblclick': _this.rowWasClicked.bind(_this, row)
+          }
+        },
+        [columns, ' ']
+      ));
+
+      rows.push(_this.hasChildRow && _this.openChildRows.includes(row[rowKey]) ? h(
+        'tr',
+        { 'class': 'VueTables__child-row' },
+        [h(
+          'td',
+          {
+            attrs: { colspan: _this.colspan }
+          },
+          [_this._getChildRowTemplate(h, row)]
+        )]
+      ) : h());
+    });
+
+    return rows;
+  };
+};
+
+/***/ }),
+
+/***/ "./node_modules/vue-tables-2/compiled/modules/sort-control.js":
+/*!********************************************************************!*\
+  !*** ./node_modules/vue-tables-2/compiled/modules/sort-control.js ***!
+  \********************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+module.exports = function (h, right) {
+  return function (column) {
+
+    if (!this.sortable(column)) return '';
+    return h('span', { 'class': 'VueTables__sort-icon ' + right + ' ' + this.sortableChevronClass(column) });
+  };
+};
+
+/***/ }),
+
+/***/ "./node_modules/vue-tables-2/compiled/modules/text-filter.js":
+/*!*******************************************************************!*\
+  !*** ./node_modules/vue-tables-2/compiled/modules/text-filter.js ***!
+  \*******************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var debounce = __webpack_require__(/*! debounce */ "./node_modules/debounce/index.js");
+
+module.exports = function (h, inputClass) {
+  var _this = this;
+
+  var search = this.source == 'client' ? this.search.bind(this, this.data) : this.serverSearch.bind(this);
+
+  if (this.opts.debounce) {
+    var debouncedSearch = debounce(search, this.opts.debounce);
+
+    var onKeyUp = function onKeyUp(e) {
+      if (e.keyCode === 13) {
+        debouncedSearch.clear();
+        search.apply(undefined, arguments);
+      } else {
+        debouncedSearch.apply(undefined, arguments);
+      }
+    };
+  }
+
+  return function (column) {
+    return h('input', {
+      on: {
+        'keyup': _this.opts.debounce ? onKeyUp : search
+      },
+
+      'class': inputClass,
+      attrs: { name: _this._getColumnName(column),
+        type: 'text',
+        placeholder: _this.display('filterBy', { column: _this.getHeading(column) })
+      },
+      domProps: {
+        'value': _this.query[column]
+      }
+    });
+  };
+};
+
+/***/ }),
+
+/***/ "./node_modules/vue-tables-2/compiled/slots.js":
+/*!*****************************************************!*\
+  !*** ./node_modules/vue-tables-2/compiled/slots.js ***!
+  \*****************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+module.exports = function () {
+  return {
+    beforeFilters: this.$slots.beforeFilters ? this.$slots.beforeFilters : '',
+    afterFilters: this.$slots.afterFilters ? this.$slots.afterFilters : '',
+    beforeBody: this.$slots.beforeBody ? this.$slots.beforeBody : '',
+    prependBody: this.$slots.prependBody ? this.$slots.prependBody : '',
+    appendBody: this.$slots.appendBody ? this.$slots.appendBody : '',
+    afterBody: this.$slots.afterBody ? this.$slots.afterBody : '',
+    beforeFilter: this.$slots.beforeFilter ? this.$slots.beforeFilter : '',
+    afterFilter: this.$slots.afterFilter ? this.$slots.afterFilter : '',
+    beforeLimit: this.$slots.beforeLimit ? this.$slots.beforeLimit : '',
+    afterLimit: this.$slots.afterLimit ? this.$slots.afterLimit : '',
+    beforeTable: this.$slots.beforeTable ? this.$slots.beforeTable : '',
+    afterTable: this.$slots.afterTable ? this.$slots.afterTable : ''
+  };
+};
+
+/***/ }),
+
+/***/ "./node_modules/vue-tables-2/compiled/state/data.js":
+/*!**********************************************************!*\
+  !*** ./node_modules/vue-tables-2/compiled/state/data.js ***!
+  \**********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+exports.default = function (useVuex, source) {
+  var page = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 1;
+
+
+  var data = {
+    vuex: true,
+    activeState: false,
+    userColumnsDisplay: [],
+    userControlsColumns: false,
+    displayColumnsDropdown: false,
+    collapsedGroups: []
+  };
+
+  if (useVuex) return data;
+
+  data = (0, _merge2.default)(data, {
+    vuex: false,
+    count: 0,
+    customQueries: {},
+    query: null,
+    page: page,
+    limit: 10,
+    windowWidth: typeof window !== 'undefined' ? window.innerWidth : null,
+    orderBy: {
+      column: false,
+      ascending: true
+    }
+  });
+
+  if (source == 'server') data.data = [];
+
+  return data;
+};
+
+var _merge = __webpack_require__(/*! merge */ "./node_modules/merge/merge.js");
+
+var _merge2 = _interopRequireDefault(_merge);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+/***/ }),
+
+/***/ "./node_modules/vue-tables-2/compiled/state/mutations.js":
+/*!***************************************************************!*\
+  !*** ./node_modules/vue-tables-2/compiled/state/mutations.js ***!
+  \***************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+exports.default = function (self) {
+  var _ref, _merge$recursive;
+
+  var extra = self.source == 'server' ? (_ref = {}, _defineProperty(_ref, self.name + '/SET_DATA', function undefined(state, response) {
+
+    var data = self.opts.responseAdapter.call(self, response);
+
+    state.data = data.data;
+    state.count = parseInt(data.count);
+  }), _defineProperty(_ref, self.name + '/LOADING', function undefined(state, payload) {}), _defineProperty(_ref, self.name + '/LOADED', function undefined(state, payload) {}), _defineProperty(_ref, self.name + '/ERROR', function undefined(state, payload) {}), _ref) : _defineProperty({}, self.name + '/SET_COUNT', function undefined(state, count) {
+    state.count = count;
+  });
+
+  return _merge2.default.recursive(true, (_merge$recursive = {}, _defineProperty(_merge$recursive, self.name + '/PAGINATE', function undefined(state, page) {
+    state.page = page;
+    self.updateState('page', page);
+
+    if (self.source == 'server') self.getData();
+
+    self.commit('PAGINATION', page);
+  }), _defineProperty(_merge$recursive, self.name + '/SET_FILTER', function undefined(state, filter) {
+    state.page = 1;
+
+    self.updateState('page', 1);
+
+    state.query = filter;
+
+    if (self.source == 'server') {
+      self.getData();
+    }
+  }), _defineProperty(_merge$recursive, self.name + '/PAGINATION', function undefined(state, page) {}), _defineProperty(_merge$recursive, self.name + '/SET_CUSTOM_FILTER', function undefined(state, _ref3) {
+    var filter = _ref3.filter,
+        value = _ref3.value;
+
+
+    state.customQueries[filter] = value;
+    state.page = 1;
+
+    self.updateState('page', 1);
+    self.updateState('customQueries', state.customQueries);
+
+    if (self.source == 'server') {
+      self.getData();
+    }
+  }), _defineProperty(_merge$recursive, self.name + '/SET_STATE', function undefined(state, _ref4) {
+    var page = _ref4.page,
+        query = _ref4.query,
+        customQueries = _ref4.customQueries,
+        limit = _ref4.limit,
+        orderBy = _ref4.orderBy;
+
+    state.customQueries = customQueries;
+    state.query = query;
+    state.page = page;
+    state.limit = limit;
+    state.ascending = orderBy.ascending;
+    state.sortBy = orderBy.column;
+  }), _defineProperty(_merge$recursive, self.name + '/SET_LIMIT', function undefined(state, limit) {
+    state.page = 1;
+    self.updateState('page', 1);
+
+    state.limit = limit;
+
+    if (self.source == 'server') self.getData();
+  }), _defineProperty(_merge$recursive, self.name + '/SORT', function undefined(state, _ref5) {
+    var column = _ref5.column,
+        ascending = _ref5.ascending;
+
+
+    state.ascending = ascending;
+    state.sortBy = column;
+
+    if (self.source == 'server') self.getData();
+  }), _defineProperty(_merge$recursive, self.name + '/SORTED', function undefined(state, data) {}), _defineProperty(_merge$recursive, self.name + '/ROW_CLICK', function undefined(state, row) {}), _defineProperty(_merge$recursive, self.name + '/FILTER', function undefined(state, row) {}), _defineProperty(_merge$recursive, self.name + '/LIMIT', function undefined(state, limit) {}), _merge$recursive), extra);
+};
+
+var _merge = __webpack_require__(/*! merge */ "./node_modules/merge/merge.js");
+
+var _merge2 = _interopRequireDefault(_merge);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+/***/ }),
+
+/***/ "./node_modules/vue-tables-2/compiled/state/normal.js":
+/*!************************************************************!*\
+  !*** ./node_modules/vue-tables-2/compiled/state/normal.js ***!
+  \************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+exports.default = function () {
+  return {
+    computed: {
+      Columns: function Columns() {
+        return this.columns;
+      }
+    }
+  };
+};
+
+/***/ }),
+
+/***/ "./node_modules/vue-tables-2/compiled/state/register-module.js":
+/*!*********************************************************************!*\
+  !*** ./node_modules/vue-tables-2/compiled/state/register-module.js ***!
+  \*********************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _state = __webpack_require__(/*! ./state */ "./node_modules/vue-tables-2/compiled/state/state.js");
+
+var _state2 = _interopRequireDefault(_state);
+
+var _mutations = __webpack_require__(/*! ./mutations */ "./node_modules/vue-tables-2/compiled/state/mutations.js");
+
+var _mutations2 = _interopRequireDefault(_mutations);
+
+var _merge = __webpack_require__(/*! merge */ "./node_modules/merge/merge.js");
+
+var _merge2 = _interopRequireDefault(_merge);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+module.exports = function (self) {
+
+  var Module = {
+    state: (0, _state2.default)(self),
+    mutations: (0, _mutations2.default)(self)
+  };
+
+  if (self.$store && self.$store.state && self.$store.state[self.name]) {
+    Module.state = _merge2.default.recursive(Module.state, self.$store.state[self.name]);
+    self.$store.unregisterModule(self.name);
+  }
+
+  self.$store.registerModule(self.name, Module);
+};
+
+/***/ }),
+
+/***/ "./node_modules/vue-tables-2/compiled/state/state.js":
+/*!***********************************************************!*\
+  !*** ./node_modules/vue-tables-2/compiled/state/state.js ***!
+  \***********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+exports.default = function (self) {
+
+  var state = {
+    page: self.opts.initialPage ? self.opts.initialPage : 1,
+    limit: self.opts.perPage,
+    count: self.source == 'server' ? 0 : self.data.length,
+    columns: self.columns,
+    data: self.source == 'client' ? self.data : [],
+    query: self.initQuery(),
+    customQueries: self.initCustomFilters(),
+    sortBy: self.opts.orderBy && self.opts.orderBy.column ? self.opts.orderBy.column : false,
+    ascending: self.opts.orderBy && self.opts.orderBy.hasOwnProperty('ascending') ? self.opts.orderBy.ascending : true
+  };
+
+  if (typeof self.$store.state[self.name] !== 'undefined') {
+    return (0, _merge2.default)(true, self.$store.state[self.name], state);
+  }
+
+  return state;
+};
+
+var _merge = __webpack_require__(/*! merge */ "./node_modules/merge/merge.js");
+
+var _merge2 = _interopRequireDefault(_merge);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+/***/ }),
+
+/***/ "./node_modules/vue-tables-2/compiled/state/vuex.js":
+/*!**********************************************************!*\
+  !*** ./node_modules/vue-tables-2/compiled/state/vuex.js ***!
+  \**********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
+exports.default = function (source) {
+
+  var extra = source == 'server' ? serverExtra() : clientExtra();
+
+  return _merge2.default.recursive(true, {
+    props: {
+      name: {
+        type: String,
+        required: true
+      }
+    },
+    computed: {
+      state: function state() {
+        return this.$store.state[this.name];
+      },
+      Page: function Page() {
+        return this.state.page;
+      },
+      count: function count() {
+        return this.state.count;
+      },
+      Columns: function Columns() {
+        return this.state.columns;
+      },
+      tableData: function tableData() {
+        return this.state.data;
+      },
+      page: function page() {
+        return this.state.page;
+      },
+      limit: function limit() {
+        return this.state.limit;
+      },
+      customQueries: function customQueries() {
+        return this.state.customQueries;
+      },
+      query: function query() {
+        return this.state.query;
+      },
+      orderBy: function orderBy() {
+        return {
+          column: this.state.sortBy,
+          ascending: this.state.ascending
+        };
+      }
+    },
+    methods: {
+      commit: function commit(action, payload) {
+        return this.$store.commit(this.name + '/' + action, payload);
+      },
+      orderByColumn: function orderByColumn(column, ev) {
+
+        if (!this.sortable(column)) return;
+
+        if (ev.shiftKey && this.orderBy.column && this.hasMultiSort) {
+          this.setUserMultiSort(column);
+        } else {
+          var ascending = this.orderBy.column === column ? !this.orderBy.ascending : this._initialOrderAscending(column);
+          var orderBy = { column: column, ascending: ascending };
+          this.updateState('orderBy', orderBy);
+          this.commit('SORT', orderBy);
+          this.dispatch('sorted', orderBy);
+        }
+      },
+      setLimit: function setLimit(e) {
+        var limit = (typeof e === 'undefined' ? 'undefined' : _typeof(e)) === 'object' ? parseInt(e.target.value) : e;
+        this.updateState('perPage', limit);
+        this.commit('SET_LIMIT', limit);
+        this.dispatch('limit', limit);
+      },
+      setOrder: function setOrder(column, ascending) {
+        this.updateState('orderBy', { column: column, ascending: ascending });
+        this.commit('SORT', { column: column, ascending: ascending });
+      },
+      setPage: function setPage(page) {
+
+        if (!page) {
+          page = this.$refs.page.value;
+        }
+
+        if (!this.opts.pagination.dropdown) this.$refs.pagination.Page = page;
+
+        this.commit('PAGINATE', page);
+      }
+
+    }
+  }, extra);
+};
+
+var _merge = __webpack_require__(/*! merge */ "./node_modules/merge/merge.js");
+
+var _merge2 = _interopRequireDefault(_merge);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function serverExtra() {
+  return {
+    methods: {
+      setData: function setData(data) {
+        this.commit('SET_DATA', data);
+
+        setTimeout(function () {
+          this.dispatch('loaded', data);
+        }.bind(this), 0);
+      }
+    }
+  };
+}
+
+function clientExtra() {
+  return {};
+}
+
+/***/ }),
+
+/***/ "./node_modules/vue-tables-2/compiled/table.js":
+/*!*****************************************************!*\
+  !*** ./node_modules/vue-tables-2/compiled/table.js ***!
+  \*****************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+exports.default = function () {
+  return { methods: methods, computed: computed, directives: directives, beforeDestroy: beforeDestroy };
+};
+
+var methods = __webpack_require__(/*! ./mixins/methods */ "./node_modules/vue-tables-2/compiled/mixins/methods.js");
+var computed = __webpack_require__(/*! ./mixins/computed */ "./node_modules/vue-tables-2/compiled/mixins/computed.js");
+var directives = __webpack_require__(/*! ./mixins/directives */ "./node_modules/vue-tables-2/compiled/mixins/directives.js");
+var beforeDestroy = __webpack_require__(/*! ./mixins/before-destroy */ "./node_modules/vue-tables-2/compiled/mixins/before-destroy.js");
+
+/***/ }),
+
+/***/ "./node_modules/vue-tables-2/compiled/template-compiler.js":
+/*!*****************************************************************!*\
+  !*** ./node_modules/vue-tables-2/compiled/template-compiler.js ***!
+  \*****************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
+module.exports = function (template, theme) {
+
+    var themes = {
+        bootstrap3: __webpack_require__(/*! ./themes/bootstrap3 */ "./node_modules/vue-tables-2/compiled/themes/bootstrap3.js")(),
+        bootstrap4: __webpack_require__(/*! ./themes/bootstrap4 */ "./node_modules/vue-tables-2/compiled/themes/bootstrap4.js")(),
+        bulma: __webpack_require__(/*! ./themes/bulma */ "./node_modules/vue-tables-2/compiled/themes/bulma.js")()
+    };
+
+    var templates = {
+        default: __webpack_require__(/*! ./templates/default */ "./node_modules/vue-tables-2/compiled/templates/default.js"),
+        footerPagination: __webpack_require__(/*! ./templates/footer-pagination */ "./node_modules/vue-tables-2/compiled/templates/footer-pagination.js")
+    };
+
+    return function (h) {
+
+        var modules = {
+            rows: __webpack_require__(/*! ./modules/rows */ "./node_modules/vue-tables-2/compiled/modules/rows.js").call(this, h),
+            normalFilter: __webpack_require__(/*! ./modules/normal-filter */ "./node_modules/vue-tables-2/compiled/modules/normal-filter.js").call(this, h),
+            dropdownPagination: __webpack_require__(/*! ./modules/dropdown-pagination */ "./node_modules/vue-tables-2/compiled/modules/dropdown-pagination.js").call(this, h),
+            dropdownPaginationCount: __webpack_require__(/*! ./modules/dropdown-pagination-count */ "./node_modules/vue-tables-2/compiled/modules/dropdown-pagination-count.js").call(this, h),
+            columnFilters: __webpack_require__(/*! ./modules/column-filters */ "./node_modules/vue-tables-2/compiled/modules/column-filters.js").call(this, h),
+            pagination: __webpack_require__(/*! ./modules/pagination */ "./node_modules/vue-tables-2/compiled/modules/pagination.js").call(this, h),
+            headings: __webpack_require__(/*! ./modules/headings */ "./node_modules/vue-tables-2/compiled/modules/headings.js").call(this, h),
+            perPage: __webpack_require__(/*! ./modules/per-page */ "./node_modules/vue-tables-2/compiled/modules/per-page.js").call(this, h),
+            columnsDropdown: __webpack_require__(/*! ./modules/columns-dropdown */ "./node_modules/vue-tables-2/compiled/modules/columns-dropdown.js").call(this, h)
+        };
+
+        if (typeof template === 'string' && (!templates[template] || typeof templates[template] !== 'function')) {
+            throw 'vue-tables-2: Template "' + template + '" does not exist';
+        }
+
+        if (typeof theme === 'string' && (!themes[theme] || _typeof(themes[theme]) !== 'object')) {
+            throw 'vue-tables-2: Theme "' + theme + '" does not exist';
+        }
+
+        var tpl = typeof template === 'string' ? templates[template] : template;
+        var thm = typeof theme === 'string' ? themes[theme] : theme();
+        var slots = __webpack_require__(/*! ./slots */ "./node_modules/vue-tables-2/compiled/slots.js").call(this);
+
+        return tpl.call(this, h, modules, thm, slots);
+    };
+};
+
+/***/ }),
+
+/***/ "./node_modules/vue-tables-2/compiled/templates/default.js":
+/*!*****************************************************************!*\
+  !*** ./node_modules/vue-tables-2/compiled/templates/default.js ***!
+  \*****************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _merge = __webpack_require__(/*! merge */ "./node_modules/merge/merge.js");
+
+var _merge2 = _interopRequireDefault(_merge);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+module.exports = function (h, modules, classes, slots) {
+
+  var filterId = 'VueTables__search_' + this.id;
+  var ddpId = 'VueTables__dropdown-pagination_' + this.id;
+  var perpageId = 'VueTables__limit_' + this.id;
+  var perpageValues = __webpack_require__(/*! ../modules/per-page-values */ "./node_modules/vue-tables-2/compiled/modules/per-page-values.js").call(this, h);
+
+  var genericFilter = this.hasGenericFilter ? h(
+    'div',
+    { 'class': 'VueTables__search-field' },
+    [h(
+      'label',
+      {
+        attrs: { 'for': filterId },
+        'class': classes.label },
+      [this.display('filter')]
+    ), modules.normalFilter(classes, filterId)]
+  ) : '';
+
+  var perpage = perpageValues.length > 1 ? h(
+    'div',
+    { 'class': 'VueTables__limit-field' },
+    [h(
+      'label',
+      { 'class': classes.label, attrs: { 'for': perpageId }
+      },
+      [this.display('limit')]
+    ), modules.perPage(perpageValues, classes.select, perpageId)]
+  ) : '';
+
+  var dropdownPagination = this.opts.pagination && this.opts.pagination.dropdown ? h(
+    'div',
+    { 'class': 'VueTables__pagination-wrapper' },
+    [h(
+      'div',
+      { 'class': classes.field + ' ' + classes.inline + ' ' + classes.right + ' VueTables__dropdown-pagination',
+        directives: [{
+          name: 'show',
+          value: this.totalPages > 1
+        }]
+      },
+      [h(
+        'label',
+        {
+          attrs: { 'for': ddpId }
+        },
+        [this.display('page')]
+      ), modules.dropdownPagination(classes.select, ddpId)]
+    )]
+  ) : '';
+
+  var columnsDropdown = this.opts.columnsDropdown ? h(
+    'div',
+    { 'class': 'VueTables__columns-dropdown-wrapper' },
+    [modules.columnsDropdown(classes)]
+  ) : '';
+
+  var footerHeadings = this.opts.footerHeadings ? h('tfoot', [h('tr', [modules.headings(classes.right)])]) : '';
+
+  var shouldShowTop = genericFilter || perpage || dropdownPagination || columnsDropdown || slots.beforeFilter || slots.afterFilter || slots.beforeLimit || slots.afterLimit;
+
+  var tableTop = h(
+    'div',
+    { 'class': classes.row, directives: [{
+        name: 'show',
+        value: shouldShowTop
+      }]
+    },
+    [h(
+      'div',
+      { 'class': classes.column },
+      [h(
+        'div',
+        { 'class': classes.field + ' ' + classes.inline + ' ' + classes.left + ' VueTables__search' },
+        [slots.beforeFilter, genericFilter, slots.afterFilter]
+      ), h(
+        'div',
+        { 'class': classes.field + ' ' + classes.inline + ' ' + classes.right + ' VueTables__limit' },
+        [slots.beforeLimit, perpage, slots.afterLimit]
+      ), dropdownPagination, columnsDropdown]
+    )]
+  );
+
+  return h(
+    'div',
+    { 'class': "VueTables VueTables--" + this.source },
+    [tableTop, slots.beforeTable, h(
+      'div',
+      { 'class': 'table-responsive' },
+      [h(
+        'table',
+        { 'class': 'VueTables__table ' + (this.opts.skin ? this.opts.skin : classes.table) },
+        [h('thead', [h('tr', [modules.headings(classes.right)]), slots.beforeFilters, modules.columnFilters(classes), slots.afterFilters]), footerHeadings, slots.beforeBody, h('tbody', [slots.prependBody, modules.rows(classes), slots.appendBody]), slots.afterBody]
+      )]
+    ), slots.afterTable, modules.pagination((0, _merge2.default)(classes.pagination, {
+      wrapper: classes.row + ' ' + classes.column + ' ' + classes.contentCenter,
+      nav: classes.center,
+      count: classes.center + ' ' + classes.column
+    })), modules.dropdownPaginationCount()]
+  );
+};
+
+/***/ }),
+
+/***/ "./node_modules/vue-tables-2/compiled/templates/footer-pagination.js":
+/*!***************************************************************************!*\
+  !*** ./node_modules/vue-tables-2/compiled/templates/footer-pagination.js ***!
+  \***************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _merge = __webpack_require__(/*! merge */ "./node_modules/merge/merge.js");
+
+var _merge2 = _interopRequireDefault(_merge);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+module.exports = function (h, modules, classes, slots) {
+
+  var filterId = 'VueTables__search_' + this.id;
+  var perpageId = 'VueTables__limit_' + this.id;
+  var perpageValues = __webpack_require__(/*! ../modules/per-page-values */ "./node_modules/vue-tables-2/compiled/modules/per-page-values.js").call(this, h);
+
+  var genericFilter = this.hasGenericFilter ? h(
+    'div',
+    { 'class': 'VueTables__search-field' },
+    [h(
+      'label',
+      {
+        attrs: { 'for': filterId },
+        'class': classes.label },
+      [this.display('filter')]
+    ), modules.normalFilter(classes, filterId)]
+  ) : '';
+
+  var perpage = perpageValues.length > 1 ? h(
+    'div',
+    { 'class': 'VueTables__limit-field' },
+    [h(
+      'label',
+      { 'class': classes.label, attrs: { 'for': perpageId }
+      },
+      [this.display('limit')]
+    ), modules.perPage(perpageValues, classes.select, perpageId)]
+  ) : '';
+
+  var columnsDropdown = this.opts.columnsDropdown ? h(
+    'div',
+    { 'class': 'VueTables__columns-dropdown-wrapper' },
+    [modules.columnsDropdown(classes)]
+  ) : '';
+
+  var shouldShowTop = genericFilter || perpage || columnsDropdown || slots.beforeFilter || slots.afterFilter || slots.beforeLimit || slots.afterLimit;
+
+  var tableTop = h(
+    'div',
+    { 'class': classes.row, directives: [{
+        name: 'show',
+        value: shouldShowTop
+      }]
+    },
+    [h(
+      'div',
+      { 'class': classes.column },
+      [h(
+        'div',
+        { 'class': classes.field + ' ' + classes.inline + ' ' + classes.left + ' VueTables__search' },
+        [slots.beforeFilter, genericFilter, slots.afterFilter]
+      ), h(
+        'div',
+        { 'class': classes.field + ' ' + classes.inline + ' ' + classes.right + ' VueTables__limit' },
+        [slots.beforeLimit, perpage, slots.afterLimit]
+      ), columnsDropdown]
+    )]
+  );
+
+  return h(
+    'div',
+    { 'class': "VueTables VueTables--" + this.source },
+    [tableTop, slots.beforeTable, h(
+      'div',
+      { 'class': 'table-responsive' },
+      [h(
+        'table',
+        { 'class': 'VueTables__table ' + (this.opts.skin ? this.opts.skin : classes.table) },
+        [h('thead', [h('tr', [modules.headings(classes.right)]), slots.beforeFilters, modules.columnFilters(classes), slots.afterFilters]), h('tfoot', [h('tr', [h(
+          'td',
+          {
+            attrs: { colspan: this.colspan }
+          },
+          [modules.pagination((0, _merge2.default)(classes.pagination, {
+            list: classes.pagination.list + ' ' + classes.right + ' ' + classes.nomargin,
+            count: '' + classes.left
+          }))]
+        )])]), slots.beforeBody, h('tbody', [slots.prependBody, modules.rows(classes), slots.appendBody]), slots.afterBody]
+      )]
+    ), slots.afterTable]
+  );
+};
+
+/***/ }),
+
+/***/ "./node_modules/vue-tables-2/compiled/themes/bootstrap3.js":
+/*!*****************************************************************!*\
+  !*** ./node_modules/vue-tables-2/compiled/themes/bootstrap3.js ***!
+  \*****************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+module.exports = function () {
+    return {
+        framework: 'bootstrap3',
+        table: 'table table-striped table-bordered table-hover',
+        row: 'row',
+        column: 'col-md-12',
+        label: '',
+        input: 'form-control',
+        select: 'form-control',
+        field: 'form-group',
+        inline: 'form-inline',
+        right: 'pull-right',
+        left: 'pull-left',
+        center: 'text-center',
+        contentCenter: '',
+        small: '',
+        nomargin: '',
+        groupTr: 'info',
+        button: 'btn btn-secondary',
+        dropdown: {
+            container: 'dropdown',
+            trigger: 'dropdown-toggle',
+            menu: 'dropdown-menu',
+            content: '',
+            item: '',
+            caret: 'caret'
+        },
+        pagination: {
+            nav: '',
+            count: '',
+            wrapper: '',
+            list: 'pagination',
+            item: 'page-item',
+            link: 'page-link',
+            next: '',
+            prev: '',
+            active: 'active',
+            disabled: 'disabled'
+        }
+    };
+};
+
+/***/ }),
+
+/***/ "./node_modules/vue-tables-2/compiled/themes/bootstrap4.js":
+/*!*****************************************************************!*\
+  !*** ./node_modules/vue-tables-2/compiled/themes/bootstrap4.js ***!
+  \*****************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+module.exports = function () {
+    return {
+        framework: 'bootstrap4',
+        table: 'table table-striped table-bordered table-hover',
+        row: 'row',
+        column: 'col-md-12',
+        label: '',
+        input: 'form-control',
+        select: 'form-control',
+        field: 'form-group',
+        inline: 'form-inline',
+        right: 'float-right',
+        left: 'float-left',
+        center: 'text-center',
+        contentCenter: 'justify-content-center',
+        nomargin: 'm-0',
+        groupTr: 'table-info',
+        small: '',
+        button: 'btn btn-secondary',
+        dropdown: {
+            container: 'dropdown',
+            trigger: 'dropdown-toggle',
+            menu: 'dropdown-menu',
+            content: '',
+            item: 'dropdown-item',
+            caret: 'caret'
+        },
+        pagination: {
+            nav: '',
+            count: '',
+            wrapper: '',
+            list: 'pagination',
+            item: 'page-item',
+            link: 'page-link',
+            next: '',
+            prev: '',
+            active: 'active',
+            disabled: 'disabled'
+        }
+    };
+};
+
+/***/ }),
+
+/***/ "./node_modules/vue-tables-2/compiled/themes/bulma.js":
+/*!************************************************************!*\
+  !*** ./node_modules/vue-tables-2/compiled/themes/bulma.js ***!
+  \************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+module.exports = function () {
+    return {
+        framework: 'bulma',
+        table: 'table is-bordered is-striped is-hoverable is-fullwidth',
+        row: 'columns',
+        column: 'column is-12',
+        label: 'label',
+        input: 'input',
+        select: 'select',
+        field: 'field',
+        inline: 'is-horizontal',
+        right: 'is-pulled-right',
+        left: 'is-pulled-left',
+        center: 'has-text-centered',
+        contentCenter: 'is-centered',
+        icon: 'icon',
+        small: 'is-small',
+        nomargin: 'marginless',
+        button: 'button',
+        groupTr: 'is-selected',
+        dropdown: {
+            container: 'dropdown',
+            trigger: 'dropdown-trigger',
+            menu: 'dropdown-menu',
+            content: 'dropdown-content',
+            item: 'dropdown-item',
+            caret: 'fa fa-angle-down'
+        },
+        pagination: {
+            nav: '',
+            count: '',
+            wrapper: 'pagination',
+            list: 'pagination-list',
+            item: '',
+            link: 'pagination-link',
+            next: '',
+            prev: '',
+            active: 'is-current',
+            disabled: ''
+        }
+    };
+};
+
+/***/ }),
+
+/***/ "./node_modules/vue-tables-2/compiled/v-client-table.js":
+/*!**************************************************************!*\
+  !*** ./node_modules/vue-tables-2/compiled/v-client-table.js ***!
+  \**************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _vuePagination = __webpack_require__(/*! vue-pagination-2 */ "./node_modules/vue-pagination-2/index.js");
+
+var _vuex = __webpack_require__(/*! ./state/vuex */ "./node_modules/vue-tables-2/compiled/state/vuex.js");
+
+var _vuex2 = _interopRequireDefault(_vuex);
+
+var _normal = __webpack_require__(/*! ./state/normal */ "./node_modules/vue-tables-2/compiled/state/normal.js");
+
+var _normal2 = _interopRequireDefault(_normal);
+
+var _merge = __webpack_require__(/*! merge */ "./node_modules/merge/merge.js");
+
+var _merge2 = _interopRequireDefault(_merge);
+
+var _table = __webpack_require__(/*! ./table */ "./node_modules/vue-tables-2/compiled/table.js");
+
+var _table2 = _interopRequireDefault(_table);
+
+var _data2 = __webpack_require__(/*! ./state/data */ "./node_modules/vue-tables-2/compiled/state/data.js");
+
+var _data3 = _interopRequireDefault(_data2);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var _data = __webpack_require__(/*! ./mixins/data */ "./node_modules/vue-tables-2/compiled/mixins/data.js");
+var _created = __webpack_require__(/*! ./mixins/created */ "./node_modules/vue-tables-2/compiled/mixins/created.js");
+
+var templateCompiler = __webpack_require__(/*! ./template-compiler */ "./node_modules/vue-tables-2/compiled/template-compiler.js");
+
+exports.install = function (Vue, globalOptions, useVuex) {
+  var theme = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : 'bootstrap3';
+  var template = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : 'default';
+
+
+  var client = _merge2.default.recursive(true, (0, _table2.default)(), {
+    name: 'client-table',
+    components: {
+      Pagination: _vuePagination.Pagination
+    },
+    render: templateCompiler.call(this, template, theme),
+    props: {
+      columns: {
+        type: Array,
+        required: true
+      },
+      data: {
+        type: Array,
+        required: true
+      },
+      name: {
+        type: String,
+        required: false
+      },
+      options: {
+        type: Object,
+        required: false,
+        default: function _default() {
+          return {};
+        }
+      }
+    },
+
+    created: function created() {
+
+      _created(this);
+
+      if (this.opts.toMomentFormat) this.transformDateStringsToMoment();
+
+      if (!this.vuex) {
+
+        this.initOrderBy();
+
+        this.query = this.initQuery();
+
+        this.customQueries = this.initCustomFilters();
+      }
+    },
+
+    mounted: function mounted() {
+
+      this._setColumnsDropdownCloseListener();
+
+      if (!this.vuex) {
+        this.registerClientFilters();
+
+        if (this.options.initialPage) this.setPage(this.options.initialPage);
+      }
+
+      if (this.opts.groupBy && !this.opts.orderBy) {
+        this.orderBy.column = this.opts.groupBy;
+      }
+
+      this.loadState();
+
+      if (this.hasDateFilters()) {
+        this.initDateFilters();
+      }
+    },
+
+    data: function data() {
+      return _merge2.default.recursive(_data(), {
+        source: 'client',
+        globalOptions: globalOptions,
+        currentlySorting: {},
+        time: Date.now()
+      }, (0, _data3.default)(useVuex, 'client', this.options.initialPage));
+    },
+    computed: {
+      q: __webpack_require__(/*! ./computed/q */ "./node_modules/vue-tables-2/compiled/computed/q.js"),
+      customQ: __webpack_require__(/*! ./computed/custom-q */ "./node_modules/vue-tables-2/compiled/computed/custom-q.js"),
+      totalPages: __webpack_require__(/*! ./computed/total-pages */ "./node_modules/vue-tables-2/compiled/computed/total-pages.js"),
+      filteredData: __webpack_require__(/*! ./computed/filtered-data */ "./node_modules/vue-tables-2/compiled/computed/filtered-data.js"),
+      hasMultiSort: function hasMultiSort() {
+        return this.opts.clientMultiSorting;
+      }
+    },
+    methods: {
+      transformDateStringsToMoment: __webpack_require__(/*! ./methods/transform-date-strings-to-moment */ "./node_modules/vue-tables-2/compiled/methods/transform-date-strings-to-moment.js"),
+      registerClientFilters: __webpack_require__(/*! ./methods/register-client-filters */ "./node_modules/vue-tables-2/compiled/methods/register-client-filters.js"),
+      search: __webpack_require__(/*! ./methods/client-search */ "./node_modules/vue-tables-2/compiled/methods/client-search.js"),
+      defaultSort: __webpack_require__(/*! ./methods/default-sort */ "./node_modules/vue-tables-2/compiled/methods/default-sort.js"),
+      getGroupSlot: __webpack_require__(/*! ./methods/get-group-slot */ "./node_modules/vue-tables-2/compiled/methods/get-group-slot.js"),
+      toggleGroup: function toggleGroup(group, e) {
+
+        e.stopPropagation();
+
+        var i = this.collapsedGroups.indexOf(group);
+        if (i >= 0) {
+          this.collapsedGroups.splice(i, 1);
+        } else {
+          this.collapsedGroups.push(group);
+        }
+      },
+      groupToggleIcon: function groupToggleIcon(group) {
+        var cls = this.opts.sortIcon.base + ' ';
+        cls += this.collapsedGroups.indexOf(group) > -1 ? this.opts.sortIcon.down : this.opts.sortIcon.up;
+
+        return cls;
+      },
+      loadState: function loadState() {
+
+        if (!this.opts.saveState) return;
+
+        if (!this.storage.getItem(this.stateKey)) {
+          this.initState();
+          this.activeState = true;
+          return;
+        }
+
+        var state = JSON.parse(this.storage.getItem(this.stateKey));
+
+        if (this.opts.filterable) this.setFilter(state.query);
+
+        this.setOrder(state.orderBy.column, state.orderBy.ascending);
+
+        if (this.vuex) {
+          this.commit('SET_LIMIT', state.perPage);
+        } else {
+          this.limit = state.perPage;
+        }
+
+        this.setPage(state.page);
+
+        this.activeState = true;
+
+        if (state.userControlsColumns) {
+          this.userColumnsDisplay = state.userColumnsDisplay;
+          this.userControlsColumns = state.userControlsColumns;
+        }
+
+        // TODO: Custom Queries
+      }
+    }
+
+  });
+
+  var state = useVuex ? (0, _vuex2.default)() : (0, _normal2.default)();
+
+  client = _merge2.default.recursive(client, state);
+
+  Vue.component('v-client-table', client);
+
+  return client;
+};
+
+/***/ }),
+
+/***/ "./node_modules/vue-tables-2/compiled/v-server-table.js":
+/*!**************************************************************!*\
+  !*** ./node_modules/vue-tables-2/compiled/v-server-table.js ***!
+  \**************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _merge = __webpack_require__(/*! merge */ "./node_modules/merge/merge.js");
+
+var _merge2 = _interopRequireDefault(_merge);
+
+var _data2 = __webpack_require__(/*! ./state/data */ "./node_modules/vue-tables-2/compiled/state/data.js");
+
+var _data3 = _interopRequireDefault(_data2);
+
+var _vuex = __webpack_require__(/*! ./state/vuex */ "./node_modules/vue-tables-2/compiled/state/vuex.js");
+
+var _vuex2 = _interopRequireDefault(_vuex);
+
+var _normal = __webpack_require__(/*! ./state/normal */ "./node_modules/vue-tables-2/compiled/state/normal.js");
+
+var _normal2 = _interopRequireDefault(_normal);
+
+var _table = __webpack_require__(/*! ./table */ "./node_modules/vue-tables-2/compiled/table.js");
+
+var _table2 = _interopRequireDefault(_table);
+
+var _vuePagination = __webpack_require__(/*! vue-pagination-2 */ "./node_modules/vue-pagination-2/index.js");
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var _data = __webpack_require__(/*! ./mixins/data */ "./node_modules/vue-tables-2/compiled/mixins/data.js");
+var _created = __webpack_require__(/*! ./mixins/created */ "./node_modules/vue-tables-2/compiled/mixins/created.js");
+
+var templateCompiler = __webpack_require__(/*! ./template-compiler */ "./node_modules/vue-tables-2/compiled/template-compiler.js");
+
+exports.install = function (Vue, globalOptions, useVuex) {
+  var theme = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : 'bootstrap3';
+  var template = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : 'default';
+
+
+  var state = useVuex ? (0, _vuex2.default)('server') : (0, _normal2.default)();
+
+  var server = _merge2.default.recursive(true, (0, _table2.default)(), {
+    name: 'server-table',
+    components: {
+      Pagination: _vuePagination.Pagination
+    },
+    render: templateCompiler.call(this, template, theme),
+    props: {
+      columns: {
+        type: Array,
+        required: true
+      },
+      url: {
+        type: String
+      },
+      name: {
+        type: String,
+        required: false
+      },
+      options: {
+        type: Object,
+        required: false,
+        default: function _default() {
+          return {};
+        }
+      }
+    },
+    created: function created() {
+
+      if (!this.opts.requestFunction && !this.url) {
+        throw 'vue-tables-2: you must provide either a "url" prop or a custom request function. Aborting';
+      }
+
+      _created(this);
+
+      if (!this.vuex) {
+        this.query = this.initQuery();
+        this.initOrderBy();
+        this.customQueries = this.initCustomFilters();
+      }
+
+      this.loadState();
+
+      this.getData(true).then(function (response) {
+
+        this.setData(response);
+
+        this.loading = false;
+
+        if (this.hasDateFilters()) {
+          setTimeout(function () {
+            this.initDateFilters();
+          }.bind(this), 0);
+        }
+      }.bind(this));
+    },
+    mounted: function mounted() {
+
+      this._setColumnsDropdownCloseListener();
+
+      if (this.vuex) return;
+
+      this.registerServerFilters();
+
+      if (this.options.initialPage) this.setPage(this.options.initialPage, true);
+    },
+    data: function data() {
+      return _merge2.default.recursive(_data(), {
+        source: 'server',
+        loading: true,
+        lastKeyStrokeAt: false,
+        globalOptions: globalOptions
+      }, (0, _data3.default)(useVuex, 'server', this.options.initialPage));
+    },
+    methods: {
+      refresh: __webpack_require__(/*! ./methods/refresh */ "./node_modules/vue-tables-2/compiled/methods/refresh.js"),
+      getData: __webpack_require__(/*! ./methods/get-data */ "./node_modules/vue-tables-2/compiled/methods/get-data.js"),
+      setData: __webpack_require__(/*! ./methods/set-data */ "./node_modules/vue-tables-2/compiled/methods/set-data.js"),
+      serverSearch: __webpack_require__(/*! ./methods/server-search */ "./node_modules/vue-tables-2/compiled/methods/server-search.js"),
+      registerServerFilters: __webpack_require__(/*! ./methods/register-server-filters */ "./node_modules/vue-tables-2/compiled/methods/register-server-filters.js"),
+      loadState: function loadState() {
+        var _this = this;
+
+        if (!this.opts.saveState) return;
+
+        if (!this.storage.getItem(this.stateKey)) {
+          this.initState();
+          this.activeState = true;
+          return;
+        }
+
+        var state = JSON.parse(this.storage.getItem(this.stateKey));
+
+        if (this.vuex) {
+          this.commit('SET_STATE', {
+            query: state.query,
+            customQueries: state.customQueries,
+            page: state.page,
+            limit: state.perPage,
+            orderBy: state.orderBy
+          });
+        } else {
+          this.page = state.page;
+          this.query = state.query;
+          this.customQueries = state.customQueries;
+          this.limit = state.perPage;
+          this.orderBy = state.orderBy;
+        }
+
+        if (!this.opts.pagination.dropdown) {
+          setTimeout(function () {
+            _this.$refs.pagination.Page = state.page;
+          }, 0);
+        }
+
+        this.activeState = true;
+      }
+    },
+    watch: {
+      url: function url() {
+        this.refresh();
+      }
+    },
+    computed: {
+      totalPages: __webpack_require__(/*! ./computed/total-pages */ "./node_modules/vue-tables-2/compiled/computed/total-pages.js"),
+      filteredQuery: __webpack_require__(/*! ./computed/filtered-query */ "./node_modules/vue-tables-2/compiled/computed/filtered-query.js"),
+      hasMultiSort: function hasMultiSort() {
+        return this.opts.serverMultiSorting;
+      }
+    }
+
+  }, state);
+
+  Vue.component('v-server-table', server);
+
+  return server;
+};
 
 /***/ }),
 
@@ -52597,7 +67107,8 @@ Vue.component('home', __webpack_require__(/*! ./layouts/Home.vue */ "./resources
 
 Vue.component('footer-component', __webpack_require__(/*! ./components/Footer.vue */ "./resources/js/components/Footer.vue")["default"]);
 Vue.component('header-component', __webpack_require__(/*! ./components/Header.vue */ "./resources/js/components/Header.vue")["default"]);
-Vue.component('sidebar', __webpack_require__(/*! ./components/SideBar.vue */ "./resources/js/components/SideBar.vue")["default"]); //views
+Vue.component('sidebar', __webpack_require__(/*! ./components/SideBar.vue */ "./resources/js/components/SideBar.vue")["default"]);
+Vue.component('data-table', __webpack_require__(/*! ./components/DataTable.vue */ "./resources/js/components/DataTable.vue")["default"]); //views
 
 Vue.component('don-vi', __webpack_require__(/*! ./views/DonVi.vue */ "./resources/js/views/DonVi.vue")["default"]);
 Vue.component('du-an', __webpack_require__(/*! ./views/DuAn.vue */ "./resources/js/views/DuAn.vue")["default"]);
@@ -52657,6 +67168,93 @@ if (token) {
 } else {
   console.error('CSRF token not found: https://laravel.com/docs/csrf#csrf-x-csrf-token');
 }
+
+/***/ }),
+
+/***/ "./resources/js/components/DataTable.vue":
+/*!***********************************************!*\
+  !*** ./resources/js/components/DataTable.vue ***!
+  \***********************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _DataTable_vue_vue_type_template_id_4b997e69___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./DataTable.vue?vue&type=template&id=4b997e69& */ "./resources/js/components/DataTable.vue?vue&type=template&id=4b997e69&");
+/* harmony import */ var _DataTable_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./DataTable.vue?vue&type=script&lang=js& */ "./resources/js/components/DataTable.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _DataTable_vue_vue_type_style_index_0_lang_scss___WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./DataTable.vue?vue&type=style&index=0&lang=scss& */ "./resources/js/components/DataTable.vue?vue&type=style&index=0&lang=scss&");
+/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__["default"])(
+  _DataTable_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _DataTable_vue_vue_type_template_id_4b997e69___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _DataTable_vue_vue_type_template_id_4b997e69___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/components/DataTable.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/components/DataTable.vue?vue&type=script&lang=js&":
+/*!************************************************************************!*\
+  !*** ./resources/js/components/DataTable.vue?vue&type=script&lang=js& ***!
+  \************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_DataTable_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/babel-loader/lib??ref--4-0!../../../node_modules/vue-loader/lib??vue-loader-options!./DataTable.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/DataTable.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_DataTable_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/components/DataTable.vue?vue&type=style&index=0&lang=scss&":
+/*!*********************************************************************************!*\
+  !*** ./resources/js/components/DataTable.vue?vue&type=style&index=0&lang=scss& ***!
+  \*********************************************************************************/
+/*! no static exports found */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_style_loader_index_js_node_modules_css_loader_dist_cjs_js_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_sass_loader_dist_cjs_js_ref_6_3_node_modules_vue_loader_lib_index_js_vue_loader_options_DataTable_vue_vue_type_style_index_0_lang_scss___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/style-loader!../../../node_modules/css-loader/dist/cjs.js!../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../node_modules/postcss-loader/src??ref--6-2!../../../node_modules/sass-loader/dist/cjs.js??ref--6-3!../../../node_modules/vue-loader/lib??vue-loader-options!./DataTable.vue?vue&type=style&index=0&lang=scss& */ "./node_modules/style-loader/index.js!./node_modules/css-loader/dist/cjs.js!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/sass-loader/dist/cjs.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/DataTable.vue?vue&type=style&index=0&lang=scss&");
+/* harmony import */ var _node_modules_style_loader_index_js_node_modules_css_loader_dist_cjs_js_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_sass_loader_dist_cjs_js_ref_6_3_node_modules_vue_loader_lib_index_js_vue_loader_options_DataTable_vue_vue_type_style_index_0_lang_scss___WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_index_js_node_modules_css_loader_dist_cjs_js_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_sass_loader_dist_cjs_js_ref_6_3_node_modules_vue_loader_lib_index_js_vue_loader_options_DataTable_vue_vue_type_style_index_0_lang_scss___WEBPACK_IMPORTED_MODULE_0__);
+/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _node_modules_style_loader_index_js_node_modules_css_loader_dist_cjs_js_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_sass_loader_dist_cjs_js_ref_6_3_node_modules_vue_loader_lib_index_js_vue_loader_options_DataTable_vue_vue_type_style_index_0_lang_scss___WEBPACK_IMPORTED_MODULE_0__) if(__WEBPACK_IMPORT_KEY__ !== 'default') (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _node_modules_style_loader_index_js_node_modules_css_loader_dist_cjs_js_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_sass_loader_dist_cjs_js_ref_6_3_node_modules_vue_loader_lib_index_js_vue_loader_options_DataTable_vue_vue_type_style_index_0_lang_scss___WEBPACK_IMPORTED_MODULE_0__[key]; }) }(__WEBPACK_IMPORT_KEY__));
+ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_style_loader_index_js_node_modules_css_loader_dist_cjs_js_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_sass_loader_dist_cjs_js_ref_6_3_node_modules_vue_loader_lib_index_js_vue_loader_options_DataTable_vue_vue_type_style_index_0_lang_scss___WEBPACK_IMPORTED_MODULE_0___default.a); 
+
+/***/ }),
+
+/***/ "./resources/js/components/DataTable.vue?vue&type=template&id=4b997e69&":
+/*!******************************************************************************!*\
+  !*** ./resources/js/components/DataTable.vue?vue&type=template&id=4b997e69& ***!
+  \******************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_DataTable_vue_vue_type_template_id_4b997e69___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../node_modules/vue-loader/lib??vue-loader-options!./DataTable.vue?vue&type=template&id=4b997e69& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/DataTable.vue?vue&type=template&id=4b997e69&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_DataTable_vue_vue_type_template_id_4b997e69___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_DataTable_vue_vue_type_template_id_4b997e69___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
 
 /***/ }),
 
@@ -52887,21 +67485,14 @@ __webpack_require__.r(__webpack_exports__);
 var routes = [{
   path: "/",
   name: "main",
-  redirect: "/Home",
+  redirect: "/du-an",
   component: _layouts_Home__WEBPACK_IMPORTED_MODULE_0__["default"],
   children: [{
-    path: "Home",
-    //redirect: '/',
-    name: "Home",
-    component: _layouts_Home__WEBPACK_IMPORTED_MODULE_0__["default"]
-  }, {
     path: "du-an",
-    //redirect: '/',
     name: "DuAn",
     component: _views_DuAn_vue__WEBPACK_IMPORTED_MODULE_1__["default"]
   }, {
     path: "don-vi",
-    //redirect: '/',
     name: "DonVi",
     component: _views_DonVi_vue__WEBPACK_IMPORTED_MODULE_2__["default"]
   }]
@@ -52920,7 +67511,9 @@ var routes = [{
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _Home_vue_vue_type_template_id_40642c7a___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Home.vue?vue&type=template&id=40642c7a& */ "./resources/js/layouts/Home.vue?vue&type=template&id=40642c7a&");
 /* harmony import */ var _Home_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Home.vue?vue&type=script&lang=js& */ "./resources/js/layouts/Home.vue?vue&type=script&lang=js&");
-/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+/* empty/unused harmony star reexport *//* harmony import */ var _Home_vue_vue_type_style_index_0_lang_scss___WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Home.vue?vue&type=style&index=0&lang=scss& */ "./resources/js/layouts/Home.vue?vue&type=style&index=0&lang=scss&");
+/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
 
 
 
@@ -52928,7 +67521,7 @@ __webpack_require__.r(__webpack_exports__);
 
 /* normalize component */
 
-var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__["default"])(
   _Home_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
   _Home_vue_vue_type_template_id_40642c7a___WEBPACK_IMPORTED_MODULE_0__["render"],
   _Home_vue_vue_type_template_id_40642c7a___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
@@ -52957,6 +67550,22 @@ component.options.__file = "resources/js/layouts/Home.vue"
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_Home_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/babel-loader/lib??ref--4-0!../../../node_modules/vue-loader/lib??vue-loader-options!./Home.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/layouts/Home.vue?vue&type=script&lang=js&");
 /* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_Home_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/layouts/Home.vue?vue&type=style&index=0&lang=scss&":
+/*!*************************************************************************!*\
+  !*** ./resources/js/layouts/Home.vue?vue&type=style&index=0&lang=scss& ***!
+  \*************************************************************************/
+/*! no static exports found */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_style_loader_index_js_node_modules_css_loader_dist_cjs_js_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_sass_loader_dist_cjs_js_ref_6_3_node_modules_vue_loader_lib_index_js_vue_loader_options_Home_vue_vue_type_style_index_0_lang_scss___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/style-loader!../../../node_modules/css-loader/dist/cjs.js!../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../node_modules/postcss-loader/src??ref--6-2!../../../node_modules/sass-loader/dist/cjs.js??ref--6-3!../../../node_modules/vue-loader/lib??vue-loader-options!./Home.vue?vue&type=style&index=0&lang=scss& */ "./node_modules/style-loader/index.js!./node_modules/css-loader/dist/cjs.js!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/sass-loader/dist/cjs.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/layouts/Home.vue?vue&type=style&index=0&lang=scss&");
+/* harmony import */ var _node_modules_style_loader_index_js_node_modules_css_loader_dist_cjs_js_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_sass_loader_dist_cjs_js_ref_6_3_node_modules_vue_loader_lib_index_js_vue_loader_options_Home_vue_vue_type_style_index_0_lang_scss___WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_index_js_node_modules_css_loader_dist_cjs_js_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_sass_loader_dist_cjs_js_ref_6_3_node_modules_vue_loader_lib_index_js_vue_loader_options_Home_vue_vue_type_style_index_0_lang_scss___WEBPACK_IMPORTED_MODULE_0__);
+/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _node_modules_style_loader_index_js_node_modules_css_loader_dist_cjs_js_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_sass_loader_dist_cjs_js_ref_6_3_node_modules_vue_loader_lib_index_js_vue_loader_options_Home_vue_vue_type_style_index_0_lang_scss___WEBPACK_IMPORTED_MODULE_0__) if(__WEBPACK_IMPORT_KEY__ !== 'default') (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _node_modules_style_loader_index_js_node_modules_css_loader_dist_cjs_js_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_sass_loader_dist_cjs_js_ref_6_3_node_modules_vue_loader_lib_index_js_vue_loader_options_Home_vue_vue_type_style_index_0_lang_scss___WEBPACK_IMPORTED_MODULE_0__[key]; }) }(__WEBPACK_IMPORT_KEY__));
+ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_style_loader_index_js_node_modules_css_loader_dist_cjs_js_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_sass_loader_dist_cjs_js_ref_6_3_node_modules_vue_loader_lib_index_js_vue_loader_options_Home_vue_vue_type_style_index_0_lang_scss___WEBPACK_IMPORTED_MODULE_0___default.a); 
 
 /***/ }),
 
@@ -53123,7 +67732,7 @@ __webpack_require__.r(__webpack_exports__);
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! c:\xampp\htdocs\Report\resources\js\app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! /var/www/html/Report/resources/js/app.js */"./resources/js/app.js");
 
 
 /***/ })

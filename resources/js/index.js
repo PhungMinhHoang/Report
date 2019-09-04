@@ -8,24 +8,16 @@ export const routes = [
     {
         path: "/",
         name: "main",
-        redirect: "/Home",
+        redirect: "/du-an",
         component: Home,
         children: [
             {
-                path: "Home",
-                //redirect: '/',
-                name: "Home",
-                component: Home
-            },
-            {
                 path: "du-an",
-                //redirect: '/',
                 name: "DuAn",
                 component: DuAn
             },
             {
                 path: "don-vi",
-                //redirect: '/',
                 name: "DonVi",
                 component: DonVi
             }

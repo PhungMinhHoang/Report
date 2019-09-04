@@ -10,6 +10,7 @@ Vue.component('home', require('./layouts/Home.vue').default);
 Vue.component('footer-component', require('./components/Footer.vue').default);
 Vue.component('header-component', require('./components/Header.vue').default);
 Vue.component('sidebar', require('./components/SideBar.vue').default);
+Vue.component('data-table', require('./components/DataTable.vue').default);
 
 //views
 Vue.component('don-vi', require('./views/DonVi.vue').default);

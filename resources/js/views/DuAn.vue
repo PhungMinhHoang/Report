@@ -1,12 +1,22 @@
 <template>
   <div>
-    <h1>Danh sách dự án</h1>
+    <data-table t_title=" Danh sách dự án"/>
   </div>
 </template>
 
 <script>
 export default {
-
+  data(){
+    return {
+      ds_du_an: []
+    }
+  },
+  created() {
+      let uri = 'http://localhost/api/du-an';
+      this.axios.get(uri).then(response => {
+        this.ds_du_an = response.data.data;
+      });
+    }
 }
 </script>
 

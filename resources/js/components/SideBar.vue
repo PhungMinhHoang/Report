@@ -3,16 +3,16 @@
     <nav class="sidebar-nav">
       <ul class="nav">
         <li class="nav-title">Dashboard</li>
-        <router-link tag="li" class="nav-item" to="/du-an" exact-active-class="active" exact>
-          <a class="nav-link">
-            <i class="nav-icon icon-drop"></i>Dự Án
-          </a>
-        </router-link>
-        <router-link tag="li" class="nav-item" to="/don-vi" exact-active-class="active">
-          <a class="nav-link">
+        <li class="nav-item">
+          <router-link tag="a" class="nav-link" to="/don-vi" exact-active-class="active" exact>
             <i class="nav-icon icon-drop"></i>Đơn Vị
-          </a>
         </router-link>
+        </li>
+        <li class="nav-item">
+          <router-link tag="a" class="nav-link" to="/du-an" exact-active-class="active">
+            <i class="nav-icon icon-drop"></i>Dự Án
+        </router-link>
+        </li>
       </ul>
     </nav>
     <button class="sidebar-minimizer brand-minimizer" type="button"></button>

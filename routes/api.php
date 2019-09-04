@@ -18,5 +18,5 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 });
 
 Route::group(['prefix' => '', 'namespace' => 'Api', 'as' => 'api.'], function () {
-    Route::resource('DuAn', 'DuAnController', ['except' => ['create', 'edit']]);
+    Route::resource('du-an', 'DuAnController', ['except' => ['create', 'edit']]);
 });

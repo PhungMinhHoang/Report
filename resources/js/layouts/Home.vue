@@ -3,9 +3,11 @@
     <header-component />
     <div class="app-body">
       <sidebar />
-      <div class="container-fluid">
+      <main class="main">
+        <div class="container-fluid">
            <router-view></router-view>
       </div>
+      </main>
     </div>
     <footer-component />
   </div>
@@ -17,5 +19,11 @@ export default {
 };
 </script>
 
-<style>
+<style lang="scss">
+  /* Import Font Awesome Icons Set */
+  $fa-font-path: '~font-awesome/fonts/';
+  @import '~font-awesome/scss/font-awesome.scss';
+  /* Import Simple Line Icons Set */
+  $simple-line-font-path: '~simple-line-icons/fonts/';
+  @import '~simple-line-icons/scss/simple-line-icons.scss';
 </style>
