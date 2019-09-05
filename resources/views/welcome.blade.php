@@ -11,13 +11,13 @@
         <link href="https://fonts.googleapis.com/css?family=Nunito:200,600" rel="stylesheet">
 
         <!-- Main styles for this application -->
-        <link href="{{ mix('css/app.css') }}" rel="stylesheet">
+        <link href="{{ url(mix('css/app.css')) }}" rel="stylesheet">
     </head>
     <body>
         <div id="app">
             <router-view></router-view>
         </div>
 
-        <script src="{{ mix('js/app.js') }}"></script>
+        <script src="{{ url(mix('js/app.js')) }}"></script>
     </body>
 </html>

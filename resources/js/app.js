@@ -1,6 +1,12 @@
+import VueRouter from 'vue-router'
+import { routes }  from './index';
+//Font-Awesome
+import { library } from '@fortawesome/fontawesome-svg-core'
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+import { faPlusSquare } from '@fortawesome/free-solid-svg-icons'
 
+library.add(faPlusSquare)
 require('./bootstrap');
-
 window.Vue = require('vue');
 
 //layouts
@@ -16,13 +22,16 @@ Vue.component('data-table', require('./components/DataTable.vue').default);
 Vue.component('don-vi', require('./views/DonVi.vue').default);
 Vue.component('du-an', require('./views/DuAn.vue').default);
 
-import VueRouter from 'vue-router'
-import { routes }  from './index';
+//font-awesome
+Vue.component('font-awesome-icon', FontAwesomeIcon);
+
+
+
 
 Vue.use(VueRouter)
 
 const router = new VueRouter({
-    mode: 'history',
+    mode: 'hash',
     routes
 })
 

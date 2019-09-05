@@ -1,4 +1,4 @@
-const mix = require('laravel-mix');
+const mix = require("laravel-mix");
 
 /*
  |--------------------------------------------------------------------------
@@ -11,10 +11,10 @@ const mix = require('laravel-mix');
  |
  */
 
-mix.js('resources/js/app.js', 'public/js');
 
-mix.styles([
-    'resources/css/style.css',
-], 'public/css/app.css');
+mix.js("resources/js/app.js", "public/js")
+    .styles("resources/css/style.css", "public/css/app.css")
 
 
+// mix.setPublicPath('public');
+// mix.setResourceRoot('../');
