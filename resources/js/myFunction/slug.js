@@ -31,4 +31,4 @@ function ChangeToSlug(title) {
     //In slug ra textbox có id “slug”
     return slug;
 }
-export default ChangeToSlug
+export {ChangeToSlug}

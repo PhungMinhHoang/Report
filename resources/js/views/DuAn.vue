@@ -10,7 +10,7 @@ export default {
   data() {
     return {
       ds_du_an: [],
-      columns: ["STT", "Mã dự án", "Tên dự án","Tên đơn vị", "Thao tác"],
+      columns: ["Mã dự án", "Tên dự án","Tên đơn vị"],
       tb_type: "ds_du_an"
     };
   },

@@ -16,11 +16,14 @@
         <table class="table table-striped table-bordered datatable">
           <thead>
             <tr>
+              <th>STT</th>
               <th v-for="(col, index) in columns" :key="index">{{col}}</th>
+              <th>Thao tác</th>
             </tr>
           </thead>
           <tbody>
             <tr v-for="(row, index) in ds_du_an" :key="index">
+              <td>{{index}}</td>
               <td v-for="(col, index) in columns" :key="index">{{row[ChangeToSlug(col)]}}</td>
               <td>
                 <a class="btn btn-info" href="#" />

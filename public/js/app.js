@@ -12992,6 +12992,9 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
 
 
 Vue.use(vue_tables_2__WEBPACK_IMPORTED_MODULE_0__["ClientTable"]);
@@ -13194,7 +13197,7 @@ __webpack_require__.r(__webpack_exports__);
   data: function data() {
     return {
       ds_du_an: [],
-      columns: ["STT", "Mã dự án", "Tên dự án", "Tên đơn vị", "Thao tác"],
+      columns: ["Mã dự án", "Tên dự án", "Tên đơn vị"],
       tb_type: "ds_du_an"
     };
   },
@@ -56624,10 +56627,16 @@ var render = function() {
             _c("thead", [
               _c(
                 "tr",
-                _vm._l(_vm.columns, function(col, index) {
-                  return _c("th", { key: index }, [_vm._v(_vm._s(col))])
-                }),
-                0
+                [
+                  _c("th", [_vm._v("STT")]),
+                  _vm._v(" "),
+                  _vm._l(_vm.columns, function(col, index) {
+                    return _c("th", { key: index }, [_vm._v(_vm._s(col))])
+                  }),
+                  _vm._v(" "),
+                  _c("th", [_vm._v("Thao tác")])
+                ],
+                2
               )
             ]),
             _vm._v(" "),
@@ -56638,6 +56647,8 @@ var render = function() {
                   "tr",
                   { key: index },
                   [
+                    _c("td", [_vm._v(_vm._s(index))]),
+                    _vm._v(" "),
                     _vm._l(_vm.columns, function(col, index) {
                       return _c("td", { key: index }, [
                         _vm._v(_vm._s(row[_vm.ChangeToSlug(col)]))
@@ -78213,11 +78224,12 @@ __webpack_require__.r(__webpack_exports__);
 /*!*****************************************!*\
   !*** ./resources/js/myFunction/slug.js ***!
   \*****************************************/
-/*! exports provided: default */
+/*! exports provided: ChangeToSlug */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ChangeToSlug", function() { return ChangeToSlug; });
 function ChangeToSlug(title) {
   var slug; //Đổi chữ hoa thành chữ thường
 
@@ -78247,7 +78259,7 @@ function ChangeToSlug(title) {
   return slug;
 }
 
-/* harmony default export */ __webpack_exports__["default"] = (ChangeToSlug);
+
 
 /***/ }),
 
@@ -78396,7 +78408,7 @@ __webpack_require__.r(__webpack_exports__);
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! C:\xampp\htdocs\Report\resources\js\app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! /var/www/html/Report/resources/js/app.js */"./resources/js/app.js");
 
 
 /***/ })
