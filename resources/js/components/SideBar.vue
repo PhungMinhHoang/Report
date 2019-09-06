@@ -10,7 +10,7 @@
         </li>
         <li class="nav-item">
           <router-link tag="a" class="nav-link" to="/du-an" exact-active-class="active">
-            <i class="nav-icon icon-drop"></i>Dự Án
+            <font-awesome-icon :icon="['fas','project-diagram']" /> <span>Đề tài/Dự án</span>
         </router-link>
         </li>
       </ul>

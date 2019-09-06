@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\DonVi;
 use App\DuAn;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\DuAnResource;
 
 class DuAnController extends Controller
 {
@@ -15,7 +17,7 @@ class DuAnController extends Controller
      */
     public function index()
     {
-        return DuAn::all();
+       return DuAnResource::collection(DuAn::all()->load('don_vi'));
     }
 
     /**

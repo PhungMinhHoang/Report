@@ -1,11 +1,11 @@
 import VueRouter from 'vue-router'
 import { routes }  from './index';
 //Font-Awesome
-import { library } from '@fortawesome/fontawesome-svg-core'
-import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
-import { faPlusSquare } from '@fortawesome/free-solid-svg-icons'
 
-library.add(faPlusSquare)
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+import {icon} from './icon.js'
+
+
 require('./bootstrap');
 window.Vue = require('vue');
 

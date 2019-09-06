@@ -8,7 +8,7 @@ class DonVi extends Model
 {
     protected $table = 'don_vi';
 
-    public function duAn()
+    public function du_an()
     {
         return $this->hasMany(DuAn::class);
     }

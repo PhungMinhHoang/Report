@@ -1,15 +1,14 @@
 <template>
   <div class="animated fadeIn">
-    
     <div class="card">
       <div class="card-header">
         <h2>
-          <i class="fa fa-list"></i>
-          {{t_title}}
+          <font-awesome-icon :icon="['far','list-alt']" />
+          <span>Danh sách {{tb_title}}</span>
         </h2>
         <div class="card-header-actions">
-          <button class="btn btn-success">
-            <font-awesome-icon :icon="['fas','plus-square']"/>
+          <button class="btn btn-success" :title="'Thêm mới'+tb_title">
+            <font-awesome-icon :icon="['far','plus-square']" size="2x" />
           </button>
         </div>
       </div>
@@ -17,24 +16,15 @@
         <table class="table table-striped table-bordered datatable">
           <thead>
             <tr>
-              <th>STT</th>
-              <th>Mã</th>
-              <th>Tên</th>
-              <th>Thao tác</th>
+              <th v-for="(col, index) in columns" :key="index">{{col}}</th>
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <td>Anton Phunihel</td>
-              <td>2012/01/01</td>
-              <td>Member</td>
+            <tr v-for="(row, index) in ds_du_an" :key="index">
+              <td v-for="(col, index) in columns" :key="index">{{row[ChangeToSlug(col)]}}</td>
               <td>
-                <a class="btn btn-info" href="#">
-                  <i class="fa fa-edit"></i>
-                </a>
-                <a class="btn btn-danger" href="#">
-                  <i class="fa fa-trash-o"></i>
-                </a>
+                <a class="btn btn-info" href="#" />
+                <a class="btn btn-danger" href="#" />
               </td>
             </tr>
           </tbody>
@@ -46,13 +36,16 @@
 
 <script>
 import { ClientTable, Event } from "vue-tables-2";
-
+import { ChangeToSlug } from "../myFunction/slug.js";
 Vue.use(ClientTable);
 
 export default {
   name: "DataTable",
   props: {
-    t_title: String
+    tb_title: String,
+    columns: Array,
+    tb_type: String,
+    ds_du_an: Array
   },
   components: {
     ClientTable,
@@ -60,8 +53,7 @@ export default {
   },
   data: function() {
     return {
-      columns: ["name", "code", "uri"],
-      data: ["VietNam", 1, "google.com"],
+      rows: this.ds_du_an
       // options: {
       //   headings: {
       //     name: 'Country Name',
@@ -77,9 +69,11 @@ export default {
       //     nav: 'scroll'
       //   }
       // },
-      theme: "bootstrap4",
-      template: "default"
     };
+  },
+  computed: {},
+  methods:{
+      ChangeToSlug: ChangeToSlug
   }
 };
 </script>

@@ -8,8 +8,8 @@ class DuAn extends Model
 {
     protected $table = 'du_an';
 
-    public function donVi()
+    public function don_vi()
     {
-        return $this->belongsTo(DonVi::class,'don_vi_id');
+        return $this->belongsTo(DonVi::class,'donvi_id');
     }
 }
