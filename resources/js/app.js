@@ -3,7 +3,7 @@ import { routes }  from './index';
 //Font-Awesome
 
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
-import {icon} from './icon.js'
+import {icon} from './custom.js'
 
 
 require('./bootstrap');

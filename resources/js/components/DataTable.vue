@@ -39,7 +39,7 @@
 
 <script>
 import { ClientTable, Event } from "vue-tables-2";
-import { ChangeToSlug } from "../myFunction/slug.js";
+import { ChangeToSlug } from "../custom.js";
 Vue.use(ClientTable);
 
 export default {

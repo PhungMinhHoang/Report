@@ -1,9 +1,7 @@
 function ChangeToSlug(title) {
     var slug;
-
     //Đổi chữ hoa thành chữ thường
     slug = title.toLowerCase();
-
     //Đổi ký tự có dấu thành không dấu
     slug = slug.replace(/á|à|ả|ạ|ã|ă|ắ|ằ|ẳ|ẵ|ặ|â|ấ|ầ|ẩ|ẫ|ậ/gi, "a");
     slug = slug.replace(/é|è|ẻ|ẽ|ẹ|ê|ế|ề|ể|ễ|ệ/gi, "e");
@@ -31,4 +29,12 @@ function ChangeToSlug(title) {
     //In slug ra textbox có id “slug”
     return slug;
 }
-export {ChangeToSlug}
+
+// Font-Awesome
+import { library } from "@fortawesome/fontawesome-svg-core";
+import { faPlusSquare, faListAlt } from "@fortawesome/free-regular-svg-icons";
+import { faProjectDiagram } from "@fortawesome/free-solid-svg-icons";
+library.add(faPlusSquare, faListAlt, faProjectDiagram);
+
+export { ChangeToSlug };
+export const icon = library;

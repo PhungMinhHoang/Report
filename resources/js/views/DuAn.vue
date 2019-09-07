@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import { getDuAn } from "../api/api.js";
+import { getData } from "../api/api.js";
 export default {
   data() {
     return {
@@ -15,7 +15,7 @@ export default {
     };
   },
   mounted() {
-    getDuAn().then(response => {
+    getData('/du-an').then(response => {
       this.ds_du_an = response.data;
       console.log(this.ds_du_an)
     });
