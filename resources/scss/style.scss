@@ -2,3 +2,15 @@
 // If you are going to use dark layout please comment next line
 @import "~@coreui/coreui-pro/scss/coreui";
 
+/* Import Font Awesome Icons Set */
+@import "~@fortawesome/fontawesome-free/scss/fontawesome.scss";
+@import "~@fortawesome/fontawesome-free/scss/solid.scss";
+@import "~@fortawesome/fontawesome-free/scss/regular.scss";
+
+/* Import Bootstrap Vue Styles */
+@import "~bootstrap-vue/dist/bootstrap-vue.css";
+
+.sidebar .nav-link.router-link-active {
+    color: #fff;
+    background: #3a4248;
+}

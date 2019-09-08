@@ -7,18 +7,18 @@ import DonVi from "./views/DonVi.vue";
 export const routes = [
     {
         path: "/",
-        name: "main",
+        name: "Trang chủ",
         redirect: "/du-an",
         component: Home,
         children: [
             {
                 path: "du-an",
-                name: "DuAn",
+                name: "Dự Án",
                 component: DuAn
             },
             {
                 path: "don-vi",
-                name: "DonVi",
+                name: "Đơn Vị",
                 component: DonVi
             }
         ]

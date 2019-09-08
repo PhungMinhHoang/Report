@@ -1,10 +1,6 @@
 import VueRouter from 'vue-router'
 import { routes }  from './index';
-//Font-Awesome
-
-import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
-import {icon} from './custom.js'
-
+import BootstrapVue from 'bootstrap-vue'
 
 require('./bootstrap');
 window.Vue = require('vue');
@@ -13,22 +9,15 @@ window.Vue = require('vue');
 Vue.component('home', require('./layouts/Home.vue').default);
 
 //components
-Vue.component('footer-component', require('./components/Footer.vue').default);
-Vue.component('header-component', require('./components/Header.vue').default);
-Vue.component('sidebar', require('./components/SideBar.vue').default);
 Vue.component('data-table', require('./components/DataTable.vue').default);
 
 //views
 Vue.component('don-vi', require('./views/DonVi.vue').default);
 Vue.component('du-an', require('./views/DuAn.vue').default);
 
-//font-awesome
-Vue.component('font-awesome-icon', FontAwesomeIcon);
-
-
-
 
 Vue.use(VueRouter)
+Vue.use(BootstrapVue)
 
 const router = new VueRouter({
     mode: 'hash',

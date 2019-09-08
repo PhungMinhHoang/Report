@@ -15,9 +15,10 @@ class DuAnResource extends JsonResource
     public function toArray($request)
     {
         return [
-            'ma-du-an' => $this->ma_de_tai,
-            'ten-du-an' => $this->ten,
-            'ten-don-vi' => $this->don_vi->ten
+            'id' => $this->id,
+            'ma_du_an' => $this->ma_de_tai,
+            'ten_du_an' => $this->ten,
+            'ten_don_vi' => $this->don_vi->ten
         ];
     }
 }
