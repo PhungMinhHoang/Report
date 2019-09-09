@@ -3,6 +3,7 @@
 import Home from "./layouts/Home";
 import DuAn from "./views/DuAn.vue";
 import DonVi from "./views/DonVi.vue";
+import KPI_Veco from "./views/KPI_Veco.vue";
 
 export const routes = [
     {
@@ -20,6 +21,11 @@ export const routes = [
                 path: "don-vi",
                 name: "Đơn Vị",
                 component: DonVi
+            },
+            {
+                path: "kpi-veco",
+                name: "KPI Veco",
+                component: KPI_Veco
             }
         ]
     }

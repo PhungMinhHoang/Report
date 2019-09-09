@@ -2,12 +2,10 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Models\DuAn;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Http\Resources\DuAnResource;
 
-class DuAnController extends Controller
+class KPI_QuyTrinhController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -16,7 +14,17 @@ class DuAnController extends Controller
      */
     public function index()
     {
-       return DuAnResource::collection(DuAn::all()->load('don_vi'));
+        //
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function create()
+    {
+        //
     }
 
     /**
@@ -37,6 +45,17 @@ class DuAnController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function show($id)
+    {
+        //
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function edit($id)
     {
         //
     }

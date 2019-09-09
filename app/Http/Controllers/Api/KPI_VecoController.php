@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Models\DuAn;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Http\Resources\DuAnResource;
+use App\Http\Resources\KPI_VecoResource;
+use App\Models\KPI_Veco;
 
-class DuAnController extends Controller
+class KPI_VecoController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -16,8 +16,9 @@ class DuAnController extends Controller
      */
     public function index()
     {
-       return DuAnResource::collection(DuAn::all()->load('don_vi'));
+        return KPI_VecoResource::collection(KPI_Veco::all()->load('don_vi'));
     }
+
 
     /**
      * Store a newly created resource in storage.
@@ -27,7 +28,15 @@ class DuAnController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $data = $request->all();
+        if(KPI_Veco::create($data))
+        {
+            return response()->json(['success'=>'Thêm thành công']);
+        }
+        else
+        {
+            return response()->json(['error'=>'Thêm không thành công']);
+        }
     }
 
     /**
@@ -40,6 +49,7 @@ class DuAnController extends Controller
     {
         //
     }
+
 
     /**
      * Update the specified resource in storage.

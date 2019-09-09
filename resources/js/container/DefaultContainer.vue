@@ -119,16 +119,11 @@ export default {
     SidebarNav,
     SidebarMinimizer
   },
+  props:{
+      nav: Array
+  },
   data() {
     return {
-      nav: [
-        { name: "Đơn Vị", url: "/don-vi", icon: "icon-speedometer" },
-        {
-          name: "Dự Án",
-          url: "/du-an",
-          icon: "fas fa-project-diagram"
-        }
-      ]
     };
   },
   computed: {

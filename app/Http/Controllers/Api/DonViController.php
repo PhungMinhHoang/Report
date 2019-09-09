@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Models\DuAn;
-use Illuminate\Http\Request;
+use App\Http\Resources\DonViResource;
+use App\Models\DonVi;
 use App\Http\Controllers\Controller;
-use App\Http\Resources\DuAnResource;
+use Illuminate\Http\Request;
 
-class DuAnController extends Controller
+class DonViController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -16,7 +16,17 @@ class DuAnController extends Controller
      */
     public function index()
     {
-       return DuAnResource::collection(DuAn::all()->load('don_vi'));
+        return DonViResource::collection(DonVi::all());
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function create()
+    {
+        //
     }
 
     /**
@@ -37,6 +47,17 @@ class DuAnController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function show($id)
+    {
+        //
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function edit($id)
     {
         //
     }
