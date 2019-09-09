@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\QuyTrinh;
 
 class QuyTrinhController extends Controller
 {
@@ -14,18 +15,9 @@ class QuyTrinhController extends Controller
      */
     public function index()
     {
-        //
+        return response()->json(QuyTrinh::all());
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
 
     /**
      * Store a newly created resource in storage.
@@ -35,7 +27,12 @@ class QuyTrinhController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $data = $request->all();
+        if (QuyTrinh::create($data)) {
+            return response()->json(['success' => 'Thêm thành công']);
+        } else {
+            return response()->json(['error' => 'Thêm không thành công']);
+        }
     }
 
     /**

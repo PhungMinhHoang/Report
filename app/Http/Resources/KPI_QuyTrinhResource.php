@@ -14,6 +14,12 @@ class KPI_QuyTrinhResource extends JsonResource
      */
     public function toArray($request)
     {
-        return parent::toArray($request);
+        return [
+            'id' => $this->id,
+            'ten_du_an' => $this->du_an->ten,
+            'ten_quy_trinh' => $this->quy_trinh->ten,
+            'diem' => $this->diem,
+            'thoigian' => $this->thoigian
+        ];
     }
 }

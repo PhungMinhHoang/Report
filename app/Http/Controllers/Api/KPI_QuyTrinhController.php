@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Api;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\KPI_QuyTrinhResource;
+use App\Models\KPI_QuyTrinh;
 
 class KPI_QuyTrinhController extends Controller
 {
@@ -14,17 +16,7 @@ class KPI_QuyTrinhController extends Controller
      */
     public function index()
     {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
+        return KPI_QuyTrinhResource::collection(KPI_QuyTrinh::all()->load('du_an','quy_trinh'));
     }
 
     /**
@@ -35,7 +27,12 @@ class KPI_QuyTrinhController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $data = $request->all();
+        if (KPI_QuyTrinh::create($data)) {
+            return response()->json(['success' => 'Thêm thành công']);
+        } else {
+            return response()->json(['error' => 'Thêm không thành công']);
+        }
     }
 
     /**
@@ -49,16 +46,6 @@ class KPI_QuyTrinhController extends Controller
         //
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
 
     /**
      * Update the specified resource in storage.

@@ -11,17 +11,30 @@ export default {
   data() {
     return {
       nav: [
-        { name: "Đơn Vị", url: "/don-vi", icon: "icon-speedometer" },
+        { name: "Dashboard", url: "/", icon: "fas fa-chart-line" },
+        { name: "Danh sách", title: true },
+        { name: "Đơn Vị", url: "/don-vi", icon: "far fa-building" },
         {
           name: "Dự Án",
           url: "/du-an",
           icon: "fas fa-project-diagram"
         },
         {
+          name: "Quy Trình",
+          url: "/quy-trinh",
+          icon: "fas fa-clipboard-check"
+        },
+        { name: "Công cụ", title: true },
+        {
           name: "KPI Veco",
           url: "/kpi-veco",
           icon: "fas fa-project-diagram"
         },
+        {
+          name: "Chấm điểm quy trình",
+          url: "/kpi-quy-trinh",
+          icon: "fas fa-user-check"
+        }
       ]
     };
   }
@@ -29,10 +42,5 @@ export default {
 </script>
 
 <style lang="scss">
-button[id^="edit-button"],
-button[id^="delete-button"] {
-  width: 3rem;
-  margin-top: 2px;
-}
 </style>
 
