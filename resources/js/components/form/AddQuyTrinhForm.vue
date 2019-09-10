@@ -1,39 +1,29 @@
 <template>
   <b-card>
-    <div slot="header">Example Form</div>
-    <b-form>
+    <div slot="header">Form</div>
+    <b-form @submit="formSubmit">
       <b-form-group>
         <b-input-group>
           <b-input-group-prepend>
             <b-input-group-text>
-              <i class="fa fa-user"></i>
+              <i class="fas fa-clipboard-check"></i>
             </b-input-group-text>
           </b-input-group-prepend>
-          <b-form-input type="text" placeholder="Username"></b-form-input>
+          <b-form-input type="text" placeholder="Quy trình" required v-model="ten"></b-form-input>
         </b-input-group>
       </b-form-group>
       <b-form-group>
         <b-input-group>
           <b-input-group-prepend>
             <b-input-group-text>
-              <i class="fa fa-envelope"></i>
+              <i class="fas fa-bolt"></i>
             </b-input-group-text>
           </b-input-group-prepend>
-          <b-form-input type="email" placeholder="Email" autocomplete="email"></b-form-input>
-        </b-input-group>
-      </b-form-group>
-      <b-form-group>
-        <b-input-group>
-          <b-input-group-prepend>
-            <b-input-group-text>
-              <i class="fa fa-asterisk"></i>
-            </b-input-group-text>
-          </b-input-group-prepend>
-          <b-form-input type="password" placeholder="Password" autocomplete="current-password"></b-form-input>
+          <b-form-input type="text" placeholder="Tên viết tắt" required v-model="ma_quy_trinh"></b-form-input>
         </b-input-group>
       </b-form-group>
       <div class="form-group form-actions">
-        <b-button type="submit" size="sm" variant="success">Submit</b-button>
+        <b-button type="submit" size="md" variant="success" class="float-right">Thêm</b-button>
       </div>
     </b-form>
   </b-card>
@@ -41,19 +31,31 @@
 
 <script>
 export default {
-  name: 'AddQuyTrinhForm',
-  data () {
+  name: "AddQuyTrinhForm",
+  data() {
     return {
-      selected: [], // Must be an array reference!
-      show: true
-    }
+      ten: "",
+      ma_quy_trinh: ""
+    };
   },
   methods: {
-    click () {
-      // do nothing
-    }
+    formSubmit(e) {
+      e.preventDefault();
+      axios
+        .post("/quy-trinh", {
+          ten: this.ten,
+          ma_quy_trinh: this.ma_quy_trinh
+        })
+        .then(response => {
+          this.$bvModal.hide("add-quy-trinh-modal");
+          this.$emit('add-success',response.data.success)
+        })
+        .catch(error => {
+          console.log(error);
+        });
+    },
   }
-}
+};
 </script>
 
 <style scoped>

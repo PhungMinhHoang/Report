@@ -32,7 +32,7 @@
       </b-form-group>
 
       <div class="form-group form-actions">
-        <b-button type="submit" size="sm" variant="success">Submit</b-button>
+        <b-button type="submit" size="md" variant="success" class="float-right">Thêm</b-button>
       </div>
     </b-form>
   </b-card>
