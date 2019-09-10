@@ -1,11 +1,13 @@
-// Views
 
 import Home from "./layouts/Home";
+//Danh sach
 import DuAn from "./views/DuAn.vue";
 import DonVi from "./views/DonVi.vue";
 import QuyTrinh from "./views/QuyTrinh.vue";
+//Cong cu
 import KPI_Veco from "./views/KPI_Veco.vue";
 import KPI_QuyTrinh from "./views/KPI_QuyTrinh.vue";
+
 
 export const routes = [
     {
@@ -37,8 +39,8 @@ export const routes = [
             {
                 path: "kpi-quy-trinh",
                 name: "KPI Quy Trình",
-                component: KPI_QuyTrinh
-            },
+                component: KPI_QuyTrinh,
+            }
         ]
     }
 ];

@@ -15,7 +15,7 @@ export default {
         { name: "Danh sách", title: true },
         { name: "Đơn Vị", url: "/don-vi", icon: "far fa-building" },
         {
-          name: "Dự Án",
+          name: "Đề tài/Dự Án",
           url: "/du-an",
           icon: "fas fa-project-diagram"
         },
@@ -26,14 +26,14 @@ export default {
         },
         { name: "Công cụ", title: true },
         {
-          name: "KPI Veco",
-          url: "/kpi-veco",
-          icon: "fas fa-project-diagram"
-        },
-        {
           name: "Chấm điểm quy trình",
           url: "/kpi-quy-trinh",
           icon: "fas fa-user-check"
+        },
+        {
+          name: "KPI Veco",
+          url: "/kpi-veco",
+          icon: "fas fa-tools"
         }
       ]
     };

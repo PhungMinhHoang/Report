@@ -4,39 +4,22 @@
       <b-card>
         <b-card-header>
           <i class="far fa-list-alt fa-2x"></i>
-          <h2>Danh sách dự án</h2>
+          <h2>Danh sách đề tài/dự án</h2>
           <div class="card-header-actions">
-            <b-button id="add-button" variant="success">
+            <b-button id="add-button" variant="success" @click="addModal = true">
               <b-tooltip target="add-button" variant="dark">
                 <strong>Thêm dự án mới</strong>
               </b-tooltip>
               <i class="fas fa-plus fa-lg"></i>
             </b-button>
+            <!-- Modal add quy trinh -->
+            <b-modal title="Thêm dự án mới" size="lg" v-model="addModal" hide-footer>
+              <AddDuAnForm />
+            </b-modal>
           </div>
         </b-card-header>
         <b-card-body>
-          <v-client-table
-            :columns="columns"
-            :data="data"
-            :options="options"
-            :theme="theme"
-            id="dataTable"
-          >
-            <span slot="thao_tac" slot-scope="props">
-              <b-button :id="'edit-button-'+props.index" variant="warning" @click="edit()">
-                <i class="far fa-edit fa-lg"></i>
-                <b-tooltip :target="'edit-button-'+props.index" variant="dark">
-                  <strong>Sửa</strong>
-                </b-tooltip>
-              </b-button>
-              <b-button :id="'delete-button-'+props.index" variant="danger">
-                <i class="far fa-window-close fa-lg"></i>
-                <b-tooltip :target="'delete-button-'+props.index" variant="dark">
-                  <strong>Đóng</strong>
-                </b-tooltip>
-              </b-button>
-            </span>
-          </v-client-table>
+          <DuAnTable />
         </b-card-body>
       </b-card>
     </div>
@@ -44,113 +27,20 @@
 </template>
 
 <script>
-import { getData } from "../api/api.js";
-import Vue from "vue";
-import { ClientTable, Event } from "vue-tables-2";
-
-Vue.use(ClientTable);
-
+import DuAnTable from "../components/table/DuAnTable";
+import AddDuAnForm from "../components/form/AddDuAnForm";
 export default {
   name: "DuAn",
-  components: {},
-  data: function() {
+  components: {
+    DuAnTable,
+    AddDuAnForm
+  },
+  data(){
     return {
-      columns: ["id", "ma_du_an", "ten_du_an", "ten_don_vi", "thao_tac"],
-      data: [],
-      options: {
-        headings: {
-          stt: "ID ",
-          ma_du_an: "Mã Dự án ",
-          ten_du_an: "Tên dự án ",
-          ten_don_vi: "Tên đơn vị ",
-          thao_tac: "Thao tác "
-        },
-        sortable: ["id","ma_du_an", "ten_du_an", "ten_don_vi"],
-        sortIcon: {
-          base: "fa",
-          up: "fas fa-sort-up",
-          down: "fas fa-sort-down",
-          is: "fas fa-sort"
-        },
-        filterable: ["ma_du_an", "ten_du_an", "ten_don_vi"],
-        pagination: {
-            chunk: 5,
-            edge: false,
-            nav: 'scroll'
-          }
-      },
-      useVuex: false,
-      theme: "bootstrap4",
-      template: "default"
-    };
-  },
-  methods: {
-    edit() {
-      alert("edit");
+      addModal: false,
     }
-  },
-  mounted() {
-    axios.get("/du-an").then(response => {
-      this.data = response.data;
-      console.log(this.data);
-    });
   }
 };
 </script>
 
-<style lang="scss">
-h2 {
-  display: inline;
-}
 
-#dataTable {
-  width: 95%;
-  margin: 0 auto;
-
-  .VuePagination {
-    text-align: center;
-    justify-content: center;
-  }
-
-  .vue-title {
-    text-align: center;
-    margin-bottom: 10px;
-  }
-
-  .VueTables__search-field {
-    display: flex;
-  }
-  .VueTables__search-field input {
-    margin-left: 0.25rem;
-  }
-
-  .VueTables__limit-field {
-    display: flex;
-  }
-
-  .VueTables__limit-field select {
-    margin-left: 0.25rem !important;
-  }
-
-  .VueTables__table th {
-    text-align: center;
-  }
-
-  .VueTables__child-row-toggler {
-    width: 16px;
-    height: 16px;
-    line-height: 16px;
-    display: block;
-    margin: auto;
-    text-align: center;
-  }
-
-  .VueTables__child-row-toggler--closed::before {
-    content: "+";
-  }
-
-  .VueTables__child-row-toggler--open::before {
-    content: "-";
-  }
-}
-</style>
