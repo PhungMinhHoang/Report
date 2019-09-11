@@ -8,12 +8,12 @@
           <div class="card-header-actions">
             <b-button id="add-button" variant="success" @click="addModal = true">
               <b-tooltip target="add-button" variant="dark">
-                <strong>Thêm dự án mới</strong>
+                <strong>Thêm đề tài/dự án mới</strong>
               </b-tooltip>
               <i class="fas fa-plus fa-lg"></i>
             </b-button>
             <!-- Modal add quy trinh -->
-            <b-modal title="Thêm dự án mới" size="md" v-model="addModal" hide-footer>
+            <b-modal id="add-du-an-modal" title="Thêm dự án mới" size="md" v-model="addModal" hide-footer>
               <AddDuAnForm />
             </b-modal>
           </div>

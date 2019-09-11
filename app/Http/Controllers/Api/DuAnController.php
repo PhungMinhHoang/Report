@@ -28,11 +28,11 @@ class DuAnController extends Controller
     public function store(Request $request)
     {
         $data = $request->all();
-        if (DuAn::create($data)) {
+        //if (DuAn::create($data)) {
             return response()->json(['success' => 'Thêm thành công']);
-        } else {
+        //} else {
             return response()->json(['error' => 'Thêm không thành công']);
-        }
+        //}
     }
 
     /**

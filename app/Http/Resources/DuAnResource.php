@@ -16,8 +16,8 @@ class DuAnResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'ma_du_an' => $this->ma_de_tai,
-            'ten_du_an' => $this->ten,
+            'ma_de_tai' => $this->ma_de_tai,
+            'ten_de_tai' => $this->ten,
             'ten_don_vi' => $this->don_vi->ten
         ];
     }

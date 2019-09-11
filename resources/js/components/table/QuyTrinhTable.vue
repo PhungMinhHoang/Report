@@ -63,7 +63,7 @@ export default {
   mounted() {
     axios.get("/quy-trinh").then(response => {
       this.data = response.data;
-      console.log(this.data);
+      //console.log(this.data);
     });
   }
 };

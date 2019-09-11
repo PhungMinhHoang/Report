@@ -27,31 +27,31 @@ export default {
   components: {},
   data: function() {
     return {
-      columns: ["id", "ma_du_an", "ten_du_an", "ten_don_vi", "thao_tac"],
+      columns: ["ma_de_tai", "ten_de_tai", "ten_don_vi", "thao_tac"],
       data: [],
       options: {
         headings: {
-          stt: "ID ",
-          ma_du_an: "Mã Dự án ",
-          ten_du_an: "Tên dự án ",
+          stt: "STT ",
+          ma_de_tai: "Mã đề tài/dự án ",
+          ten_de_tai: "Tên đề tài/dự án ",
           ten_don_vi: "Tên đơn vị ",
           thao_tac: "Thao tác "
         },
-        sortable: ["id", "ma_du_an", "ten_du_an", "ten_don_vi"],
+        sortable: ["ma_de_tai", "ten_de_tai", "ten_don_vi"],
         sortIcon: {
           base: "fa",
           up: "fas fa-sort-up",
           down: "fas fa-sort-down",
           is: "fas fa-sort"
         },
-        filterable: ["ma_du_an", "ten_du_an", "ten_don_vi"],
+        filterable: ["ma_de_tai", "ten_de_tai", "ten_don_vi"],
         pagination: {
           chunk: 3,
           edge: true,
-          nav: "scroll",
+          nav: "scroll"
         },
         perPage: 5,
-        perPageValues: [5,10,25]
+        perPageValues: [5, 10, 25]
       },
       useVuex: false,
       theme: "bootstrap4",
@@ -66,7 +66,10 @@ export default {
   mounted() {
     axios.get("/du-an").then(response => {
       this.data = response.data;
-      console.log(this.data);
+    });
+
+    EventBus.$on("add-du-an-success", du_an_moi => {
+      this.data.push(du_an_moi)
     });
   }
 };

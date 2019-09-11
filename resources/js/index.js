@@ -18,7 +18,7 @@ export const routes = [
         children: [
             {
                 path: "du-an",
-                name: "Dự Án",
+                name: "Đề tài",
                 component: DuAn
             },
             {

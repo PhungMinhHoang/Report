@@ -4,11 +4,10 @@ import BootstrapVue from 'bootstrap-vue'
 
 require('./bootstrap');
 window.Vue = require('vue');
-
+window.EventBus = new Vue();
 
 Vue.use(VueRouter)
 Vue.use(BootstrapVue)
-
 const router = new VueRouter({
     mode: 'hash',
     routes

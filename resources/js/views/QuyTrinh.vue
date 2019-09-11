@@ -13,7 +13,7 @@
               <i class="fas fa-plus fa-lg"></i>
             </b-button>
             <!-- Modal add quy trinh -->
-            <b-modal title="Thêm quy trình mới" size="md" v-model="addModal" hide-footer="">
+            <b-modal id="add-quy-trinh-modal" title="Thêm quy trình mới" size="md" v-model="addModal" hide-footer="">
               <AddQuyTrinhForm />
             </b-modal>
           </div>
