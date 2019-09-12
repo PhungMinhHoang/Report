@@ -10,6 +10,7 @@ Vue.use(VueRouter)
 Vue.use(BootstrapVue)
 const router = new VueRouter({
     mode: 'hash',
+    linkExactActiveClass: 'open active',
     routes
 })
 

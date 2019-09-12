@@ -10,10 +10,7 @@
 /* Import Bootstrap Vue Styles */
 @import "~bootstrap-vue/dist/bootstrap-vue.css";
 
-.sidebar .nav-link.router-link-exact-active {
-    color: #fff;
-    background: #3a4248;
-}
+
 button[id^="edit-button"],
 button[id^="delete-button"] {
     width: 3rem;
