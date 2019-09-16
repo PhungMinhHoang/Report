@@ -24,3 +24,8 @@ Route::group(['prefix' => '', 'namespace' => 'Api', 'as' => 'api.'], function ()
     Route::resource('quy-trinh', 'QuyTrinhController', ['except' => ['create', 'edit']]);
     Route::resource('kpi-quy-trinh', 'KPI_QuyTrinhController', ['except' => ['create', 'edit']]);
 });
+
+Route::group(['prefix' => 'auth'], function () {
+    Route::post('login', 'AuthController@login');
+    Route::post('logout', 'AuthController@logout');
+});

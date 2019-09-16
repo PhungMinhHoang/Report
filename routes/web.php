@@ -11,6 +11,8 @@
 |
 */
 
+
 Route::get('/{any}', function(){
-    return view('welcome');
+    $user = null;
+    return view('welcome',['user' => $user]);
 })->where('any', '.*');

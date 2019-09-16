@@ -16,5 +16,6 @@ const router = new VueRouter({
 
 const app = new Vue({
     el: '#app',
+    user: window.__user__,
     router
 });
