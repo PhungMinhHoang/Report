@@ -27,23 +27,22 @@ export default {
   data: function() {
     return {
       //data for table
-      columns: ["id", "ten", "ma_quy_trinh", "thao_tac"],
+      columns: ["ma_quy_trinh", "ten",  "thao_tac"],
       data: [],
       options: {
         headings: {
-          stt: "ID ",
-          ten: "Tên ",
-          ma_quy_trinh: "Mã Quy Trình ",
+          ten: "Tên quy trình",
+          ma_quy_trinh: "Mã quy Trình ",
           thao_tac: "Thao tác"
         },
-        sortable: ["id", "ten", "ma_quy_trinh"],
+        sortable: ["ten", "ma_quy_trinh"],
         sortIcon: {
           base: "fa",
           up: "fas fa-sort-up",
           down: "fas fa-sort-down",
           is: "fas fa-sort"
         },
-        filterable: ["id", "ten", "ma_quy_trinh"],
+        filterable: ["ten", "ma_quy_trinh"],
         pagination: {
           chunk: 5,
           edge: false,
