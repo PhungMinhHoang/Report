@@ -1,5 +1,8 @@
 
 import Home from "./layouts/Home";
+
+import Login from "./components/Login.vue"
+
 //Danh sach
 import DuAn from "./views/DuAn.vue";
 import DonVi from "./views/DonVi.vue";
@@ -10,6 +13,14 @@ import KPI_QuyTrinh from "./views/KPI_QuyTrinh.vue";
 
 
 export const routes = [
+    {
+        path: '/login',
+        component: Login,
+        name: 'Đăng Nhập',
+        meta: {
+            auth: false
+        }
+    },
     {
         path: "/",
         name: "Trang chủ",
@@ -41,6 +52,9 @@ export const routes = [
                 name: "KPI Quy Trình",
                 component: KPI_QuyTrinh,
             }
-        ]
+        ],
+        meta: {
+            auth: true
+        }
     }
 ];

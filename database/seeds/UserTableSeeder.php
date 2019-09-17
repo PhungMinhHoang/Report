@@ -110,8 +110,8 @@ class UserTableSeeder extends Seeder
         $developer_create->roles()->attach($QA_role);
 
         $developer_create = new User();
-        $developer_create->name = 'Vũ Thị Liên';
-        $developer_create->email = 'Vũ Thị Liên@viettel.com.vn';
+        $developer_create->name = 'lienvt1';
+        $developer_create->email = 'lienvt1@viettel.com.vn';
         $developer_create->password = bcrypt('123456a@');
         $developer_create->save();
         $developer_create->roles()->attach($QA_role);

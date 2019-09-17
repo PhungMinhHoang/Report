@@ -25,18 +25,6 @@
         <b-nav-item class="px-3">Settings</b-nav-item>
       </b-navbar-nav>
       <b-navbar-nav class="ml-auto">
-        <b-nav-item class="d-md-down-none">
-          <DefaultHeaderDropdownNotif />
-        </b-nav-item>
-        <b-nav-item class="d-md-down-none">
-          <DefaultHeaderDropdownTasks />
-        </b-nav-item>
-        <b-nav-item class="d-md-down-none">
-          <DefaultHeaderDropdownMssgs />
-        </b-nav-item>
-        <b-nav-item class="d-md-down-none">
-          <DefaultHeaderDropdown />
-        </b-nav-item>
         <DefaultHeaderDropdownAccnt />
       </b-navbar-nav>
       <AsideToggler class="d-none d-lg-block" />
@@ -44,10 +32,7 @@
     </AppHeader>
     <div class="app-body">
       <AppSidebar fixed>
-        <!-- <SidebarHeader/> -->
-        <!-- <SidebarForm/> -->
         <SidebarNav :navItems="nav"></SidebarNav>
-        <!-- <SidebarFooter/> -->
         <SidebarMinimizer />
       </AppSidebar>
       <main class="main">
@@ -119,12 +104,11 @@ export default {
     SidebarNav,
     SidebarMinimizer
   },
-  props:{
-      nav: Array
+  props: {
+    nav: Array
   },
   data() {
-    return {
-    };
+    return {};
   },
   computed: {
     name() {

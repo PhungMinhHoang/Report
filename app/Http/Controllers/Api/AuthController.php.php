@@ -6,33 +6,40 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Auth;
+use Tymon\JWTAuth\Facades\JWTAuth;
 
-class AuthController extends Controllers
+class AuthController extends Controller
 {
-    public function __construct()
+    public function login(Request $request)
     {
-        $this->middleware('auth:api', ['except' => ['login']]);
-    }
-
-    public function login()
-    {
-        $credentials = request(['email', 'password']);
-        if (!$token = auth('api')->attempt($credentials)) {
-            return response()->json(['error' => 'Unauthorized'], 401);
+        $credentials = $request->only('email', 'password');
+        if (!$token = JWTAuth::attempt($credentials)) {
+            return response([
+                'status' => 'error',
+                'error' => 'invalid.credentials',
+                'msg' => 'Invalid Credentials.'
+            ], 400);
         }
-
-        return response()->json(auth('api')->user())->header('Authorization', $token);
+        return response([
+            'status' => 'success'
+        ])
+            ->header('Authorization', $token);
     }
 
-    public function user()
+    public function user(Request $request)
     {
-        return response()->json(auth('api')->user());
+        $user = User::find(Auth::user()->id);
+        return response([
+            'status' => 'success',
+            'data' => $user
+        ]);
     }
-
-    public function logout()
+    public function refresh()
     {
-        auth('api')->logout();
-
-        return response()->json(['message' => 'Successfully logged out']);
+        return response([
+            'status' => 'success'
+        ]);
     }
+
 }

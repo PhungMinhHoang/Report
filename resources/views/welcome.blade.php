@@ -19,7 +19,6 @@
             <router-view></router-view>
         </div>
         <script>
-            window.__user__ = @json($user)
         </script>
         <script src="{{ url(mix('js/app.js')) }}"></script>
     </body>
