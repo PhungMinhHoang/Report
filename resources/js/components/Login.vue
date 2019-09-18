@@ -54,7 +54,7 @@ export default {
           email: app.email,
           password: app.password
         },
-        success: function (response) {console.log(response)},
+        success: function (response) {},
         error: function () {
           app.error = true
         },

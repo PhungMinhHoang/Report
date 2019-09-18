@@ -15,7 +15,7 @@
       <b-dropdown-item @click="changePassword">
         <i class="fas fa-key" /> Đổi mật khẩu
       </b-dropdown-item>
-      <b-dropdown-item @click="logout">
+      <b-dropdown-item @click="$auth.logout()">
         <i class="fa fa-lock" /> Đăng xuất
       </b-dropdown-item>
     </template>
@@ -33,9 +33,6 @@ export default {
     return { itemsCount: 42 };
   },
   methods: {
-    logout: function () {
-      this.$auth.logout()
-    },
     changePassword(){
         
     }

@@ -12,7 +12,7 @@
               </b-tooltip>
               <i class="fas fa-plus fa-lg"></i>
             </b-button>
-            <!-- Modal add quy trinh -->
+            <!-- Modal add du an -->
             <b-modal id="add-du-an-modal" title="Thêm dự án mới" size="md" v-model="addModal" hide-footer>
               <AddDuAnForm />
             </b-modal>

@@ -13,7 +13,7 @@ export default {
       nav: [
         { name: "Dashboard", url: "/", icon: "fas fa-chart-line" },
         { name: "Danh sách", title: true },
-        { name: "Đơn Vị", url: "/don-vi", icon: "far fa-building" },
+        // { name: "Đơn Vị", url: "/don-vi", icon: "far fa-building" },
         {
           name: "Đề tài/Dự Án",
           url: "/du-an",

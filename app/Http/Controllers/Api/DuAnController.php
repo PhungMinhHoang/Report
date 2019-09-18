@@ -6,6 +6,8 @@ use App\Models\DuAn;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\DuAnResource;
+use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 
 class DuAnController extends Controller
 {
@@ -16,7 +18,7 @@ class DuAnController extends Controller
      */
     public function index()
     {
-       return DuAnResource::collection(DuAn::all()->load('don_vi'));
+       return DuAnResource::collection(DuAn::all()->load('don_vi','user'));
     }
 
     /**
@@ -27,12 +29,13 @@ class DuAnController extends Controller
      */
     public function store(Request $request)
     {
+        
         $data = $request->all();
-        //if (DuAn::create($data)) {
+        if (DuAn::create($data)) {
             return response()->json(['success' => 'Thêm thành công']);
-        //} else {
+        } else {
             return response()->json(['error' => 'Thêm không thành công']);
-        //}
+        }
     }
 
     /**
@@ -55,7 +58,13 @@ class DuAnController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $du_an = DuAn::find($id);
+        $du_an->ma_de_tai = $request->ma_de_tai;
+        $du_an->ten = $request->ten;
+        $du_an->user_id = $request->user_id;
+        $du_an->donvi_id = $request->donvi_id;
+        $du_an->save();
+        return response()->json(['success' => 'Thêm thành công']);
     }
 
     /**

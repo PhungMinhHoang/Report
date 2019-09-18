@@ -61,34 +61,39 @@
 <script>
 export default {
   name: "AddDuAnForm",
+  props:{
+    edit_du_an: Object
+  },
   data() {
     return {
       options_dv: [[], [], [], [], []],
       options_QA: [],
       don_vi: null,
-      ma_de_tai: null,
-      ten: null,
+      ma_de_tai: this.edit_du_an.ma_de_tai,
+      ten: this.edit_du_an.ten_de_tai,
       QA: null
     };
+  },
+  computed:{
   },
   methods: {
     formSubmit(e) {
       axios
-        .post("/du-an", {
+        .put(`/du-an/${this.edit_du_an.id}`, {
           ma_de_tai: this.ma_de_tai,
           ten: this.ten,
           donvi_id: this.don_vi.id,
           user_id: this.QA.id
         })
         .then(response => {
-          this.$bvModal.hide("add-du-an-modal");
+          this.$bvModal.hide("edit-du-an-modal");
           let du_an_moi = {
             ma_de_tai: this.ma_de_tai,
             ten_de_tai: this.ten,
             ten_don_vi: this.don_vi.ten,
             QA: this.QA.name
           };
-          EventBus.$emit("add-du-an-success", du_an_moi);
+          EventBus.$emit("edit-du-an-success", du_an_moi);
         })
         .catch(error => {
           console.log(error);
@@ -96,16 +101,18 @@ export default {
     }
   },
   mounted() {
+    console.log('edit',this.edit_du_an)
     axios.get("/don-vi").then(response => {
       for (let i = 1; i <= 3; i++) {
         response.data.forEach(dv => {
-          if (dv.khoi == i) this.options_dv[i].push(dv);
+          if(dv.khoi == i) this.options_dv[i].push(dv);
+          if(dv.ten == this.edit_du_an.ten_don_vi) this.don_vi = dv
         });
       }
     });
     axios.get("/QA").then(response => {
       this.options_QA = response.data;
-      console.log("test", this.options_QA);
+      this.QA = response.data.find(QA => {return QA.name == this.edit_du_an.QA})
     });
   }
 };

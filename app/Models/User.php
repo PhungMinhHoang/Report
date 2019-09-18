@@ -48,4 +48,9 @@ class User extends Authenticatable implements JWTSubject
     {
         return [];
     }
+
+    public function du_an()
+    {
+        return $this->hasMany(DuAn::class);
+    }
 }
