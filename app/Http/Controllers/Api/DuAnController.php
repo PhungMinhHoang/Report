@@ -18,7 +18,14 @@ class DuAnController extends Controller
      */
     public function index()
     {
-       return DuAnResource::collection(DuAn::all()->load('don_vi','user'));
+        $user = User::find(Auth::user()->id);
+        if($user->hasRole('admin','QA-admin')){
+            return DuAnResource::collection(DuAn::all()->load('don_vi','user'));
+        }
+        else if($user->hasRole('QA')){
+            return DuAnResource::collection(DuAn::where('user_id',$user->id)->get()->load('don_vi','user'));
+        }
+       
     }
 
     /**

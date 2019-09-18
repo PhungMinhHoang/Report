@@ -72,7 +72,7 @@ export default {
     };
   },
   methods: {
-    formSubmit(e) {
+    formSubmit() {
       axios
         .post("/du-an", {
           ma_de_tai: this.ma_de_tai,
