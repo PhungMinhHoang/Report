@@ -2,20 +2,20 @@
   <div class="app">
     <AppHeader fixed>
       <SidebarToggler class="d-lg-none" display="md" mobile />
-      <b-link class="navbar-brand" to="#">
+      <b-link class="navbar-brand" to="/">
         <img
           class="navbar-brand-full"
-          src="img/brand/logo.svg"
-          width="89"
-          height="25"
-          alt="CoreUI Logo"
+          src="assets/images/logo_full.png"
+          width="100"
+          height="55"
+          alt="VHT Logo"
         />
         <img
           class="navbar-brand-minimized"
-          src="img/brand/sygnet.svg"
+          src="assets/images/logo_mini.png"
           width="30"
           height="30"
-          alt="CoreUI Logo"
+          alt="VHT Logo"
         />
       </b-link>
       <SidebarToggler class="d-md-down-none" display="lg" />
@@ -49,12 +49,15 @@
     <TheFooter>
       <!--footer-->
       <div>
-        <a href="https://coreui.io">CoreUI</a>
-        <span class="ml-1">&copy; 2018 creativeLabs.</span>
-      </div>
-      <div class="ml-auto">
-        <span class="mr-1">Powered by</span>
-        <a href="https://coreui.io">CoreUI for Vue</a>
+        <i class="fas fa-email"></i>
+        <div class="ml-1">
+          <span>Mọi thắc mắc vui lòng liên hệ admin:</span>
+          <address>
+            <i class="far fa-envelope"></i> hoangpm7@viettel.com.vn
+            <br>
+            <i class="fas fa-phone"></i> 0977481901
+          </address>
+        </div>
       </div>
     </TheFooter>
   </div>
@@ -65,9 +68,6 @@ import {
   Header as AppHeader,
   SidebarToggler,
   Sidebar as AppSidebar,
-  SidebarFooter,
-  SidebarForm,
-  SidebarHeader,
   SidebarMinimizer,
   SidebarNav,
   Aside as AppAside,
@@ -76,11 +76,7 @@ import {
   Breadcrumb
 } from "@coreui/vue";
 import DefaultAside from "./DefaultAside";
-import DefaultHeaderDropdown from "./DefaultHeaderDropdown";
-import DefaultHeaderDropdownNotif from "./DefaultHeaderDropdownNotif";
 import DefaultHeaderDropdownAccnt from "./DefaultHeaderDropdownAccnt";
-import DefaultHeaderDropdownMssgs from "./DefaultHeaderDropdownMssgs";
-import DefaultHeaderDropdownTasks from "./DefaultHeaderDropdownTasks";
 
 export default {
   name: "DefaultContainer",
@@ -92,15 +88,8 @@ export default {
     TheFooter,
     Breadcrumb,
     DefaultAside,
-    DefaultHeaderDropdown,
-    DefaultHeaderDropdownMssgs,
-    DefaultHeaderDropdownNotif,
-    DefaultHeaderDropdownTasks,
     DefaultHeaderDropdownAccnt,
-    SidebarForm,
-    SidebarFooter,
     SidebarToggler,
-    SidebarHeader,
     SidebarNav,
     SidebarMinimizer
   },

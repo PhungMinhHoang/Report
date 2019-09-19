@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\KPI_QuyTrinhResource;
 use App\Models\KPI_QuyTrinh;
+use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 
 class KPI_QuyTrinhController extends Controller
 {
@@ -16,7 +18,13 @@ class KPI_QuyTrinhController extends Controller
      */
     public function index()
     {
-        return KPI_QuyTrinhResource::collection(KPI_QuyTrinh::all()->load('du_an','quy_trinh'));
+        $user = User::find(Auth::user()->id);
+
+        if ($user->hasRole('admin', 'QA-admin')) {
+            return KPI_QuyTrinhResource::collection(KPI_QuyTrinh::all());
+        } else if ($user->hasRole('QA')) {
+            return KPI_QuyTrinhResource::collection($user->kpi_quy_trinh);
+        }
     }
 
     /**
@@ -27,12 +35,18 @@ class KPI_QuyTrinhController extends Controller
      */
     public function store(Request $request)
     {
-        $data = $request->all();
-        if (KPI_QuyTrinh::create($data)) {
-            return response()->json(['success' => 'Thêm thành công']);
-        } else {
-            return response()->json(['error' => 'Thêm không thành công']);
-        }
+        // $data = new KPI_QuyTrinh;
+        // $data->quy_trinh_id = $request->quy_trinh_id;
+        // $data->du_an_id = $request->du_an_id;
+        // $data->diem = $request->diem;
+        // $data->thoigian = date("Y-m",strtotime($request->thoigian));
+        // $data->save();
+        $data = KPI_QuyTrinh::updateOrCreate(
+            ['quy_trinh_id' => $request->quy_trinh_id, 'du_an_id' => $request->du_an_id, 'thoigian' => date("Y-m",strtotime($request->thoigian))],
+            ['diem' => $request->diem]
+        );
+
+        return response()->json(['success' => 'Thêm thành công', new KPI_QuyTrinhResource($data)]);
     }
 
     /**

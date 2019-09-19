@@ -7,9 +7,10 @@ import Login from "./components/Login.vue"
 import DuAn from "./views/DuAn.vue";
 import DonVi from "./views/DonVi.vue";
 import QuyTrinh from "./views/QuyTrinh.vue";
+import KPIQuyTrinh from "./views/KPIQuyTrinh.vue";
 //Cong cu
 import KPI_Veco from "./views/KPI_Veco.vue";
-import KPI_QuyTrinh from "./views/KPI_QuyTrinh.vue";
+import CheckList from "./views/CheckList.vue";
 
 
 export const routes = [
@@ -43,14 +44,19 @@ export const routes = [
                 component: KPI_Veco
             },
             {
+                path: "kpi-quy-trinh",
+                name: "KPI Quy Trình",
+                component: KPIQuyTrinh
+            },
+            {
                 path: "quy-trinh",
                 name: "Quy Trình",
                 component: QuyTrinh
             },
             {
-                path: "kpi-quy-trinh",
-                name: "KPI Quy Trình",
-                component: KPI_QuyTrinh,
+                path: "check-list",
+                name: "Chấm điểm quy trình",
+                component: CheckList,
             }
         ],
         meta: {

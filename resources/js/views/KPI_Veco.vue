@@ -39,7 +39,7 @@ export default {
       output: "",
       id_don_vi: 0,
       chi_so: null,
-      thoi_gian: "2019-09-06"
+      thoi_gian: "2019-09-13"
     };
   },
   methods: {

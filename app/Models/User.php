@@ -53,4 +53,9 @@ class User extends Authenticatable implements JWTSubject
     {
         return $this->hasMany(DuAn::class);
     }
+
+    public function kpi_quy_trinh()
+    {
+        return $this->hasManyThrough(KPI_QuyTrinh::class, DuAn::class,'user_id','du_an_id');
+    }
 }

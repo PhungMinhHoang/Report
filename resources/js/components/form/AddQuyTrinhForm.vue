@@ -1,7 +1,7 @@
 <template>
   <b-card>
     <div slot="header">Form</div>
-    <b-form @submit="formSubmit">
+    <b-form @submit.prevent="formSubmit">
       <b-form-group>
         <b-input-group>
           <b-input-group-prepend>
@@ -40,7 +40,6 @@ export default {
   },
   methods: {
     formSubmit(e) {
-      e.preventDefault();
       axios
         .post("/quy-trinh", {
           ten: this.ten,

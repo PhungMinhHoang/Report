@@ -61,7 +61,7 @@ export default {
         pagination: {
           chunk: 3,
           edge: true,
-          nav: "scroll"
+          nav: "fixed"
         },
         perPage: 5,
         perPageValues: [5, 10, 25]
