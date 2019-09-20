@@ -21,17 +21,17 @@ export default {
   name: "KPIQuyTrinhTable",
   data: function() {
     return {
-      columns: ["stt", "ten_du_an", "ten_quy_trinh", "diem", "thoigian"],
+      columns: ["id", "ten_du_an", "ten_quy_trinh", "diem", "thoigian"],
       data: [],
       options: {
         headings: {
-          stt: "STT ",
+          stt: "ID ",
           ten_du_an: "Tên đề tài/dự án ",
           ten_quy_trinh: "Quy Trình ",
           diem: "Điểm ",
-          thoigian: "Phụ trách QA"
+          thoigian: "Thời gian"
         },
-        sortable: ["stt", "ten_du_an", "ten_quy_trinh", "diem", "thoigian"],
+        sortable: ["id", "ten_du_an", "ten_quy_trinh", "diem", "thoigian"],
         sortIcon: {
           base: "fa",
           up: "fas fa-sort-up",
@@ -56,9 +56,6 @@ export default {
   mounted() {
     axios.get("/kpi-quy-trinh").then(response => {
       this.data = response.data;
-    });
-    EventBus.$on("add-kpi-quy-trinh-success", kpi_quy_trinh_moi => {
-      this.data.unshift(kpi_quy_trinh_moi);
     });
   }
 };

@@ -21,9 +21,9 @@ class KPI_QuyTrinhController extends Controller
         $user = User::find(Auth::user()->id);
 
         if ($user->hasRole('admin', 'QA-admin')) {
-            return KPI_QuyTrinhResource::collection(KPI_QuyTrinh::all());
+            return KPI_QuyTrinhResource::collection(KPI_QuyTrinh::all()->sortByDesc('id'));
         } else if ($user->hasRole('QA')) {
-            return KPI_QuyTrinhResource::collection($user->kpi_quy_trinh);
+            return KPI_QuyTrinhResource::collection($user->kpi_quy_trinh->sortByDesc('id'));
         }
     }
 

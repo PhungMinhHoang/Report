@@ -1,5 +1,4 @@
 <template>
-  <div>
     <div class="animated">
       <b-card>
         <b-card-header>
@@ -23,7 +22,6 @@
         </b-card-body>
       </b-card>
     </div>
-  </div>
 </template>
 
 <script>
