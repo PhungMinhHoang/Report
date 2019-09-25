@@ -18,10 +18,10 @@
                 <td>Quyết định về việc thực hiện Đề tài</td>
                 <td>-</td>
                 <td>TGĐ TĐ/ TGĐ TCT (Đề tài cấp TĐ/TCT)</td>
-                <td><input type="text" class="form-control"></td>
+                <td><input type="text" class="form-control" v-model="link[0]" @keyup="inputLink(0)" placeholder="Nhập link vào đây để chấm"></td>
                 <td>
-                    <select required id="1.1" class="form-control " v-model="selected[0]" @change="changeSelect($event,0)" >
-                        <option :value="null" disabled>--Lựa chọn--</option>
+                    <select disabled id="select-0" class="form-control" v-model="selected[0]" @change="changeSelect($event,0)" >
+                        <option :value="undefined" disabled>--Lựa chọn--</option>
                         <option value="-1">Không áp dụng</option>
                         <option value="0">Không đạt</option>
                         <option value="1">Đạt</option>
@@ -34,10 +34,10 @@
                 <td>Kế hoạch thực hiện đề tài</td>
                 <td>BM.VHT.KHCN.01/TK.01 - Ke hoach thuc hien de tai</td>
                 <td>-</td>
-                <td><input type="text" class="form-control"></td>
+                <td><input type="text" class="form-control" v-model="link[1]" @keyup="inputLink(1)" placeholder="Nhập link vào đây để chấm"></td>
                 <td>
-                    <select required id="1.2" class="form-control " v-model="selected[1]" @change="changeSelect($event,1)">
-                        <option :value="null" disabled>--Lựa chọn--</option>
+                    <select disabled id="select-1" class="form-control" v-model="selected[1]" @change="changeSelect($event,1)">
+                        <option :value="undefined" disabled>--Lựa chọn--</option>
                         <option value="-1">Không áp dụng</option>
                         <option value="0">Không đạt</option>
                         <option value="1">Đạt</option>
@@ -52,10 +52,10 @@
                 <td>Kế hoạch kick-off</td>
                 <td>BM.VHT.KHCN.01/TK.02 - Ke hoach kick off</td>
                 <td>-</td>
-                <td><input type="text" class="form-control"></td>
+                <td><input type="text" class="form-control" v-model="link[2]" @keyup="inputLink(2)" placeholder="Nhập link vào đây để chấm"></td>
                 <td>
-                    <select required id="2.1" class="form-control " v-model="selected[2]" @change="changeSelect($event,2)">
-                        <option :value="null" disabled>--Lựa chọn--</option>
+                    <select disabled id="select-2" class="form-control" v-model="selected[2]" @change="changeSelect($event,2)">
+                        <option :value="undefined" disabled>--Lựa chọn--</option>
                         <option value="-1">Không áp dụng</option>
                         <option value="0">Không đạt</option>
                         <option value="1">Đạt</option>
@@ -68,10 +68,10 @@
                 <td>Biên bản họp kick-off meeting</td>
                 <td>-</td>
                 <td>-</td>
-                <td><input type="text" class="form-control"></td>
+                <td><input type="text" class="form-control" v-model="link[3]" @keyup="inputLink(3)" placeholder="Nhập link vào đây để chấm"></td>
                 <td>
-                    <select required id="2.2" class="form-control " v-model="selected[3]" @change="changeSelect($event,3)">
-                        <option :value="null" disabled>--Lựa chọn--</option>
+                    <select disabled id="select-3" class="form-control" v-model="selected[3]" @change="changeSelect($event,3)">
+                        <option :value="undefined" disabled>--Lựa chọn--</option>
                         <option value="-1">Không áp dụng</option>
                         <option value="0">Không đạt</option>
                         <option value="1">Đạt</option>
@@ -86,10 +86,10 @@
                 <td>Kế hoạch thực hiện đề tài được phê duyệt</td>
                 <td>BM.VHT.KHCN.01/TK.01 - Ke hoach thuc hien de tai</td>
                 <td>BGĐ Khối</td>
-                <td><input type="text" class="form-control"></td>
+                <td><input type="text" class="form-control" v-model="link[4]" @keyup="inputLink(4)" placeholder="Nhập link vào đây để chấm"></td>
                 <td>
-                    <select required id="3.1" class="form-control " v-model="selected[4]" @change="changeSelect($event,4)">
-                        <option :value="null" disabled>--Lựa chọn--</option>
+                    <select disabled id="select-4" class="form-control" v-model="selected[4]" @change="changeSelect($event,4)">
+                        <option :value="undefined" disabled>--Lựa chọn--</option>
                         <option value="-1">Không áp dụng</option>
                         <option value="0">Không đạt</option>
                         <option value="1">Đạt</option>
@@ -104,10 +104,10 @@
                 <td>Tài liệu thiết kế hệ thống</td>
                 <td>HD.VHT.KHCN.01/TK.TKHT - Xay dung TKHT</td>
                 <td>BGĐ Khối</td>
-                <td><input type="text" class="form-control"></td>
+                <td><input type="text" class="form-control" v-model="link[5]" @keyup="inputLink(5)" placeholder="Nhập link vào đây để chấm"></td>
                 <td>
-                    <select required id="4.1" class="form-control " v-model="selected[5]" @change="changeSelect($event,5)">
-                        <option :value="null" disabled>--Lựa chọn--</option>
+                    <select disabled id="select-5" class="form-control" v-model="selected[5]" @change="changeSelect($event,5)">
+                        <option :value="undefined" disabled>--Lựa chọn--</option>
                         <option value="-1">Không áp dụng</option>
                         <option value="0">Không đạt</option>
                         <option value="1">Đạt</option>
@@ -122,10 +122,10 @@
                 <td>Chỉ tiêu nội sản phẩm</td>
                 <td>HD.VHT.KHCN.01/TK.CTN - Xay dung chi tieu noi</td>
                 <td>BGĐ Khối</td>
-                <td><input type="text" class="form-control"></td>
+                <td><input type="text" class="form-control" v-model="link[6]" @keyup="inputLink(6)" placeholder="Nhập link vào đây để chấm"></td>
                 <td>
-                    <select required id="5.1" class="form-control " v-model="selected[6]" @change="changeSelect($event,6)">
-                        <option :value="null" disabled>--Lựa chọn--</option>
+                    <select disabled id="select-6" class="form-control" v-model="selected[6]" @change="changeSelect($event,6)">
+                        <option :value="undefined" disabled>--Lựa chọn--</option>
                         <option value="-1">Không áp dụng</option>
                         <option value="0">Không đạt</option>
                         <option value="1">Đạt</option>
@@ -140,10 +140,10 @@
                 <td>Sơ đồ khối thiết kế module và giao diện kết nối các khối trong module</td>
                 <td>BM.VHT.KHCN.01/TK.05 - TK Module</td>
                 <td>PM Đề tài</td>
-                <td><input type="text" class="form-control"></td>
+                <td><input type="text" class="form-control" v-model="link[7]" @keyup="inputLink(7)" placeholder="Nhập link vào đây để chấm"></td>
                 <td>
-                    <select required id="6.1" class="form-control " v-model="selected[7]" @change="changeSelect($event,7)">
-                        <option :value="null" disabled>--Lựa chọn--</option>
+                    <select disabled id="select-7" class="form-control" v-model="selected[7]" @change="changeSelect($event,7)">
+                        <option :value="undefined" disabled>--Lựa chọn--</option>
                         <option value="-1">Không áp dụng</option>
                         <option value="0">Không đạt</option>
                         <option value="1">Đạt</option>
@@ -158,10 +158,10 @@
                 <td>Kết quả đo, kiểm tra tính năng, chỉ tiêu kỹ thuật module</td>
                 <td>-</td>
                 <td>PM Đề tài</td>
-                <td><input type="text" class="form-control"></td>
+                <td><input type="text" class="form-control" v-model="link[8]" @keyup="inputLink(8)" placeholder="Nhập link vào đây để chấm"></td>
                 <td>
-                    <select required id="7.1" class="form-control " v-model="selected[8]" @change="changeSelect($event,8)">
-                        <option :value="null" disabled>--Lựa chọn--</option>
+                    <select disabled id="select-8" class="form-control" v-model="selected[8]" @change="changeSelect($event,8)">
+                        <option :value="undefined" disabled>--Lựa chọn--</option>
                         <option value="-1">Không áp dụng</option>
                         <option value="0">Không đạt</option>
                         <option value="1">Đạt</option>
@@ -176,10 +176,10 @@
                 <td>Sản phẩm sau khi lắp ráp, hiệu chỉnh</td>
                 <td>-</td>
                 <td>-</td>
-                <td><input type="text" class="form-control"></td>
+                <td><input type="text" class="form-control" v-model="link[9]" @keyup="inputLink(9)" placeholder="Nhập link vào đây để chấm"></td>
                 <td>
-                    <select required id="8.1" class="form-control " v-model="selected[9]" @change="changeSelect($event,9)">
-                        <option :value="null" disabled>--Lựa chọn--</option>
+                    <select disabled id="select-9" class="form-control" v-model="selected[9]" @change="changeSelect($event,9)">
+                        <option :value="undefined" disabled>--Lựa chọn--</option>
                         <option value="-1">Không áp dụng</option>
                         <option value="0">Không đạt</option>
                         <option value="1">Đạt</option>
@@ -192,10 +192,10 @@
                 <td>List lỗi trong quá trình lắp ráp và phương án khắc phục</td>
                 <td>-</td>
                 <td>-</td>
-                <td><input type="text" class="form-control"></td>
+                <td><input type="text" class="form-control" v-model="link[10]" @keyup="inputLink(10)" placeholder="Nhập link vào đây để chấm"></td>
                 <td>
-                    <select required id="8.2" class="form-control " v-model="selected[10]" @change="changeSelect($event,10)">
-                        <option :value="null" disabled>--Lựa chọn--</option>
+                    <select disabled id="select-10" class="form-control" v-model="selected[10]" @change="changeSelect($event,10)">
+                        <option :value="undefined" disabled>--Lựa chọn--</option>
                         <option value="-1">Không áp dụng</option>
                         <option value="0">Không đạt</option>
                         <option value="1">Đạt</option>
@@ -208,10 +208,10 @@
                 <td>Dự thảo tài liệu mô tả sản phẩm</td>
                 <td>BM.VHT.KHCN.01/TK.04 - Mo ta san pham</td>
                 <td>-</td>
-                <td><input type="text" class="form-control"></td>
+                <td><input type="text" class="form-control" v-model="link[11]" @keyup="inputLink(11)" placeholder="Nhập link vào đây để chấm"></td>
                 <td>
-                    <select required id="8.3" class="form-control " v-model="selected[11]" @change="changeSelect($event,11)">
-                        <option :value="null" disabled>--Lựa chọn--</option>
+                    <select disabled id="select-11" class="form-control" v-model="selected[11]" @change="changeSelect($event,11)">
+                        <option :value="undefined" disabled>--Lựa chọn--</option>
                         <option value="-1">Không áp dụng</option>
                         <option value="0">Không đạt</option>
                         <option value="1">Đạt</option>
@@ -226,10 +226,10 @@
                 <td>Bài đo/phương pháp đo sản phẩm</td>
                 <td>BM.VHT.KHCN.01/TK.06 - Bai do phuong phap do kiem</td>
                 <td>BGĐ Khối</td>
-                <td><input type="text" class="form-control"></td>
+                <td><input type="text" class="form-control" v-model="link[12]" @keyup="inputLink(12)" placeholder="Nhập link vào đây để chấm"></td>
                 <td>
-                    <select required id="9.1" class="form-control " v-model="selected[12]" @change="changeSelect($event,12)">
-                        <option :value="null" disabled>--Lựa chọn--</option>
+                    <select disabled id="select-12" class="form-control" v-model="selected[12]" @change="changeSelect($event,12)">
+                        <option :value="undefined" disabled>--Lựa chọn--</option>
                         <option value="-1">Không áp dụng</option>
                         <option value="0">Không đạt</option>
                         <option value="1">Đạt</option>
@@ -244,10 +244,10 @@
                 <td>Kết quả đo, kiểm tra tính năng, chỉ tiêu kỹ thuật sản phẩm</td>
                 <td>-</td>
                 <td>QC Đề tài</td>
-                <td><input type="text" class="form-control"></td>
+                <td><input type="text" class="form-control" v-model="link[13]" @keyup="inputLink(13)" placeholder="Nhập link vào đây để chấm"></td>
                 <td>
-                    <select required id="10.1" class="form-control " v-model="selected[13]" @change="changeSelect($event,13)">
-                        <option :value="null" disabled>--Lựa chọn--</option>
+                    <select disabled id="select-13" class="form-control" v-model="selected[13]" @change="changeSelect($event,13)">
+                        <option :value="undefined" disabled>--Lựa chọn--</option>
                         <option value="-1">Không áp dụng</option>
                         <option value="0">Không đạt</option>
                         <option value="1">Đạt</option>
@@ -260,10 +260,10 @@
                 <td>Báo cáo kết quả đánh giá ATTT sản phẩm</td>
                 <td>-</td>
                 <td>QC Đề tài</td>
-                <td><input type="text" class="form-control"></td>
+                <td><input type="text" class="form-control" v-model="link[14]" @keyup="inputLink(14)" placeholder="Nhập link vào đây để chấm"></td>
                 <td>
-                    <select required id="10.2" class="form-control " v-model="selected[14]" @change="changeSelect($event,14)">
-                        <option :value="null" disabled>--Lựa chọn--</option>
+                    <select disabled id="select-14" class="form-control" v-model="selected[14]" @change="changeSelect($event,14)">
+                        <option :value="undefined" disabled>--Lựa chọn--</option>
                         <option value="-1">Không áp dụng</option>
                         <option value="0">Không đạt</option>
                         <option value="1">Đạt</option>
@@ -278,10 +278,10 @@
                 <td>Yêu cầu thay đổi</td>
                 <td>-</td>
                 <td>-</td>
-                <td><input type="text" class="form-control"></td>
+                <td><input type="text" class="form-control" v-model="link[15]" @keyup="inputLink(15)" placeholder="Nhập link vào đây để chấm"></td>
                 <td>
-                    <select required id="11.1" class="form-control " v-model="selected[15]" @change="changeSelect($event,15)">
-                        <option :value="null" disabled>--Lựa chọn--</option>
+                    <select disabled id="select-15" class="form-control" v-model="selected[15]" @change="changeSelect($event,15)">
+                        <option :value="undefined" disabled>--Lựa chọn--</option>
                         <option value="-1">Không áp dụng</option>
                         <option value="0">Không đạt</option>
                         <option value="1">Đạt</option>
@@ -294,10 +294,10 @@
                 <td>Log QLDA</td>
                 <td>BM.VHT.KHCN.01/TK.07 - Log QLDA</td>
                 <td>-</td>
-                <td><input type="text" class="form-control"></td>
+                <td><input type="text" class="form-control" v-model="link[16]" @keyup="inputLink(16)" placeholder="Nhập link vào đây để chấm"></td>
                 <td>
-                    <select required id="11.2" class="form-control " v-model="selected[16]" @change="changeSelect($event,16)">
-                        <option :value="null" disabled>--Lựa chọn--</option>
+                    <select disabled id="select-16" class="form-control" v-model="selected[16]" @change="changeSelect($event,16)">
+                        <option :value="undefined" disabled>--Lựa chọn--</option>
                         <option value="-1">Không áp dụng</option>
                         <option value="0">Không đạt</option>
                         <option value="1">Đạt</option>
@@ -312,10 +312,10 @@
                 <td>Kế hoạch thử nghiệm thực tế</td>
                 <td>BM.VHT.KHCN.01/TK.08A – Ke hoach thu nghiem thuc te</td>
                 <td>Ban TGĐ</td>
-                <td><input type="text" class="form-control"></td>
+                <td><input type="text" class="form-control" v-model="link[17]" @keyup="inputLink(17)" placeholder="Nhập link vào đây để chấm"></td>
                 <td>
-                    <select required id="12.1" class="form-control " v-model="selected[17]" @change="changeSelect($event,17)">
-                        <option :value="null" disabled>--Lựa chọn--</option>
+                    <select disabled id="select-17" class="form-control" v-model="selected[17]" @change="changeSelect($event,17)">
+                        <option :value="undefined" disabled>--Lựa chọn--</option>
                         <option value="-1">Không áp dụng</option>
                         <option value="0">Không đạt</option>
                         <option value="1">Đạt</option>
@@ -330,10 +330,10 @@
                     vận
                     hành</td>
                 <td>-</td>
-                <td><input type="text" class="form-control"></td>
+                <td><input type="text" class="form-control" v-model="link[18]" @keyup="inputLink(18)" placeholder="Nhập link vào đây để chấm"></td>
                 <td>
-                    <select required id="12.2" class="form-control " v-model="selected[18]" @change="changeSelect($event,18)">
-                        <option :value="null" disabled>--Lựa chọn--</option>
+                    <select disabled id="select-18" class="form-control" v-model="selected[18]" @change="changeSelect($event,18)">
+                        <option :value="undefined" disabled>--Lựa chọn--</option>
                         <option value="-1">Không áp dụng</option>
                         <option value="0">Không đạt</option>
                         <option value="1">Đạt</option>
@@ -348,10 +348,10 @@
                 <td>Báo cáo đánh giá chất lượng sản phẩm</td>
                 <td>BM.VHT.KHCN.01- TK.09- Bao cao danh gia chat luong san pham</td>
                 <td>-</td>
-                <td><input type="text" class="form-control"></td>
+                <td><input type="text" class="form-control" v-model="link[19]" @keyup="inputLink(19)" placeholder="Nhập link vào đây để chấm"></td>
                 <td>
-                    <select required id="13.1" class="form-control " v-model="selected[19]" @change="changeSelect($event,19)">
-                        <option :value="null" disabled>--Lựa chọn--</option>
+                    <select disabled id="select-19" class="form-control" v-model="selected[19]" @change="changeSelect($event,19)">
+                        <option :value="undefined" disabled>--Lựa chọn--</option>
                         <option value="-1">Không áp dụng</option>
                         <option value="0">Không đạt</option>
                         <option value="1">Đạt</option>
@@ -366,10 +366,10 @@
                 <td>Báo cáo kết quả nghiên cứu giai đoạn</td>
                 <td>BM.VHT.KHCN.01/TK.10 - Bao cao ket qua nghien cuu giai doan</td>
                 <td rowspan="5">BGĐ Khối</td>
-                <td><input type="text" class="form-control"></td>
+                <td><input type="text" class="form-control" v-model="link[20]" @keyup="inputLink(20)" placeholder="Nhập link vào đây để chấm"></td>
                 <td>
-                    <select required id="14.1" class="form-control " v-model="selected[20]" @change="changeSelect($event,20)">
-                        <option :value="null" disabled>--Lựa chọn--</option>
+                    <select disabled id="select-20" class="form-control" v-model="selected[20]" @change="changeSelect($event,20)">
+                        <option :value="undefined" disabled>--Lựa chọn--</option>
                         <option value="-1">Không áp dụng</option>
                         <option value="0">Không đạt</option>
                         <option value="1">Đạt</option>
@@ -381,10 +381,10 @@
             <tr>
                 <td>Báo cáo linh kiện</td>
                 <td>BM.VHT.KHCN.01/TK.11 - Bieu mau bao cao linh kien</td>
-                <td><input type="text" class="form-control"></td>
+                <td><input type="text" class="form-control" v-model="link[21]" @keyup="inputLink(21)" placeholder="Nhập link vào đây để chấm"></td>
                 <td>
-                    <select required id="14.2" class="form-control " v-model="selected[21]" @change="changeSelect($event,21)">
-                        <option :value="null" disabled>--Lựa chọn--</option>
+                    <select disabled id="select-21" class="form-control" v-model="selected[21]" @change="changeSelect($event,21)">
+                        <option :value="undefined" disabled>--Lựa chọn--</option>
                         <option value="-1">Không áp dụng</option>
                         <option value="0">Không đạt</option>
                         <option value="1">Đạt</option>
@@ -396,10 +396,10 @@
             <tr>
                 <td>Bảng chấm công theo công việc</td>
                 <td>BM.VHT.KHCN.01/TK.12 - Bieu mau theo cong viec</td>
-                <td><input type="text" class="form-control"></td>
+                <td><input type="text" class="form-control" v-model="link[22]" @keyup="inputLink(22)" placeholder="Nhập link vào đây để chấm"></td>
                 <td>
-                    <select required id="14.3" class="form-control " v-model="selected[22]" @change="changeSelect($event,22)">
-                        <option :value="null" disabled>--Lựa chọn--</option>
+                    <select disabled id="select-22" class="form-control" v-model="selected[22]" @change="changeSelect($event,22)">
+                        <option :value="undefined" disabled>--Lựa chọn--</option>
                         <option value="-1">Không áp dụng</option>
                         <option value="0">Không đạt</option>
                         <option value="1">Đạt</option>
@@ -411,10 +411,10 @@
             <tr>
                 <td>Báo cáo phân bổ chi phí nhân công theo nhân sự</td>
                 <td>BM.VHT.KHCN.01/TK.13 - Bieu mau theo nhan su</td>
-                <td><input type="text" class="form-control"></td>
+                <td><input type="text" class="form-control" v-model="link[23]" @keyup="inputLink(23)" placeholder="Nhập link vào đây để chấm"></td>
                 <td>
-                    <select required id="14.4" class="form-control " v-model="selected[23]" @change="changeSelect($event,23)">
-                        <option :value="null" disabled>--Lựa chọn--</option>
+                    <select disabled id="select-23" class="form-control" v-model="selected[23]" @change="changeSelect($event,23)">
+                        <option :value="undefined" disabled>--Lựa chọn--</option>
                         <option value="-1">Không áp dụng</option>
                         <option value="0">Không đạt</option>
                         <option value="1">Đạt</option>
@@ -426,10 +426,10 @@
             <tr>
                 <td>Bảng Tổng hợp chi phí nhân công theo nhân sự</td>
                 <td>BM.VHT.KHCN.01/TK.14 - Tong hop chi phi nhan cong theo nhan su</td>
-                <td><input type="text" class="form-control"></td>
+                <td><input type="text" class="form-control" v-model="link[24]" @keyup="inputLink(24)" placeholder="Nhập link vào đây để chấm"></td>
                 <td>
-                    <select required id="14.5" class="form-control " v-model="selected[24]" @change="changeSelect($event,24)">
-                        <option :value="null" disabled>--Lựa chọn--</option>
+                    <select disabled id="select-24" class="form-control" v-model="selected[24]" @change="changeSelect($event,24)">
+                        <option :value="undefined" disabled>--Lựa chọn--</option>
                         <option value="-1">Không áp dụng</option>
                         <option value="0">Không đạt</option>
                         <option value="1">Đạt</option>
@@ -453,10 +453,10 @@
                     <br>8. Hồ sơ quản lý điều chỉnh thiết kế
                     <br>9. Bộ tài liệu báo cáo giai đoạn nghiên cứu</td>
                 <td>Theo quy định trong QT</td>
-                <td><input type="text" class="form-control"></td>
+                <td><input type="text" class="form-control" v-model="link[25]" @keyup="inputLink(25)" placeholder="Nhập link vào đây để chấm"></td>
                 <td>
-                    <select required id="15.1" class="form-control " v-model="selected[25]" @change="changeSelect($event,25)">
-                        <option :value="null" disabled>--Lựa chọn--</option>
+                    <select disabled id="select-25" class="form-control" v-model="selected[25]" @change="changeSelect($event,25)">
+                        <option :value="undefined" disabled>--Lựa chọn--</option>
                         <option value="-1">Không áp dụng</option>
                         <option value="0">Không đạt</option>
                         <option value="1">Đạt</option>
@@ -489,10 +489,11 @@ export default {
     },
     data(){
         return{
+            link: [],
             maxScore: [4,1,1,1,3,5,15,10,5,5,5,5,5,14,1,1,1,1,2,5,1,1,1,1,1,5],
             selected: [],
             realScore: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-            tMaxScore: [4,1,1,1,3,5,15,10,5,5,5,5,5,14,1,1,1,1,2,5,1,1,1,1,1,5],
+            tMaxScore: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
         } 
     },
     computed: {
@@ -509,6 +510,20 @@ export default {
         }
     },
     methods: {
+        inputLink(i){
+            let DOM_Select = document.getElementById(`select-${i}`);
+            if(this.link[i] != ""){
+                DOM_Select.disabled = false;
+                this.$set(this.tMaxScore,i,this.maxScore[i])      
+            }
+            else{
+                DOM_Select.disabled = true;
+                this.$set(this.selected,i,undefined)
+                this.$set(this.tMaxScore,i,0)
+                this.$set(this.realScore,i,0)
+                DOM_Select.classList.remove("bg-warning","bg-success","bg-danger");
+            }
+        },
         changeSelect(event,i){
             event.target.classList.add("text-dark");
             event.target.classList.remove("bg-warning","bg-success","bg-danger");
@@ -519,7 +534,7 @@ export default {
                 this.$set(this.tMaxScore,i,this.maxScore[i])
             }
             //Không áp dụng
-            else if(this.selected[i] == -1){
+            else if(this.selected[i] == -1 || this.selected[i] == null){
                 event.target.classList.add("bg-warning");
                 this.$set(this.tMaxScore,i,0)
                 this.$set(this.realScore,i,0)
@@ -531,35 +546,34 @@ export default {
                 this.$set(this.realScore,i,0)
             }    
         },
-        checkEmpty(){
-            if( this.selected.length == 0 || this.selected.length < this.realScore.length){
-                this.$bvToast.toast('Kết quả đánh giá không được để trống!', {
+        formSubmit() {
+            if(isNaN(this.getRate)){
+                this.$bvToast.toast('Bạn chưa chấm!', {
                     title: `Thông báo`,
-                    variant: "warning",
-                    toaster: "b-toaster-top-center",
+                    variant: "danger",
+                    toaster: "b-toaster-bottom-right",
                     autoHideDelay: 3000
                 });
             }
-        },
-        formSubmit() {
-            axios
-            .post("/kpi-quy-trinh", {
-                quy_trinh_id: this.quy_trinh.id,
-                du_an_id: this.de_tai.id,
-                diem: this.getRate,
-                thoigian: this.thoigian
-            })
-            .then(response => {
-                this.$bvToast.toast(response.data[0].ten_du_an, {
-                    title: `Thêm thành công kpi quy trinh:${response.data[0].ten_quy_trinh}`,
-                    variant: "success",
-                    toaster: "b-toaster-bottom-right",
-                    autoHideDelay: 5000
+            else{      
+                axios.post("/kpi-quy-trinh", {
+                    quy_trinh_id: this.quy_trinh.id,
+                    du_an_id: this.de_tai.id,
+                    diem: this.getRate,
+                    thoigian: this.thoigian
+                })
+                .then(response => {
+                    this.$bvToast.toast(response.data[0].ten_du_an, {
+                        title: `Thêm thành công kpi quy trinh:${response.data[0].ten_quy_trinh}`,
+                        variant: "success",
+                        toaster: "b-toaster-bottom-right",
+                        autoHideDelay: 5000
+                    });
+                })
+                .catch(error => {
+                    console.log(error);
                 });
-            })
-            .catch(error => {
-                console.log(error);
-            });
+            }
         }
     }
 }

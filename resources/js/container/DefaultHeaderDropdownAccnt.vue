@@ -1,14 +1,10 @@
 <template>
   <div>
-    <AppHeaderDropdown right no-caret>
+    <AppHeaderDropdown right no-caret class="mr-5">
       <template slot="header">
-        <!-- <img
-        src="img/avatars/6.jpg"
-        class="img-avatar"
-        alt="admin@bootstrapmaster.com" />-->
-
-        <i class="fas fa-user-alt" />
-        {{$auth.user().email}}
+        <span style="font-size: 20px;">
+          <i class="fas fa-user-circle" /> {{$auth.user().email}}
+        </span>
       </template>
       <template slot="dropdown">
         <b-dropdown-header tag="div" class="text-center">

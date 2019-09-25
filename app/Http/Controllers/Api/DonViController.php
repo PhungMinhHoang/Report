@@ -19,6 +19,11 @@ class DonViController extends Controller
         return DonViResource::collection(DonVi::all());
     }
 
+    public function getDonViApDungQuyTrinh()
+    {
+        return DonViResource::collection(DonVi::where('ap_dung_quy_trinh',1)->get());
+    }
+
     /**
      * Show the form for creating a new resource.
      *

@@ -102,7 +102,7 @@ export default {
   },
   mounted() {
     console.log('edit',this.edit_du_an)
-    axios.get("/don-vi").then(response => {
+    axios.get("/don-vi-ap-dung-quy-trinh").then(response => {
       for (let i = 1; i <= 3; i++) {
         response.data.forEach(dv => {
           if(dv.khoi == i) this.options_dv[i].push(dv);

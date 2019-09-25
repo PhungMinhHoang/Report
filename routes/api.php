@@ -15,7 +15,10 @@ Route::group(['prefix' => '', 'namespace' => 'Api', 'as' => 'api.'], function ()
         Route::resource('don-vi', 'DonViController', ['except' => ['create', 'edit']]);
         Route::resource('quy-trinh', 'QuyTrinhController', ['except' => ['create', 'edit']]);
         Route::resource('kpi-quy-trinh', 'KPI_QuyTrinhController', ['except' => ['create', 'edit']]);
+
         Route::get('/QA', 'UserController@getDanhSachQA');
+        Route::get('/don-vi-ap-dung-quy-trinh', 'DonViController@getDonViApDungQuyTrinh');
+
         Route::post('/changePassword', 'UserController@changePassword');
         
     });

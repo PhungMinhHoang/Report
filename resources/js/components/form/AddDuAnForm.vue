@@ -96,7 +96,7 @@ export default {
     }
   },
   mounted() {
-    axios.get("/don-vi").then(response => {
+    axios.get("/don-vi-ap-dung-quy-trinh").then(response => {
       for (let i = 1; i <= 3; i++) {
         response.data.forEach(dv => {
           if (dv.khoi == i) this.options_dv[i].push(dv);
@@ -105,7 +105,6 @@ export default {
     });
     axios.get("/QA").then(response => {
       this.options_QA = response.data;
-      console.log("test", this.options_QA);
     });
   }
 };

@@ -18,7 +18,9 @@
               </select>
               <strong>Chỉ số:</strong>
               <input type="text" class="form-control" v-model="chi_so" />
-              <strong>Thời gian:{{thoi_gian}}</strong>
+              <br />
+              <strong>Thời gian:</strong>
+              <input type="date" class="form-control" v-model="thoi_gian" />
               <br />
               <button class="btn btn-success">Submit</button>
             </form>
@@ -39,7 +41,7 @@ export default {
       output: "",
       id_don_vi: 0,
       chi_so: null,
-      thoi_gian: "2019-09-13"
+      thoi_gian: null,
     };
   },
   methods: {

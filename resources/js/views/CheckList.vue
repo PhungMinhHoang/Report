@@ -60,7 +60,7 @@ export default {
       quy_trinh: null,
       options_dt: [],
       de_tai: null,
-      thoigian: null,
+      thoigian: new Date().toISOString().substring(0, 10),
       renderKey: 0
     };
   },

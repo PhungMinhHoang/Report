@@ -27,7 +27,7 @@
       <b-navbar-nav class="ml-auto">
         <DefaultHeaderDropdownAccnt />
       </b-navbar-nav>
-      <AsideToggler class="d-none d-lg-block" />
+      <!-- <AsideToggler class="d-none d-lg-block" /> -->
       <!--<AsideToggler class="d-lg-none" mobile />-->
     </AppHeader>
     <div class="app-body">
@@ -41,10 +41,9 @@
           <router-view></router-view>
         </div>
       </main>
-      <AppAside fixed>
-        <!--aside-->
+      <!-- <AppAside fixed>
         <DefaultAside />
-      </AppAside>
+      </AppAside> -->
     </div>
     <TheFooter>
       <!--footer-->
