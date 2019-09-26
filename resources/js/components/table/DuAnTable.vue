@@ -3,18 +3,18 @@
     <v-client-table :columns="columns" :data="data" :options="options" :theme="theme" id="dataTable">
         <span slot="stt" slot-scope="props">{{props.index}}</span>
         <span slot="thao_tac" slot-scope="props">
-        <b-button :id="'edit-button-'+props.index" variant="warning" @click="edit(props.row)">
-            <i class="far fa-edit fa-lg"></i>
-            <b-tooltip :target="'edit-button-'+props.index" variant="dark">
-            <strong>Sửa</strong>
-            </b-tooltip>
-        </b-button>
-        <b-button :id="'delete-button-'+props.index" variant="danger">
-            <i class="far fa-window-close fa-lg"></i>
-            <b-tooltip :target="'delete-button-'+props.index" variant="dark">
-            <strong>Đóng</strong>
-            </b-tooltip>
-        </b-button>
+          <b-button :id="'edit-button-'+props.index" variant="warning" @click="edit(props.row)">
+              <i class="far fa-edit fa-lg"></i>
+              <b-tooltip :target="'edit-button-'+props.index" variant="dark">
+              <strong>Sửa</strong>
+              </b-tooltip>
+          </b-button>
+          <b-button :id="'delete-button-'+props.index" variant="danger">
+              <i class="far fa-window-close fa-lg"></i>
+              <b-tooltip :target="'delete-button-'+props.index" variant="dark">
+              <strong>Đóng</strong>
+              </b-tooltip>
+          </b-button>
         </span>
     </v-client-table>
   <!-- Modal edit du an -->

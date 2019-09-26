@@ -5,17 +5,19 @@ namespace App\Http\Controllers\Api;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\KPI_QuyTrinhResource;
+use App\Http\Resources\TaiLieuQuyTrinhResource;
 use App\Models\KPI_QuyTrinh;
+use App\Models\TaiLieuQuyTrinh;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 
 class KPI_QuyTrinhController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+    public function getTaiLieuQuyTrinh($id)
+    {
+        return TaiLieuQuyTrinhResource::collection(TaiLieuQuyTrinh::where('kpi_quytrinh_id',$id)->get());
+    }
+
     public function index()
     {
         $user = User::find(Auth::user()->id);
@@ -35,31 +37,22 @@ class KPI_QuyTrinhController extends Controller
      */
     public function store(Request $request)
     {
-        // $data = new KPI_QuyTrinh;
-        // $data->quy_trinh_id = $request->quy_trinh_id;
-        // $data->du_an_id = $request->du_an_id;
-        // $data->diem = $request->diem;
-        // $data->thoigian = date("Y-m",strtotime($request->thoigian));
-        // $data->save();
+        // return $request->tai_lieu_quy_trinh;
         $data = KPI_QuyTrinh::updateOrCreate(
             ['quy_trinh_id' => $request->quy_trinh_id, 'du_an_id' => $request->du_an_id, 'thoigian' => date("Y-m",strtotime($request->thoigian))],
             ['diem' => $request->diem]
         );
 
-        return response()->json(['success' => 'Thêm thành công', new KPI_QuyTrinhResource($data)]);
-    }
+        $tai_lieu_quy_trinh = $request->tai_lieu_quy_trinh;
+        foreach ($tai_lieu_quy_trinh as $tl) {
+            TaiLieuQuyTrinh::updateOrCreate(
+                ['kpi_quytrinh_id' => $data->id, 'ten' => $tl['ten']],
+                ['link' => $tl['link'], 'danh_gia' => $tl['danh_gia']]
+            );
+        }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
+        return response()->json(['success' => 'Thêm thành công', 'data'=>new KPI_QuyTrinhResource($data)]);
     }
-
 
     /**
      * Update the specified resource in storage.
