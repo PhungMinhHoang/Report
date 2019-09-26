@@ -2,7 +2,7 @@
   <div>
     <v-client-table :columns="columns" :data="data" :options="options" :theme="theme" id="dataTable">
       <a slot="link" slot-scope="props" :href="'http://www.'+props.row.link" target="_blank">{{props.row.link}}</a>
-      <span slot="danh_gia" slot-scope="props" :class="badgeClass">{{getResult(props.row.danh_gia)}}</span>
+      <span slot="danh_gia" slot-scope="props" v-html="getResult(props.row.danh_gia)"></span>
     </v-client-table>
   </div>
 </template>
@@ -61,16 +61,13 @@ export default {
         console.log(danh_gia,this.badgeClass)
       switch (danh_gia) {
         case -1:
-          //this.badgeClass = "badge badge-warning text-dark";
-          return 'Không áp dụng';
+          return `<span class="badge badge-warning text-dark">Không áp dụng</span>`;
           break;
         case 0:
-          //this.badgeClass = "badge badge-danger text-dark";
-          return 'Không đạt';
+          return `<span class="badge badge-danger text-dark">Không đạt</span>`;
           break;
         case 1:
-          //this.badgeClass = "badge badge-success text-dark";
-          return 'Đạt';
+          return `<span class="badge badge-success text-dark">Đạt</span>`;
           break;
 
         default:
