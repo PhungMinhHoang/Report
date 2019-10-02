@@ -6,20 +6,20 @@
         <b-input-group>
           <b-input-group-prepend>
             <b-input-group-text>
-              <i class="fas fa-project-diagram"></i>
+              <i class="fas fa-code"></i>
             </b-input-group-text>
           </b-input-group-prepend>
-          <b-form-input type="text" placeholder="Tên đề tài/dự án" required v-model="ten"></b-form-input>
+          <b-form-input type="text" placeholder="Mã đề tài/dự án" required v-model="ma_de_tai"></b-form-input>
         </b-input-group>
       </b-form-group>
       <b-form-group>
         <b-input-group>
           <b-input-group-prepend>
             <b-input-group-text>
-              <i class="fas fa-code"></i>
+              <i class="fas fa-project-diagram"></i>
             </b-input-group-text>
           </b-input-group-prepend>
-          <b-form-input type="text" placeholder="Mã đề tài/dự án" required v-model="ma_de_tai"></b-form-input>
+          <b-form-input type="text" placeholder="Tên đề tài/dự án" required v-model="ten"></b-form-input>
         </b-input-group>
       </b-form-group>
       <b-form-group>
@@ -68,9 +68,11 @@ export default {
     return {
       options_dv: [[], [], [], [], []],
       options_QA: [],
+      id: this.edit_du_an.id,
       don_vi: null,
       ma_de_tai: this.edit_du_an.ma_de_tai,
       ten: this.edit_du_an.ten_de_tai,
+      trang_thai: this.edit_du_an.trang_thai,
       QA: null
     };
   },
@@ -88,8 +90,10 @@ export default {
         .then(response => {
           this.$bvModal.hide("edit-du-an-modal");
           let du_an_moi = {
+            id: this.id,
             ma_de_tai: this.ma_de_tai,
             ten_de_tai: this.ten,
+            trang_thai: this.trang_thai,
             ten_don_vi: this.don_vi.ten,
             QA: this.QA.name
           };
@@ -101,7 +105,6 @@ export default {
     }
   },
   mounted() {
-    console.log('edit',this.edit_du_an)
     axios.get("/don-vi-ap-dung-quy-trinh").then(response => {
       for (let i = 1; i <= 3; i++) {
         response.data.forEach(dv => {

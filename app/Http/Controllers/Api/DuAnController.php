@@ -25,7 +25,6 @@ class DuAnController extends Controller
         else if($user->hasRole('QA')){
             return DuAnResource::collection(DuAn::where('user_id',$user->id)->get()->load('don_vi','user'));
         }
-       
     }
 
     /**
@@ -37,8 +36,9 @@ class DuAnController extends Controller
     public function store(Request $request)
     {
         $data = $request->all();
-        if (DuAn::create($data)) {
-            return response()->json(['success' => 'Thêm thành công']);
+        $data = DuAn::create($data);
+        if ($data) {
+            return response()->json(['success' => 'Thêm thành công', 'data'=> new DuAnResource($data)]);
         } else {
             return response()->json(['error' => 'Thêm không thành công']);
         }
@@ -65,10 +65,15 @@ class DuAnController extends Controller
     public function update(Request $request, $id)
     {
         $du_an = DuAn::find($id);
-        $du_an->ma_de_tai = $request->ma_de_tai;
-        $du_an->ten = $request->ten;
-        $du_an->user_id = $request->user_id;
-        $du_an->donvi_id = $request->donvi_id;
+        if($request->has('trang_thai')){
+            $du_an->trang_thai = $request->trang_thai;
+        }
+        else{
+            $du_an->ma_de_tai = $request->ma_de_tai;
+            $du_an->ten = $request->ten;
+            $du_an->user_id = $request->user_id;
+            $du_an->donvi_id = $request->donvi_id;
+        }
         $du_an->save();
         return response()->json(['success' => 'Thêm thành công']);
     }

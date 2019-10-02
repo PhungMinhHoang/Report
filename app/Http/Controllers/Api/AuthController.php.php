@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\UserResource;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -41,7 +42,7 @@ class AuthController extends Controller
         $user = User::find(Auth::user()->id);
         return response([
             'status' => 'success',
-            'data' => $user
+            'data' => new UserResource($user)
         ]);
     }
     public function refresh()

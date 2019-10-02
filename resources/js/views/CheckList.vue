@@ -24,7 +24,7 @@
             </td>
             <th scope="row">Quy trình áp dụng</th>
             <td>
-              <select class="form-control select2-single" id="select_quy_trinh" v-model="quy_trinh">
+              <select class="form-control select2-single" id="select_quy_trinh" v-model="quy_trinh" @change="showMessage()">
                 <option :value="null" disabled>-- Chọn quy trình --</option>
                 <option :value="qt" v-for="(qt,index) in options_qt" :key="index">{{qt.ten}}</option>
               </select>
@@ -36,23 +36,51 @@
     <!-- Checklist -->
     <b-card v-if="selectQT() == 'SP'">
       <b-card-body>
-        <CheckListForm
-          :quy_trinh="quy_trinh"
-          :de_tai="de_tai"
-          :thoigian="thoigian"
-          :key="renderKey"
-        ></CheckListForm>
+        <CheckListSPForm :quy_trinh="quy_trinh" :de_tai="de_tai" :thoigian="thoigian" :key="renderKey"></CheckListSPForm>
+      </b-card-body>
+    </b-card>
+    <b-card v-else-if="selectQT() == 'CK'">
+      <b-card-body>
+        <CheckListCKForm :quy_trinh="quy_trinh" :de_tai="de_tai" :thoigian="thoigian" :key="renderKey"></CheckListCKForm>
+      </b-card-body>
+    </b-card>
+    <b-card v-else-if="selectQT() == 'PC'">
+      <b-card-body>
+        <CheckListSPForm :quy_trinh="quy_trinh" :de_tai="de_tai" :thoigian="thoigian" :key="renderKey"></CheckListSPForm>
+      </b-card-body>
+    </b-card>
+    <b-card v-else-if="selectQT() == 'PCRG'">
+      <b-card-body>
+        <CheckListSPForm :quy_trinh="quy_trinh" :de_tai="de_tai" :thoigian="thoigian" :key="renderKey"></CheckListSPForm>
+      </b-card-body>
+    </b-card>
+    <b-card v-else-if="selectQT() == 'PM'">
+      <b-card-body>
+        <CheckListSPForm :quy_trinh="quy_trinh" :de_tai="de_tai" :thoigian="thoigian" :key="renderKey"></CheckListSPForm>
+      </b-card-body>
+    </b-card>
+    <b-card v-else-if="selectQT() == 'SXTN'">
+      <b-card-body>
+        <CheckListSPForm :quy_trinh="quy_trinh" :de_tai="de_tai" :thoigian="thoigian" :key="renderKey"></CheckListSPForm>
+      </b-card-body>
+    </b-card>
+    <b-card v-else-if="selectQT() == 'SXL'">
+      <b-card-body>
+        <CheckListSPForm :quy_trinh="quy_trinh" :de_tai="de_tai" :thoigian="thoigian" :key="renderKey"></CheckListSPForm>
       </b-card-body>
     </b-card>
   </div>
 </template>
 
 <script>
-import CheckListForm from "../components/form/CheckListForm";
+import CheckListSPForm from "../components/form/CheckListSPForm";
+import CheckListCKForm from "../components/form/CheckListCKForm";
 export default {
   name: "CheckList",
   components: {
-    CheckListForm
+    CheckListSPForm,
+    CheckListCKForm,
+
   },
   data() {
     return {
@@ -66,29 +94,23 @@ export default {
   },
   watch:{
     de_tai(){
-      //rerender CheckListForm when de_tai change
+      //render lại CheckListForm khi thay đổi lựa chọn đề tài
       this.renderKey++;
-    }
+    },
   },
   methods: {
-    selectQT() {
-      if (
-        this.quy_trinh != null &&
-        this.de_tai != null &&
-        this.thoigian != null
-      ) {
-        return this.quy_trinh.ma_quy_trinh;
-      } else if (this.quy_trinh != null) {
-        let mes1 = this.de_tai == null ? "Đề tài " : "",
-          mes3 = this.thoigian == null ? "Ngày đánh giá" : "",
-          mes2 = this.de_tai == null && this.thoigian == null ? "và " : "";
-        this.$bvToast.toast(`Vui lòng chọn: ` + mes1 + mes2 + mes3, {
+    selectQT(){
+      if(this.quy_trinh != null && this.de_tai!=null) return this.quy_trinh.ma_quy_trinh;
+      return null;
+    },
+    showMessage(){
+      if(this.de_tai==null){
+        this.$bvToast.toast('Vui lòng chọn: Đề tài', {
           title: `Thông báo`,
           variant: "warning",
           toaster: "b-toaster-top-center",
           autoHideDelay: 5000
         });
-        return null;
       }
     }
   },

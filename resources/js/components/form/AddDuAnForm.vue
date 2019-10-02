@@ -6,20 +6,20 @@
         <b-input-group>
           <b-input-group-prepend>
             <b-input-group-text>
-              <i class="fas fa-project-diagram"></i>
+              <i class="fas fa-code"></i>
             </b-input-group-text>
           </b-input-group-prepend>
-          <b-form-input type="text" placeholder="Tên đề tài/dự án" required v-model="ten"></b-form-input>
+          <b-form-input type="text" placeholder="Mã đề tài/dự án" required v-model="ma_de_tai"></b-form-input>
         </b-input-group>
       </b-form-group>
       <b-form-group>
         <b-input-group>
           <b-input-group-prepend>
             <b-input-group-text>
-              <i class="fas fa-code"></i>
+              <i class="fas fa-project-diagram"></i>
             </b-input-group-text>
           </b-input-group-prepend>
-          <b-form-input type="text" placeholder="Mã đề tài/dự án" required v-model="ma_de_tai"></b-form-input>
+          <b-form-input type="text" placeholder="Tên đề tài/dự án" required v-model="ten"></b-form-input>
         </b-input-group>
       </b-form-group>
       <b-form-group>
@@ -82,12 +82,7 @@ export default {
         })
         .then(response => {
           this.$bvModal.hide("add-du-an-modal");
-          let du_an_moi = {
-            ma_de_tai: this.ma_de_tai,
-            ten_de_tai: this.ten,
-            ten_don_vi: this.don_vi.ten,
-            QA: this.QA.name
-          };
+          let du_an_moi = response.data.data;
           EventBus.$emit("add-du-an-success", du_an_moi);
         })
         .catch(error => {

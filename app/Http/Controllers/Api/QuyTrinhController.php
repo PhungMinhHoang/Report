@@ -15,7 +15,7 @@ class QuyTrinhController extends Controller
      */
     public function index()
     {
-        return response()->json(QuyTrinh::all());
+        return response()->json(QuyTrinh::all()->except(8));
     }
 
 

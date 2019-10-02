@@ -8,7 +8,7 @@ class DuAn extends Model
 {
     protected $table = 'du_an';
 
-    protected $fillable = ['ma_de_tai','ten','donvi_id','user_id'];
+    protected $fillable = ['ma_de_tai','ten','trang_thai','donvi_id','user_id'];
 
     public function don_vi()
     {

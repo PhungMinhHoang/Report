@@ -1,9 +1,15 @@
 <template>
-  <div>
-    <v-client-table :columns="columns" :data="data" :options="options" :theme="theme" id="dataTable">
-      <a slot="link" slot-scope="props" :href="'http://www.'+props.row.link" target="_blank">{{props.row.link}}</a>
-      <span slot="danh_gia" slot-scope="props" v-html="getResult(props.row.danh_gia)"></span>
-    </v-client-table>
+  <div class="border">
+    <b-card-header>
+        <i class="fas fa-link fa-lg"></i>
+        <h4>Quy trình: {{kpi_quytrinh.ten_quy_trinh+' ('+kpi_quytrinh.thoigian+')'}}</h4>
+    </b-card-header>
+    <b-card-body>
+        <v-client-table :columns="columns" :data="data" :options="options" :theme="theme" id="dataTable">
+        <a slot="link" slot-scope="props" :href="'http://www.'+props.row.link" target="_blank">{{props.row.link}}</a>
+        <span slot="danh_gia" slot-scope="props" v-html="getResult(props.row.danh_gia)"></span>
+        </v-client-table>
+    </b-card-body>
   </div>
 </template>
 
@@ -80,7 +86,7 @@ export default {
 
 
 <style lang="scss">
-h2 {
+h2, h3, h4{
   display: inline;
 }
 

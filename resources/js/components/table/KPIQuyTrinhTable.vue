@@ -12,7 +12,7 @@
       </span>
     </v-client-table>
     <!-- Modal view detail -->
-    <b-modal id="detail-modal" :title="'Tài liệu đề tài: '+kpi_quytrinh.ten_du_an" size="lg" v-model="detailModal" hide-footer>
+    <b-modal id="detail-modal" :title="'Đề tài: '+kpi_quytrinh.ten_du_an" size="xl" v-model="detailModal" hide-footer>
       <TaiLieuQuyTrinhTable :kpi_quytrinh="kpi_quytrinh" />
     </b-modal>
   </div>

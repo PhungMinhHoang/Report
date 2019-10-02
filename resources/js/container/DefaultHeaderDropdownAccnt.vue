@@ -3,7 +3,7 @@
     <AppHeaderDropdown right no-caret class="mr-5">
       <template slot="header">
         <span style="font-size: 20px;">
-          <i class="fas fa-user-circle" /> {{$auth.user().email}}
+          <i class="fas fa-user-circle" /> {{$auth.user().name}}
         </span>
       </template>
       <template slot="dropdown">
@@ -45,8 +45,8 @@ export default {
       changePasswordModal: false,
     };
   },
-  methods: {
-    changePassword() {}
+  mounted(){
+    console.log(this.$auth.user())
   }
 };
 </script>
