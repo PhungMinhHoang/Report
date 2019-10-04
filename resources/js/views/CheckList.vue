@@ -46,27 +46,32 @@
     </b-card>
     <b-card v-else-if="selectQT() == 'PC'">
       <b-card-body>
-        <CheckListSPForm :quy_trinh="quy_trinh" :de_tai="de_tai" :thoigian="thoigian" :key="renderKey"></CheckListSPForm>
+        <CheckListPCForm :quy_trinh="quy_trinh" :de_tai="de_tai" :thoigian="thoigian" :key="renderKey"></CheckListPCForm>
       </b-card-body>
     </b-card>
     <b-card v-else-if="selectQT() == 'PCRG'">
       <b-card-body>
-        <CheckListSPForm :quy_trinh="quy_trinh" :de_tai="de_tai" :thoigian="thoigian" :key="renderKey"></CheckListSPForm>
+        <CheckListPCRGForm :quy_trinh="quy_trinh" :de_tai="de_tai" :thoigian="thoigian" :key="renderKey"></CheckListPCRGForm>
       </b-card-body>
     </b-card>
     <b-card v-else-if="selectQT() == 'PM'">
       <b-card-body>
-        <CheckListSPForm :quy_trinh="quy_trinh" :de_tai="de_tai" :thoigian="thoigian" :key="renderKey"></CheckListSPForm>
+        <CheckListPMForm :quy_trinh="quy_trinh" :de_tai="de_tai" :thoigian="thoigian" :key="renderKey"></CheckListPMForm>
       </b-card-body>
     </b-card>
     <b-card v-else-if="selectQT() == 'SXTN'">
       <b-card-body>
-        <CheckListSPForm :quy_trinh="quy_trinh" :de_tai="de_tai" :thoigian="thoigian" :key="renderKey"></CheckListSPForm>
+        <CheckListSXTNForm :quy_trinh="quy_trinh" :de_tai="de_tai" :thoigian="thoigian" :key="renderKey"></CheckListSXTNForm>
       </b-card-body>
     </b-card>
     <b-card v-else-if="selectQT() == 'SXL'">
       <b-card-body>
-        <CheckListSPForm :quy_trinh="quy_trinh" :de_tai="de_tai" :thoigian="thoigian" :key="renderKey"></CheckListSPForm>
+        <CheckListSXLForm :quy_trinh="quy_trinh" :de_tai="de_tai" :thoigian="thoigian" :key="renderKey"></CheckListSXLForm>
+      </b-card-body>
+    </b-card>
+    <b-card v-else-if="selectQT() == 'SBH'">
+      <b-card-body>
+        <CheckListSBHForm :quy_trinh="quy_trinh" :de_tai="de_tai" :thoigian="thoigian" :key="renderKey"></CheckListSBHForm>
       </b-card-body>
     </b-card>
   </div>
@@ -75,11 +80,23 @@
 <script>
 import CheckListSPForm from "../components/form/CheckListSPForm";
 import CheckListCKForm from "../components/form/CheckListCKForm";
+import CheckListPCForm from "../components/form/CheckListPCForm";
+import CheckListPCRGForm from "../components/form/CheckListPCRGForm";
+import CheckListPMForm from "../components/form/CheckListPMForm";
+import CheckListSXLForm from "../components/form/CheckListSXLForm";
+import CheckListSXTNForm from "../components/form/CheckListSXTNForm";
+import CheckListSBHForm from "../components/form/CheckListSBHForm";
 export default {
   name: "CheckList",
   components: {
     CheckListSPForm,
     CheckListCKForm,
+    CheckListPCForm,
+    CheckListPCRGForm,
+    CheckListPMForm,
+    CheckListSXLForm,
+    CheckListSXTNForm,
+    CheckListSBHForm,
 
   },
   data() {

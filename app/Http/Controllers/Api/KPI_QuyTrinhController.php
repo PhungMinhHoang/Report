@@ -24,9 +24,9 @@ class KPI_QuyTrinhController extends Controller
         $user = User::find(Auth::user()->id);
 
         if ($user->hasRole('admin', 'QA-admin')) {
-            return KPI_QuyTrinhResource::collection(KPI_QuyTrinh::all()->sortByDesc('id'));
+            return KPI_QuyTrinhResource::collection(KPI_QuyTrinh::all()->sortByDesc('updated_at'));
         } else if ($user->hasRole('QA')) {
-            return KPI_QuyTrinhResource::collection($user->kpi_quy_trinh->sortByDesc('id'));
+            return KPI_QuyTrinhResource::collection($user->kpi_quy_trinh->sortByDesc('updated_at'));
         }
     }
 
@@ -42,6 +42,13 @@ class KPI_QuyTrinhController extends Controller
             ['quy_trinh_id' => $request->quy_trinh_id, 'du_an_id' => $request->du_an_id, 'thoigian' => date("Y-m",strtotime($request->thoigian))],
             ['diem' => $request->diem]
         );
+        $tai_lieu_quy_trinh = $request->tai_lieu_quy_trinh;
+        foreach ($tai_lieu_quy_trinh as $tl) {
+            TaiLieuQuyTrinh::updateOrCreate(
+                ['kpi_quytrinh_id' => $data->id, 'ten' => $tl['ten']],
+                ['link' => $tl['link'], 'danh_gia' => $tl['danh_gia']]
+            );
+        }
 
         //Cap nhat diem trung binh quy_trinh_id = 8
         $average = KPI_QuyTrinh::where('du_an_id',$request->du_an_id)
@@ -53,15 +60,6 @@ class KPI_QuyTrinhController extends Controller
             ['quy_trinh_id' => 8, 'du_an_id' => $request->du_an_id, 'thoigian' => date("Y-m",strtotime($request->thoigian))],
             ['diem' => round($average)]
         );
-
-        $tai_lieu_quy_trinh = $request->tai_lieu_quy_trinh;
-        foreach ($tai_lieu_quy_trinh as $tl) {
-            TaiLieuQuyTrinh::updateOrCreate(
-                ['kpi_quytrinh_id' => $data->id, 'ten' => $tl['ten']],
-                ['link' => $tl['link'], 'danh_gia' => $tl['danh_gia']]
-            );
-        }
-
 
         return response()->json(['success' => 'Thêm thành công', 'data'=>new KPI_QuyTrinhResource($data)]);
     }
