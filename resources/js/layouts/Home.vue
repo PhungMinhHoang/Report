@@ -34,14 +34,29 @@ export default {
           name: "Chấm điểm quy trình",
           url: "/check-list",
           icon: "fas fa-user-check"
-        },
+        }
+      ]
+    };
+  },
+  mounted() {
+    if (this.$auth.user().roles[0].slug == "admin") {
+      this.nav.push(
         {
           name: "KPI veco",
           url: "/kpi-veco",
           icon: "fas fa-tools"
         }
-      ]
-    };
+      );
+    }
+
+    EventBus.$on("unauthorized", mes => {
+      this.$bvToast.toast(mes, {
+        title: "Thông báo",
+        variant: "danger",
+        toaster: "b-toaster-top-center",
+        autoHideDelay: 5000
+      });
+    });
   }
 };
 </script>

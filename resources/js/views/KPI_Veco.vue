@@ -41,7 +41,7 @@ export default {
       output: "",
       id_don_vi: 0,
       chi_so: null,
-      thoi_gian: null,
+      thoi_gian: null
     };
   },
   methods: {
@@ -67,8 +67,18 @@ export default {
   mounted() {
     axios.get("/don-vi").then(response => {
       this.data = response.data;
-      //console.log(this.data);
     });
+  },
+  beforeRouteEnter(to, from, next) {
+    console.log(window)
+    if (window.Vue.auth.user().roles[0].slug == 'admin') {
+      next();
+    }
+    else{
+      let mes = `Bạn không có quyền truy cập vào ${to.name}`
+      window.EventBus.$emit("unauthorized",mes);
+      next(false)
+    }
   }
 };
 </script>

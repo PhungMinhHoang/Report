@@ -107,6 +107,7 @@ export default {
         route => route.name || route.meta.label
       );
     }
-  }
+  },
+  
 };
 </script>

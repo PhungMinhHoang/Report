@@ -12,7 +12,6 @@ import KPIQuyTrinh from "./views/KPIQuyTrinh.vue";
 import KPI_Veco from "./views/KPI_Veco.vue";
 import CheckList from "./views/CheckList.vue";
 
-
 export const routes = [
     {
         path: '/login',
@@ -41,7 +40,7 @@ export const routes = [
             {
                 path: "kpi-veco",
                 name: "KPI Veco",
-                component: KPI_Veco
+                component: KPI_Veco,
             },
             {
                 path: "kpi-quy-trinh",

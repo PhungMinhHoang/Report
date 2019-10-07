@@ -88,10 +88,10 @@ export default {
         })
         .then(response => {
           this.$bvToast.toast(edit_du_an.ten_de_tai, {
-          title: "Đã thay đổi trạng thái đề tài/dự án",
-          variant: "success",
-          toaster: "b-toaster-top-center",
-          autoHideDelay: 5000
+            title: "Đã thay đổi trạng thái đề tài/dự án",
+            variant: "success",
+            toaster: "b-toaster-top-center",
+            autoHideDelay: 5000
           });
         })
         .catch(error => {
