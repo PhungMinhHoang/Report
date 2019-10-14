@@ -77,6 +77,7 @@ export default {
         .post("/du-an", {
           ma_de_tai: this.ma_de_tai,
           ten: this.ten,
+          trang_thai: true,
           donvi_id: this.don_vi.id,
           user_id: this.QA.id
         })
