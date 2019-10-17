@@ -10,11 +10,21 @@
         <table class="table table-bordered">
           <tr>
             <th scope="row">Tên Đề tài/Dự án</th>
-            <td colspan="3">
+            <td>
               <select class="form-control" id="select_de_tai" v-model="de_tai">
                 <option :value="null" disabled>-- Chọn đề tài/dự án --</option>
                 <option :value="dt" v-for="(dt,index) in options_dt" :key="index">{{dt.ten_de_tai}}</option>
               </select>
+            </td>
+            <th scope="row">Tên Module</th>
+            <td>
+              <select class="form-control" style="display:inline;width:89%" id="select_module" v-model="module" v-if="changeFormModule == false">
+                <option :value="module" v-for="(module,index) in option_md" :key="index">{{module.name}}</option>
+              </select>
+              <input class="form-control" style="display:inline;width:89%" id="input_module" type="text" v-model="module.name" placeholder="Nhập tên module" v-else/>
+              <b-button @click="changeFormModule = !changeFormModule" variant="outline-primary">
+                  <i class="fas fa-sync-alt"></i>
+              </b-button>
             </td>
           </tr>
           <tr>
@@ -34,46 +44,48 @@
       </b-card-body>
     </b-card>
     <!-- Checklist -->
-    <b-card v-if="selectQT() == 'SP'">
-      <b-card-body>
-        <CheckListSPForm :quy_trinh="quy_trinh" :de_tai="de_tai" :thoigian="thoigian" :key="renderKey"></CheckListSPForm>
-      </b-card-body>
-    </b-card>
-    <b-card v-else-if="selectQT() == 'CK'">
-      <b-card-body>
-        <CheckListCKForm :quy_trinh="quy_trinh" :de_tai="de_tai" :thoigian="thoigian" :key="renderKey"></CheckListCKForm>
-      </b-card-body>
-    </b-card>
-    <b-card v-else-if="selectQT() == 'PC'">
-      <b-card-body>
-        <CheckListPCForm :quy_trinh="quy_trinh" :de_tai="de_tai" :thoigian="thoigian" :key="renderKey"></CheckListPCForm>
-      </b-card-body>
-    </b-card>
-    <b-card v-else-if="selectQT() == 'PCRG'">
-      <b-card-body>
-        <CheckListPCRGForm :quy_trinh="quy_trinh" :de_tai="de_tai" :thoigian="thoigian" :key="renderKey"></CheckListPCRGForm>
-      </b-card-body>
-    </b-card>
-    <b-card v-else-if="selectQT() == 'PM'">
-      <b-card-body>
-        <CheckListPMForm :quy_trinh="quy_trinh" :de_tai="de_tai" :thoigian="thoigian" :key="renderKey"></CheckListPMForm>
-      </b-card-body>
-    </b-card>
-    <b-card v-else-if="selectQT() == 'SXTN'">
-      <b-card-body>
-        <CheckListSXTNForm :quy_trinh="quy_trinh" :de_tai="de_tai" :thoigian="thoigian" :key="renderKey"></CheckListSXTNForm>
-      </b-card-body>
-    </b-card>
-    <b-card v-else-if="selectQT() == 'SXL'">
-      <b-card-body>
-        <CheckListSXLForm :quy_trinh="quy_trinh" :de_tai="de_tai" :thoigian="thoigian" :key="renderKey"></CheckListSXLForm>
-      </b-card-body>
-    </b-card>
-    <b-card v-else-if="selectQT() == 'SBH'">
-      <b-card-body>
-        <CheckListSBHForm :quy_trinh="quy_trinh" :de_tai="de_tai" :thoigian="thoigian" :key="renderKey"></CheckListSBHForm>
-      </b-card-body>
-    </b-card>
+    <div class="checklist">
+      <b-card v-if="selectQT() == 'SP'">
+        <b-card-body>
+          <CheckListSPForm :quy_trinh="quy_trinh" :de_tai="de_tai" :thoigian="thoigian" :module="module" :key="renderKey"></CheckListSPForm>
+        </b-card-body>
+      </b-card>
+      <b-card v-else-if="selectQT() == 'CK'">
+        <b-card-body>
+          <CheckListCKForm :quy_trinh="quy_trinh" :de_tai="de_tai" :thoigian="thoigian" :module="module" :key="renderKey"></CheckListCKForm>
+        </b-card-body>
+      </b-card>
+      <b-card v-else-if="selectQT() == 'PC'">
+        <b-card-body>
+          <CheckListPCForm :quy_trinh="quy_trinh" :de_tai="de_tai" :thoigian="thoigian" :module="module" :key="renderKey"></CheckListPCForm>
+        </b-card-body>
+      </b-card>
+      <b-card v-else-if="selectQT() == 'PCRG'">
+        <b-card-body>
+          <CheckListPCRGForm :quy_trinh="quy_trinh" :de_tai="de_tai" :thoigian="thoigian" :module="module" :key="renderKey"></CheckListPCRGForm>
+        </b-card-body>
+      </b-card>
+      <b-card v-else-if="selectQT() == 'PM'">
+        <b-card-body>
+          <CheckListPMForm :quy_trinh="quy_trinh" :de_tai="de_tai" :thoigian="thoigian" :module="module" :key="renderKey"></CheckListPMForm>
+        </b-card-body>
+      </b-card>
+      <b-card v-else-if="selectQT() == 'SXTN'">
+        <b-card-body>
+          <CheckListSXTNForm :quy_trinh="quy_trinh" :de_tai="de_tai" :thoigian="thoigian" :module="module" :key="renderKey"></CheckListSXTNForm>
+        </b-card-body>
+      </b-card>
+      <b-card v-else-if="selectQT() == 'SXL'">
+        <b-card-body>
+          <CheckListSXLForm :quy_trinh="quy_trinh" :de_tai="de_tai" :thoigian="thoigian" :module="module" :key="renderKey"></CheckListSXLForm>
+        </b-card-body>
+      </b-card>
+      <b-card v-else-if="selectQT() == 'SBH'">
+        <b-card-body>
+          <CheckListSBHForm :quy_trinh="quy_trinh" :de_tai="de_tai" :thoigian="thoigian" :module="module" :key="renderKey"></CheckListSBHForm>
+        </b-card-body>
+      </b-card>
+    </div>
   </div>
 </template>
 
@@ -103,7 +115,10 @@ export default {
     return {
       options_qt: [],
       quy_trinh: null,
+      option_md: [],
+      module: null,
       options_dt: [],
+      changeFormModule: false,
       de_tai: null,
       thoigian: new Date().toISOString().substring(0, 10),
       renderKey: 0
@@ -114,6 +129,15 @@ export default {
       //render lại CheckListForm khi thay đổi lựa chọn đề tài
       this.renderKey++;
     },
+    changeFormModule(){
+      if(this.changeFormModule == true) this.module.name = "";
+      else {
+        axios.get("/module").then(response => {
+          this.option_md = response.data;
+          this.module = this.option_md[0];
+        });
+      }
+    }
   },
   methods: {
     selectQT(){
@@ -138,9 +162,16 @@ export default {
     axios.get("/du-an").then(response => {
       this.options_dt = response.data;
     });
+    axios.get("/module").then(response => {
+      this.option_md = response.data;
+      this.module = this.option_md[0];
+    });
   }
 };
 </script>
 
-<style>
+<style lang="scss" scoped>
+  th{
+    width: 10vw;
+  }
 </style>

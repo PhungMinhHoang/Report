@@ -4,7 +4,7 @@
         <b-card>
           <b-card-header>
             <i class="far fa-list-alt fa-2x"></i>
-            <h2>Danh sách kpi quy trình</h2>
+            <h2>Kết quả KPI đánh giá Quy trình</h2>
           </b-card-header>
           <b-card-body>
             <KPIQuyTrinhTable />

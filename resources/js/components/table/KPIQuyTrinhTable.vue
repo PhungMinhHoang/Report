@@ -37,6 +37,7 @@ export default {
         "id",
         "ten_du_an",
         "ten_quy_trinh",
+        "ten_module",
         "diem",
         "thoigian",
         "thao_tac"
@@ -45,20 +46,21 @@ export default {
       options: {
         headings: {
           stt: "ID ",
-          ten_du_an: "Tên đề tài/dự án ",
+          ten_du_an: "Đề tài/dự án ",
           ten_quy_trinh: "Quy Trình ",
+          ten_module: "Module",
           diem: "Điểm ",
           thoigian: "Thời gian",
           thao_tac: "Thao tác"
         },
-        sortable: ["id", "ten_du_an", "ten_quy_trinh", "diem", "thoigian"],
+        sortable: ["id", "ten_du_an", "ten_quy_trinh", "ten_module", "diem", "thoigian"],
         sortIcon: {
           base: "fa",
           up: "fas fa-sort-up",
           down: "fas fa-sort-down",
           is: "fas fa-sort"
         },
-        filterable: ["ten_du_an", "ten_quy_trinh", "diem", "thoigian"],
+        filterable: ["ten_du_an", "ten_quy_trinh", "ten_module", "diem", "thoigian"],
         pagination: {
           chunk: 5,
           edge: true,

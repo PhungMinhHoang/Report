@@ -9,13 +9,18 @@ use App\Http\Resources\TaiLieuQuyTrinhResource;
 use App\Models\KPI_QuyTrinh;
 use App\Models\TaiLieuQuyTrinh;
 use App\Models\User;
+use App\Models\Module;
 use Illuminate\Support\Facades\Auth;
 
 class KPI_QuyTrinhController extends Controller
 {
     public function getTaiLieuQuyTrinh($id)
     {
-        return TaiLieuQuyTrinhResource::collection(TaiLieuQuyTrinh::where('kpi_quytrinh_id',$id)->get());
+        return TaiLieuQuyTrinhResource::collection(TaiLieuQuyTrinh::where('kpi_quytrinh_id', $id)->get());
+    }
+    public function getModule()
+    {
+        return response()->json(Module::all());
     }
 
     public function index()
@@ -30,18 +35,28 @@ class KPI_QuyTrinhController extends Controller
         }
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
     {
+        $module = Module::firstOrCreate(['name' => $request->module]);
         $data = KPI_QuyTrinh::updateOrCreate(
-            ['quy_trinh_id' => $request->quy_trinh_id, 'du_an_id' => $request->du_an_id, 'thoigian' => date("Y-m",strtotime($request->thoigian))],
+            ['quy_trinh_id' => $request->quy_trinh_id, 'module_id' => $module->id, 'du_an_id' => $request->du_an_id, 'thoigian' => date("Y-m", strtotime($request->thoigian))],
             ['diem' => $request->diem]
         );
+        //Cap nhat diem trung binh module tong the
+        if ($module->id != 1) {
+            $average = KPI_QuyTrinh::where('du_an_id', $request->du_an_id)
+                ->where('thoigian', date("Y-m", strtotime($request->thoigian)))
+                ->where('quy_trinh_id', $request->quy_trinh_id)
+                ->where('module_id', '<>', 1)
+                ->get()
+                ->avg('diem');
+            $average = KPI_QuyTrinh::updateOrCreate(
+                ['quy_trinh_id' => $request->quy_trinh_id, 'module_id' => 1, 'du_an_id' => $request->du_an_id, 'thoigian' => date("Y-m", strtotime($request->thoigian))],
+                ['diem' => round($average)]
+            );
+        }
+
+        //Cap nhat tai lieu
         $tai_lieu_quy_trinh = $request->tai_lieu_quy_trinh;
         foreach ($tai_lieu_quy_trinh as $tl) {
             TaiLieuQuyTrinh::updateOrCreate(
@@ -51,39 +66,19 @@ class KPI_QuyTrinhController extends Controller
         }
 
         //Cap nhat diem trung binh quy_trinh_id = 8
-        $average = KPI_QuyTrinh::where('du_an_id',$request->du_an_id)
-                                ->where('thoigian',date("Y-m",strtotime($request->thoigian)))
-                                ->where('quy_trinh_id','<>',8)
-                                ->get()
-                                ->avg('diem');
+        $average = KPI_QuyTrinh::where('du_an_id', $request->du_an_id)
+            ->where('thoigian', date("Y-m", strtotime($request->thoigian)))
+            ->where('quy_trinh_id', '<>', 8)
+            ->where('module_id', 1)
+            ->get()
+            ->avg('diem');
         $average = KPI_QuyTrinh::updateOrCreate(
-            ['quy_trinh_id' => 8, 'du_an_id' => $request->du_an_id, 'thoigian' => date("Y-m",strtotime($request->thoigian))],
+            ['quy_trinh_id' => 8, 'module_id' => 1, 'du_an_id' => $request->du_an_id, 'thoigian' => date("Y-m", strtotime($request->thoigian))],
             ['diem' => round($average)]
         );
 
-        return response()->json(['success' => 'Thêm thành công', 'data'=>new KPI_QuyTrinhResource($data)]);
+        return response()->json(['success' => 'Thêm thành công', 'data' => new KPI_QuyTrinhResource($data)]);
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
-    }
 }

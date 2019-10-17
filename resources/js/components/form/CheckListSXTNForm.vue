@@ -660,6 +660,7 @@ export default {
     props:{
         quy_trinh: Object,
         de_tai: Object,
+        module: Object,
         thoigian: [Date,String]
     },
     data(){
@@ -767,6 +768,7 @@ export default {
                 axios.post("/kpi-quy-trinh", {
                     quy_trinh_id: this.quy_trinh.id,
                     du_an_id: this.de_tai.id,
+                    module: this.module.name,
                     diem: this.getRate,
                     thoigian: this.thoigian,
                     tai_lieu_quy_trinh: this.getDocuments()

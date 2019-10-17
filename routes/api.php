@@ -1,10 +1,5 @@
 <?php
 
-use App\Http\Resources\UserResource;
-use App\Models\User;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-
 Route::group(['prefix' => '', 'namespace' => 'Api', 'as' => 'api.'], function () {
     Route::post('auth/login', 'AuthController@login');
     Route::group(['middleware' => 'jwt.auth'], function () {
@@ -16,6 +11,7 @@ Route::group(['prefix' => '', 'namespace' => 'Api', 'as' => 'api.'], function ()
         Route::resource('quy-trinh', 'QuyTrinhController', ['except' => ['create', 'edit']]);
         Route::resource('kpi-quy-trinh', 'KPI_QuyTrinhController', ['except' => ['create', 'edit']]);
         Route::get('tai-lieu-quy-trinh/{id}', 'KPI_QuyTrinhController@getTaiLieuQuyTrinh');
+        Route::get('module', 'KPI_QuyTrinhController@getModule');
 
         Route::get('/QA', 'UserController@getDanhSachQA');
         Route::get('/don-vi-ap-dung-quy-trinh', 'DonViController@getDonViApDungQuyTrinh');

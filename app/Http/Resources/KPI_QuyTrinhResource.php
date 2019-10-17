@@ -18,6 +18,7 @@ class KPI_QuyTrinhResource extends JsonResource
             'id' => $this->id,
             'ten_du_an' => $this->du_an->ten,
             'ten_quy_trinh' => $this->quy_trinh->ten,
+            'ten_module' => $this->module['name'],
             'diem' => $this->diem,
             'thoigian' => $this->thoigian
         ];
