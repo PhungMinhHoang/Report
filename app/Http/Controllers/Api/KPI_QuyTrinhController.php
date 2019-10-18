@@ -18,6 +18,16 @@ class KPI_QuyTrinhController extends Controller
     {
         return TaiLieuQuyTrinhResource::collection(TaiLieuQuyTrinh::where('kpi_quytrinh_id', $id)->get());
     }
+    public function findDataKpiQuyTrinh(Request $request)
+    {
+        $kpiQuyTrinh = KPI_QuyTrinh::where('du_an_id',$request->du_an_id)
+                                ->where('quy_trinh_id',$request->quy_trinh_id)
+                                ->where('module_id',$request->module_id)
+                                ->where('thoigian',date("Y-m", strtotime($request->thoigian)))
+                                ->firstOrFail();
+                                //return $kpiQuyTrinh->id;
+            return TaiLieuQuyTrinhResource::collection(TaiLieuQuyTrinh::where('kpi_quytrinh_id', $kpiQuyTrinh->id)->get());
+    }
     public function getModule()
     {
         return response()->json(Module::all());

@@ -498,6 +498,24 @@ export default {
             temp_max_score: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
         } 
     },
+    mounted(){
+        if(this.module.hasOwnProperty('id')){
+            axios.post("/data-kpi-quy-trinh", {
+                quy_trinh_id: this.quy_trinh.id,
+                du_an_id: this.de_tai.id,
+                module_id: this.module.id,
+                thoigian: this.thoigian,
+            })
+            .then(response => {
+                console.log(response.data)
+                this.renderData(response.data);
+                
+            })
+            .catch(error => {
+                console.log(error);
+            });
+        }
+    },
     computed: {
         getTotalRealScore(){
             const reducer = (accumulator, currentValue) => accumulator + currentValue;
@@ -512,6 +530,22 @@ export default {
         },
     },
     methods: {
+        renderData(data){
+            for(let obj of data){
+                let index = 0;
+                while(true){
+                    if(document.getElementById(`document-name-${index}`).innerText == obj.ten_tai_lieu){
+                        //this.$set(this.document_names,index,obj.ten_tai_lieu);
+                        this.$set(this.links,index,obj.link);
+                        this.inputLink(index);
+                        this.$set(this.selections,index,obj.danh_gia);
+                        this.initSelect(document.getElementById(`select-${index}`),index)
+                        break;
+                    }
+                    index++;
+                }
+            }
+        },
         filterArray(array){
             return array.filter(element => {
                 return element != undefined && element != null && element != ""
@@ -536,6 +570,28 @@ export default {
                 this.$set(this.real_score,i,0)
                 DOM_select.classList.remove("bg-warning","bg-success","bg-danger");
             }
+        },
+        initSelect(dom,i){
+            dom.classList.add("text-dark");
+            dom.classList.remove("bg-warning","bg-success","bg-danger");
+            //Đánh giá đạt
+            if(this.selections[i] == 1){
+                dom.classList.add("bg-success");
+                this.$set(this.real_score,i,this.max_score[i])
+                this.$set(this.temp_max_score,i,this.max_score[i])
+            }
+            //Không áp dụng
+            else if(this.selections[i] == -1 || this.selections[i] == null){
+                dom.classList.add("bg-warning");
+                this.$set(this.temp_max_score,i,0)
+                this.$set(this.real_score,i,0)
+            }
+            //Chưa đánh giá || Đánh giá không đạt
+            else{
+                dom.classList.add("bg-danger");
+                this.$set(this.temp_max_score,i,this.max_score[i])
+                this.$set(this.real_score,i,0)
+            }    
         },
         changeSelect(event,i){
             event.target.classList.add("text-dark");
@@ -599,7 +655,7 @@ export default {
                     tai_lieu_quy_trinh: this.getDocuments()
                 })
                 .then(response => {
-                    console.log(response.data)
+                    //console.log(response.data)
                     this.$bvToast.toast(response.data.data.ten_du_an, {
                         title: `Thêm thành công kpi quy trinh:${response.data.data.ten_quy_trinh}`,
                         variant: "success",

@@ -18,10 +18,10 @@
             </td>
             <th scope="row">Tên Module</th>
             <td>
-              <select class="form-control" style="display:inline;width:89%" id="select_module" v-model="module" v-if="changeFormModule == false">
-                <option :value="module" v-for="(module,index) in option_md" :key="index">{{module.name}}</option>
+              <select class="form-control" style="display:inline;width:89%" id="select_module" v-model="module_select" v-if="changeFormModule == false" @change="module=module_select">
+                <option :value="md" v-for="(md,index) in option_md" :key="index">{{md.name}}</option>
               </select>
-              <input class="form-control" style="display:inline;width:89%" id="input_module" type="text" v-model="module.name" placeholder="Nhập tên module" v-else/>
+              <input class="form-control" style="display:inline;width:89%" id="input_module" type="text" v-model="module_input.name" placeholder="Nhập tên module" v-else/>
               <b-button @click="changeFormModule = !changeFormModule" variant="outline-primary">
                   <i class="fas fa-sync-alt"></i>
               </b-button>
@@ -113,10 +113,13 @@ export default {
   },
   data() {
     return {
+      checklistData: [],
       options_qt: [],
       quy_trinh: null,
       option_md: [],
       module: null,
+      module_select: null,
+      module_input: null,
       options_dt: [],
       changeFormModule: false,
       de_tai: null,
@@ -129,13 +132,18 @@ export default {
       //render lại CheckListForm khi thay đổi lựa chọn đề tài
       this.renderKey++;
     },
+    module(){
+      //render lại CheckListForm khi thay đổi module
+      this.renderKey++;
+    },
     changeFormModule(){
-      if(this.changeFormModule == true) this.module.name = "";
+      if(this.changeFormModule == true){
+         this.module_input.name = "";
+         this.module = this.module_input;
+      }
       else {
-        axios.get("/module").then(response => {
-          this.option_md = response.data;
-          this.module = this.option_md[0];
-        });
+        this.module_select = this.option_md[0];
+        this.module = this.module_select;
       }
     }
   },
@@ -164,7 +172,9 @@ export default {
     });
     axios.get("/module").then(response => {
       this.option_md = response.data;
-      this.module = this.option_md[0];
+      this.module_select = response.data[0];
+      this.module_input = {name:""};
+      this.module = this.module_select;
     });
   }
 };

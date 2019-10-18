@@ -11,6 +11,8 @@ Route::group(['prefix' => '', 'namespace' => 'Api', 'as' => 'api.'], function ()
         Route::resource('quy-trinh', 'QuyTrinhController', ['except' => ['create', 'edit']]);
         Route::resource('kpi-quy-trinh', 'KPI_QuyTrinhController', ['except' => ['create', 'edit']]);
         Route::get('tai-lieu-quy-trinh/{id}', 'KPI_QuyTrinhController@getTaiLieuQuyTrinh');
+        Route::post('data-kpi-quy-trinh', 'KPI_QuyTrinhController@findDataKpiQuyTrinh');
+
         Route::get('module', 'KPI_QuyTrinhController@getModule');
 
         Route::get('/QA', 'UserController@getDanhSachQA');
