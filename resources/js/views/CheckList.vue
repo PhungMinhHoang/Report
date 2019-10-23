@@ -17,11 +17,11 @@
               </select>
             </td>
             <th scope="row">Tên Module</th>
-            <td>
-              <select class="form-control" style="display:inline;width:89%" id="select_module" v-model="module_select" v-if="changeFormModule == false" @change="module=module_select">
+            <td style="display:inline-flex;width:100%">
+              <select class="form-control" id="select_module" v-model="module_select" v-if="changeFormModule == false" @change="module=module_select">
                 <option :value="md" v-for="(md,index) in option_md" :key="index">{{md.name}}</option>
               </select>
-              <input class="form-control" style="display:inline;width:89%" id="input_module" type="text" v-model="module_input.name" placeholder="Nhập tên module" v-else/>
+              <input class="form-control" id="input_module" type="text" v-model="module_input.name" placeholder="Nhập tên module" v-else/>
               <b-button @click="changeFormModule = !changeFormModule" variant="outline-primary">
                   <i class="fas fa-sync-alt"></i>
               </b-button>

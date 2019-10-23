@@ -26,14 +26,15 @@ export default {
   data: function() {
     return {
       badgeClass: "",
-      columns: ["id", "ten_tai_lieu", "link", "danh_gia"],
+      columns: ["id", "ten_tai_lieu", "link", "danh_gia","ghi_chu"],
       data: [],
       options: {
         headings: {
           stt: "ID ",
           ten_tai_lieu: "Tên tài liệu",
           link: "Đường dẫn lưu trữ",
-          danh_gia: "Kết quả đánh giá"
+          danh_gia: "Kết quả đánh giá",
+          ghi_chu: "Ghi chú"
         },
         sortable: ["id", "ten_tai_lieu", "link", "danh_gia"],
         sortIcon: {

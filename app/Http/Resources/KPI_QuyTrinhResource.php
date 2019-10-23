@@ -20,7 +20,7 @@ class KPI_QuyTrinhResource extends JsonResource
             'ten_quy_trinh' => $this->quy_trinh->ten,
             'ten_module' => $this->module['name'],
             'diem' => $this->diem,
-            'thoigian' => $this->thoigian
+            'thoigian' => $this->thoigian,
         ];
     }
 }

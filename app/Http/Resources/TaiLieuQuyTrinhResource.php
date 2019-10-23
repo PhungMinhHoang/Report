@@ -21,7 +21,8 @@ class TaiLieuQuyTrinhResource extends JsonResource
             'danh_gia' => $this->danh_gia,
             'ten_du_an' => $this->kpi_quytrinh->du_an->ten,
             'ten_quy_trinh' => $this->kpi_quytrinh->quy_trinh->ten,
-            'thoigian' => $this->kpi_quytrinh->thoigian
+            'thoigian' => $this->kpi_quytrinh->thoigian,
+            'ghi_chu' => $this->ghi_chu
         ];
     }
 }

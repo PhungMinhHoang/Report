@@ -8,7 +8,7 @@ class TaiLieuQuyTrinh extends Model
 {
     protected $table = 'tai_lieu_quy_trinh';
 
-    protected $fillable = ['ten','link','danh_gia','kpi_quytrinh_id'];
+    protected $fillable = ['ten','link','danh_gia','kpi_quytrinh_id','ghi_chu'];
 
     public function kpi_quytrinh()
     {
