@@ -4,13 +4,14 @@
             <tr>
                 <th style="width:" >STT</th>
                 <th style="width:15%">Nội dung đánh giá</th>
-                <th style="width:15%">Nội dung hồ sơ tài liệu</th>
-                <th style="width:15%">Biểu mẫu yêu cầu</th>
-                <th style="width:10%">Cấp phê duyệt</th>
-                <th style="width:">Link lưu trữ chung</th>
+                <th style="width:20%">Nội dung hồ sơ tài liệu</th>
+                <th style="width:10%">Biểu mẫu yêu cầu</th>
+                <th style="width:5%">Cấp phê duyệt</th>
+                <th style="width:%">Link lưu trữ chung</th>
                 <th style="width:">Kết quả đánh giá</th>
                 <th style="width:">Điểm tối đa</th>
                 <th style="width:">Điểm thực tế</th>
+                <th style="width:">Ghi chú</th>
             </tr>
             <tr>
                 <td>1</td>
@@ -29,6 +30,7 @@
                 </td>
                 <td>{{temp_max_score[0]}}</td>
                 <td>{{real_score[0]}}</td>
+                <td><textarea class="form-control" v-model="ghi_chu[0]" placeholder="Thêm ghi chú mới" rows="1"></textarea></td>
             </tr>
             <tr>
                 <td>2</td>
@@ -49,6 +51,7 @@
                 </td>
                 <td>{{temp_max_score[1]}}</td>
                 <td>{{real_score[1]}}</td>
+                <td><textarea class="form-control" v-model="ghi_chu[1]" placeholder="Thêm ghi chú mới" rows="1"></textarea></td>
             </tr>
             <tr>
                 <td>3</td>
@@ -69,22 +72,22 @@
                 </td>
                 <td>{{temp_max_score[2]}}</td>
                 <td>{{real_score[2]}}</td>
+                <td><textarea class="form-control" v-model="ghi_chu[2]" placeholder="Thêm ghi chú mới" rows="1"></textarea></td>
             </tr>
             <tr>
-                <td>4</td>
-                <th>Thiết kế phần cứng</th>
-                <td id='document-name-3'>
+                <td rowspan="2">4</td>
+                <th rowspan="2">Thiết kế phần cứng</th>
+                <td rowspan="2" >
                     - PCB 
                     <br/>- Gerber, NCDrill, X-Y place, Assembly Drawing 
                     <br/>- Tài liệu yêu cầu kỹ thuật gia công bo mạch 
                     <br/>- 3D MCAD 
                     <br/>- Tài liệu yêu cầu về cơ khí shield (nếu có)
                 </td>
-                <td>
-                    - HW – YeuCauGiaCongBoMach 
-                    <br/>- HW - YeuCauCoKhiShield
+                <td id='document-name-3'>
+                    - HW - YeuCauGiaCongBoMach 
                 </td>
-                <td>-</td>
+                <td rowspan="2">-</td>
                 <td><input type="text" class="form-control" v-model="links[3]" @keyup="inputLink(3)" placeholder="Nhập link vào đây"></td>
                 <td>
                     <select disabled id="select-3" class="form-control" v-model="selections[3]" @change="changeSelect($event,3)" >
@@ -96,13 +99,12 @@
                 </td>
                 <td>{{temp_max_score[3]}}</td>
                 <td>{{real_score[3]}}</td>
+                <td><textarea class="form-control" v-model="ghi_chu[3]" placeholder="Thêm ghi chú mới" rows="1"></textarea></td>
             </tr>
             <tr>
-                <td>5</td>
-                <th>Kiểm tra, phê duyệt thiết kế phần cứng</th>
-                <td id='document-name-4'>Checklist kiểm tra PCB</td>
-                <td>HW - ChecklistPCB</td>
-                <td>-</td>
+                <td id='document-name-4'>
+                    - HW - YeuCauGiaCongBoMach 
+                </td>
                 <td><input type="text" class="form-control" v-model="links[4]" @keyup="inputLink(4)" placeholder="Nhập link vào đây"></td>
                 <td>
                     <select disabled id="select-4" class="form-control" v-model="selections[4]" @change="changeSelect($event,4)" >
@@ -114,12 +116,13 @@
                 </td>
                 <td>{{temp_max_score[4]}}</td>
                 <td>{{real_score[4]}}</td>
+                <td><textarea class="form-control" v-model="ghi_chu[4]" placeholder="Thêm ghi chú mới" rows="1"></textarea></td>
             </tr>
             <tr>
-                <td>6</td>
-                <th>Chế tạo bộ mẫu</th>
-                <td id='document-name-5'>Bo mạch</td>
-                <td>-</td>
+                <td>5</td>
+                <th>Kiểm tra, phê duyệt thiết kế phần cứng</th>
+                <td id='document-name-5'>Checklist kiểm tra PCB</td>
+                <td>HW - ChecklistPCB</td>
                 <td>-</td>
                 <td><input type="text" class="form-control" v-model="links[5]" @keyup="inputLink(5)" placeholder="Nhập link vào đây"></td>
                 <td>
@@ -132,16 +135,13 @@
                 </td>
                 <td>{{temp_max_score[5]}}</td>
                 <td>{{real_score[5]}}</td>
+                <td><textarea class="form-control" v-model="ghi_chu[5]" placeholder="Thêm ghi chú mới" rows="1"></textarea></td>
             </tr>
             <tr>
-                <td>7</td>
+                <td>6</td>
                 <th>Chế tạo bộ mẫu</th>
-                <td id='document-name-6'>
-                    Báo cáo bring-up, kiểm tra tính năng và chỉ tiêu kỹ thuật
-                </td>
-                <td>
-                    HW - BaoCaoKetQuaBringUpCTKT
-                </td>
+                <td id='document-name-6'>Bo mạch</td>
+                <td>-</td>
                 <td>-</td>
                 <td><input type="text" class="form-control" v-model="links[6]" @keyup="inputLink(6)" placeholder="Nhập link vào đây"></td>
                 <td>
@@ -154,14 +154,17 @@
                 </td>
                 <td>{{temp_max_score[6]}}</td>
                 <td>{{real_score[6]}}</td>
+                <td><textarea class="form-control" v-model="ghi_chu[6]" placeholder="Thêm ghi chú mới" rows="1"></textarea></td>
             </tr>
             <tr>
-                <td>8</td>
-                <th>Ký duyệt Báo cáo bring-up, kiểm tra tính năng và chỉ tiêu kỹ thuật</th>
+                <td>7</td>
+                <th>Chế tạo bộ mẫu</th>
                 <td id='document-name-7'>
-                    Báo cáo bring-up, kiểm tra tính năng và chỉ tiêu kỹ thuật (ký duyệt)
+                    Báo cáo bring-up, kiểm tra tính năng và chỉ tiêu kỹ thuật
                 </td>
-                <td>-</td>
+                <td>
+                    HW - BaoCaoKetQuaBringUpCTKT
+                </td>
                 <td>-</td>
                 <td><input type="text" class="form-control" v-model="links[7]" @keyup="inputLink(7)" placeholder="Nhập link vào đây"></td>
                 <td>
@@ -174,12 +177,13 @@
                 </td>
                 <td>{{temp_max_score[7]}}</td>
                 <td>{{real_score[7]}}</td>
+                <td><textarea class="form-control" v-model="ghi_chu[7]" placeholder="Thêm ghi chú mới" rows="1"></textarea></td>
             </tr>
             <tr>
-                <td>9</td>
-                <th>Phê duyệt Báo cáo bring-up, kiểm tra tính năng và chỉ tiêu kỹ thuật</th>
+                <td>8</td>
+                <th>Ký duyệt Báo cáo bring-up, kiểm tra tính năng và chỉ tiêu kỹ thuật</th>
                 <td id='document-name-8'>
-                    Báo cáo bring-up, kiểm tra tính năng và chỉ tiêu kỹ thuật (được phê duyệt)
+                    Báo cáo bring-up, kiểm tra tính năng và chỉ tiêu kỹ thuật (ký duyệt)
                 </td>
                 <td>-</td>
                 <td>-</td>
@@ -194,6 +198,28 @@
                 </td>
                 <td>{{temp_max_score[8]}}</td>
                 <td>{{real_score[8]}}</td>
+                <td><textarea class="form-control" v-model="ghi_chu[8]" placeholder="Thêm ghi chú mới" rows="1"></textarea></td>
+            </tr>
+            <tr>
+                <td>9</td>
+                <th>Phê duyệt Báo cáo bring-up, kiểm tra tính năng và chỉ tiêu kỹ thuật</th>
+                <td id='document-name-9'>
+                    Báo cáo bring-up, kiểm tra tính năng và chỉ tiêu kỹ thuật (được phê duyệt)
+                </td>
+                <td>-</td>
+                <td>-</td>
+                <td><input type="text" class="form-control" v-model="links[9]" @keyup="inputLink(9)" placeholder="Nhập link vào đây"></td>
+                <td>
+                    <select disabled id="select-9" class="form-control" v-model="selections[9]" @change="changeSelect($event,9)" >
+                        <option :value="undefined" disabled>--Lựa chọn--</option>
+                        <option value="-1">Không áp dụng</option>
+                        <option value="0">Không đạt</option>
+                        <option value="1">Đạt</option>
+                    </select>
+                </td>
+                <td>{{temp_max_score[9]}}</td>
+                <td>{{real_score[9]}}</td>
+                <td><textarea class="form-control" v-model="ghi_chu[9]" placeholder="Thêm ghi chú mới" rows="1"></textarea></td>
             </tr>
             
 
@@ -225,6 +251,7 @@ export default {
             document_names: [],
             links: [],
             selections: [],
+            ghi_chu: [],
             max_score:  [10,5,10,5,10,20,5,10,10],
             real_score: [0,0,0,0,0,0,0,0,0],
             temp_max_score: [0,0,0,0,0,0,0,0,0],
@@ -243,7 +270,42 @@ export default {
             return Math.round(this.getTotalRealScore / this.getTotalTempMaxScore * 100);
         },
     },
+    mounted(){
+        if(this.module.hasOwnProperty('id')){
+            axios.post("/data-kpi-quy-trinh", {
+                quy_trinh_id: this.quy_trinh.id,
+                du_an_id: this.de_tai.id,
+                module_id: this.module.id,
+                thoigian: this.thoigian,
+            })
+            .then(response => {
+                console.log(response.data)
+                this.renderData(response.data);
+                
+            })
+            .catch(error => {
+                console.log(error);
+            });
+        }
+    },
     methods: {
+        renderData(data){
+            for(let obj of data){
+                let index = 0;
+                while(true){
+                    if(document.getElementById(`document-name-${index}`).innerText == obj.ten_tai_lieu){
+                        //console.log(index)
+                        this.$set(this.links,index,obj.link);
+                        this.inputLink(index);
+                        this.$set(this.selections,index,obj.danh_gia);
+                        this.initSelect(document.getElementById(`select-${index}`),index)
+                        this.$set(this.ghi_chu,index,obj.ghi_chu);
+                        break;
+                    }
+                    index++;
+                }
+            }
+        },
         filterArray(array){
             return array.filter(element => {
                 return element != undefined && element != null && element != ""
@@ -268,6 +330,28 @@ export default {
                 this.$set(this.real_score,i,0)
                 DOM_select.classList.remove("bg-warning","bg-success","bg-danger");
             }
+        },
+        initSelect(dom,i){
+            dom.classList.add("text-dark");
+            dom.classList.remove("bg-warning","bg-success","bg-danger");
+            //Đánh giá đạt
+            if(this.selections[i] == 1){
+                dom.classList.add("bg-success");
+                this.$set(this.real_score,i,this.max_score[i])
+                this.$set(this.temp_max_score,i,this.max_score[i])
+            }
+            //Không áp dụng
+            else if(this.selections[i] == -1 || this.selections[i] == null){
+                dom.classList.add("bg-warning");
+                this.$set(this.temp_max_score,i,0)
+                this.$set(this.real_score,i,0)
+            }
+            //Chưa đánh giá || Đánh giá không đạt
+            else{
+                dom.classList.add("bg-danger");
+                this.$set(this.temp_max_score,i,this.max_score[i])
+                this.$set(this.real_score,i,0)
+            }    
         },
         changeSelect(event,i){
             event.target.classList.add("text-dark");
@@ -303,12 +387,15 @@ export default {
         },
         getDocuments(){
             let documents = [];
-            for (let i = 0; i < this.filterArray(this.links).length; i++) {
-                documents.push({
-                    ten: this.filterArray(this.document_names)[i],
-                    link: this.filterArray(this.links)[i],
-                    danh_gia: this.filterArray(this.selections)[i]
-                })
+            for (let i = 0; i < this.links.length; i++) {
+                if(this.links[i] != undefined){
+                    documents.push({
+                        ten: this.document_names[i],
+                        link: this.links[i],
+                        danh_gia: this.selections[i],
+                        ghi_chu: this.ghi_chu[i]
+                    })
+                }
             }
             return documents;
         },
@@ -331,6 +418,7 @@ export default {
                     tai_lieu_quy_trinh: this.getDocuments()
                 })
                 .then(response => {
+                    //console.log(response.data)
                     this.$bvToast.toast(response.data.data.ten_du_an, {
                         title: `Thêm thành công kpi quy trinh:${response.data.data.ten_quy_trinh}`,
                         variant: "success",
@@ -348,10 +436,18 @@ export default {
 </script>
 
 <style lang = "scss" scoped>
+    *{
+        text-align: center;
+        vertical-align: middle !important ;
+    }
     select{
         width: 145px;
     }
     input{
         width: 200px;
     }
+    textarea{
+        width: 200px;
+    }
+
 </style>

@@ -4,13 +4,14 @@
             <tr>
                 <th style="width:" >STT</th>
                 <th style="width:15%">Nội dung đánh giá</th>
-                <th style="width:15%">Nội dung hồ sơ tài liệu</th>
-                <th style="width:">Biểu mẫu yêu cầu</th>
-                <th style="width:">Bộ phận được đánh giá</th>
-                <th style="width:">Link lưu trữ chung</th>
+                <th style="width:20%">Nội dung hồ sơ tài liệu</th>
+                <th style="width:10%">Biểu mẫu yêu cầu</th>
+                <th style="width:5%">Cấp phê duyệt</th>
+                <th style="width:%">Link lưu trữ chung</th>
                 <th style="width:">Kết quả đánh giá</th>
                 <th style="width:">Điểm tối đa</th>
                 <th style="width:">Điểm thực tế</th>
+                <th style="width:">Ghi chú</th>
             </tr>
             <tr>
                 <td>1</td>
@@ -31,6 +32,7 @@
                 </td>
                 <td>{{temp_max_score[0]}}</td>
                 <td>{{real_score[0]}}</td>
+                <td><textarea class="form-control" v-model="ghi_chu[0]" placeholder="Thêm ghi chú mới" rows="1"></textarea></td>
             </tr>
             <tr>
                 <td>2</td>
@@ -55,6 +57,7 @@
                 </td>
                 <td>{{temp_max_score[1]}}</td>
                 <td>{{real_score[1]}}</td>
+                <td><textarea class="form-control" v-model="ghi_chu[1]" placeholder="Thêm ghi chú mới" rows="1"></textarea></td>
             </tr>
             <tr>
                 <td>3</td>
@@ -77,6 +80,7 @@
                 </td>
                 <td>{{temp_max_score[2]}}</td>
                 <td>{{real_score[2]}}</td>
+                <td><textarea class="form-control" v-model="ghi_chu[2]" placeholder="Thêm ghi chú mới" rows="1"></textarea></td>
             </tr>
             <tr>
                 <td>4</td>
@@ -97,6 +101,7 @@
                 </td>
                 <td>{{temp_max_score[3]}}</td>
                 <td>{{real_score[3]}}</td>
+                <td><textarea class="form-control" v-model="ghi_chu[3]" placeholder="Thêm ghi chú mới" rows="1"></textarea></td>
             </tr>
             <tr>
                 <td>5</td>
@@ -119,6 +124,7 @@
                 </td>
                 <td>{{temp_max_score[4]}}</td>
                 <td>{{real_score[4]}}</td>
+                <td><textarea class="form-control" v-model="ghi_chu[4]" placeholder="Thêm ghi chú mới" rows="1"></textarea></td>
             </tr>
             <tr>
                 <td>6</td>
@@ -144,6 +150,7 @@
                 </td>
                 <td>{{temp_max_score[5]}}</td>
                 <td>{{real_score[5]}}</td>
+                <td><textarea class="form-control" v-model="ghi_chu[5]" placeholder="Thêm ghi chú mới" rows="1"></textarea></td>
             </tr>
             <tr>
                 <td>7</td>
@@ -164,6 +171,7 @@
                 </td>
                 <td>{{temp_max_score[6]}}</td>
                 <td>{{real_score[6]}}</td>
+                <td><textarea class="form-control" v-model="ghi_chu[6]" placeholder="Thêm ghi chú mới" rows="1"></textarea></td>
             </tr>
             <tr>
                 <td>8</td>
@@ -184,6 +192,7 @@
                 </td>
                 <td>{{temp_max_score[7]}}</td>
                 <td>{{real_score[7]}}</td>
+                <td><textarea class="form-control" v-model="ghi_chu[7]" placeholder="Thêm ghi chú mới" rows="1"></textarea></td>
             </tr>
             <tr>
                 <td>9</td>
@@ -205,6 +214,7 @@
                 </td>
                 <td>{{temp_max_score[8]}}</td>
                 <td>{{real_score[8]}}</td>
+                <td><textarea class="form-control" v-model="ghi_chu[8]" placeholder="Thêm ghi chú mới" rows="1"></textarea></td>
             </tr>
             <tr>
                 <td>10</td>
@@ -225,6 +235,7 @@
                 </td>
                 <td>{{temp_max_score[9]}}</td>
                 <td>{{real_score[9]}}</td>
+                <td><textarea class="form-control" v-model="ghi_chu[9]" placeholder="Thêm ghi chú mới" rows="1"></textarea></td>
             </tr>
             <tr>
                 <td>11</td>
@@ -245,6 +256,7 @@
                 </td>
                 <td>{{temp_max_score[10]}}</td>
                 <td>{{real_score[10]}}</td>
+                <td><textarea class="form-control" v-model="ghi_chu[10]" placeholder="Thêm ghi chú mới" rows="1"></textarea></td>
             </tr>
             <tr>
                 <td>12</td>
@@ -265,6 +277,7 @@
                 </td>
                 <td>{{temp_max_score[11]}}</td>
                 <td>{{real_score[11]}}</td>
+                <td><textarea class="form-control" v-model="ghi_chu[11]" placeholder="Thêm ghi chú mới" rows="1"></textarea></td>
             </tr>
             <tr>
                 <td>13</td>
@@ -285,6 +298,7 @@
                 </td>
                 <td>{{temp_max_score[12]}}</td>
                 <td>{{real_score[12]}}</td>
+                <td><textarea class="form-control" v-model="ghi_chu[12]" placeholder="Thêm ghi chú mới" rows="1"></textarea></td>
             </tr>
             <tr>
                 <td>14</td>
@@ -305,6 +319,7 @@
                 </td>
                 <td>{{temp_max_score[13]}}</td>
                 <td>{{real_score[13]}}</td>
+                <td><textarea class="form-control" v-model="ghi_chu[13]" placeholder="Thêm ghi chú mới" rows="1"></textarea></td>
             </tr>
             <tr>
                 <td>15</td>
@@ -326,6 +341,7 @@
                 </td>
                 <td>{{temp_max_score[14]}}</td>
                 <td>{{real_score[14]}}</td>
+                <td><textarea class="form-control" v-model="ghi_chu[14]" placeholder="Thêm ghi chú mới" rows="1"></textarea></td>
             </tr>
             <tr>
                 <td>16</td>
@@ -346,6 +362,7 @@
                 </td>
                 <td>{{temp_max_score[15]}}</td>
                 <td>{{real_score[15]}}</td>
+                <td><textarea class="form-control" v-model="ghi_chu[15]" placeholder="Thêm ghi chú mới" rows="1"></textarea></td>
             </tr>
             <tr>
                 <td>17</td>
@@ -364,6 +381,7 @@
                 </td>
                 <td>{{temp_max_score[16]}}</td>
                 <td>{{real_score[16]}}</td>
+                <td><textarea class="form-control" v-model="ghi_chu[16]" placeholder="Thêm ghi chú mới" rows="1"></textarea></td>
             </tr>
             <tr>
                 <td>18</td>
@@ -384,6 +402,7 @@
                 </td>
                 <td>{{temp_max_score[17]}}</td>
                 <td>{{real_score[17]}}</td>
+                <td><textarea class="form-control" v-model="ghi_chu[17]" placeholder="Thêm ghi chú mới" rows="1"></textarea></td>
             </tr>
             <tr>
                 <td>19</td>
@@ -404,6 +423,7 @@
                 </td>
                 <td>{{temp_max_score[18]}}</td>
                 <td>{{real_score[18]}}</td>
+                <td><textarea class="form-control" v-model="ghi_chu[18]" placeholder="Thêm ghi chú mới" rows="1"></textarea></td>
             </tr>
             <tr>
                 <td>20</td>
@@ -424,6 +444,7 @@
                 </td>
                 <td>{{temp_max_score[19]}}</td>
                 <td>{{real_score[19]}}</td>
+                <td><textarea class="form-control" v-model="ghi_chu[19]" placeholder="Thêm ghi chú mới" rows="1"></textarea></td>
             </tr>
             <tr>
                 <td>21</td>
@@ -444,6 +465,7 @@
                 </td>
                 <td>{{temp_max_score[20]}}</td>
                 <td>{{real_score[20]}}</td>
+                <td><textarea class="form-control" v-model="ghi_chu[20]" placeholder="Thêm ghi chú mới" rows="1"></textarea></td>
             </tr>
             <tr>
                 <td>22</td>
@@ -464,6 +486,7 @@
                 </td>
                 <td>{{temp_max_score[21]}}</td>
                 <td>{{real_score[21]}}</td>
+                <td><textarea class="form-control" v-model="ghi_chu[21]" placeholder="Thêm ghi chú mới" rows="1"></textarea></td>
             </tr>
             <tr>
                 <td>23</td>
@@ -484,6 +507,7 @@
                 </td>
                 <td>{{temp_max_score[22]}}</td>
                 <td>{{real_score[22]}}</td>
+                <td><textarea class="form-control" v-model="ghi_chu[22]" placeholder="Thêm ghi chú mới" rows="1"></textarea></td>
             </tr>
             <tr>
                 <td>24</td>
@@ -504,6 +528,7 @@
                 </td>
                 <td>{{temp_max_score[23]}}</td>
                 <td>{{real_score[23]}}</td>
+                <td><textarea class="form-control" v-model="ghi_chu[23]" placeholder="Thêm ghi chú mới" rows="1"></textarea></td>
             </tr>
             <tr>
                 <td>25</td>
@@ -524,6 +549,7 @@
                 </td>
                 <td>{{temp_max_score[24]}}</td>
                 <td>{{real_score[24]}}</td>
+                <td><textarea class="form-control" v-model="ghi_chu[24]" placeholder="Thêm ghi chú mới" rows="1"></textarea></td>
             </tr>
             <tr>
                 <td>26</td>
@@ -544,6 +570,7 @@
                 </td>
                 <td>{{temp_max_score[25]}}</td>
                 <td>{{real_score[25]}}</td>
+                <td><textarea class="form-control" v-model="ghi_chu[25]" placeholder="Thêm ghi chú mới" rows="1"></textarea></td>
             </tr>
             <tr>
                 <td>27</td>
@@ -564,6 +591,7 @@
                 </td>
                 <td>{{temp_max_score[26]}}</td>
                 <td>{{real_score[26]}}</td>
+                <td><textarea class="form-control" v-model="ghi_chu[26]" placeholder="Thêm ghi chú mới" rows="1"></textarea></td>
             </tr>
             <tr>
                 <td>28</td>
@@ -584,6 +612,7 @@
                 </td>
                 <td>{{temp_max_score[27]}}</td>
                 <td>{{real_score[27]}}</td>
+                <td><textarea class="form-control" v-model="ghi_chu[27]" placeholder="Thêm ghi chú mới" rows="1"></textarea></td>
             </tr>
             <tr>
                 <td>29</td>
@@ -604,6 +633,7 @@
                 </td>
                 <td>{{temp_max_score[28]}}</td>
                 <td>{{real_score[28]}}</td>
+                <td><textarea class="form-control" v-model="ghi_chu[28]" placeholder="Thêm ghi chú mới" rows="1"></textarea></td>
             </tr>
 
 
@@ -635,6 +665,7 @@ export default {
             document_names: [],
             links: [],
             selections: [],
+            ghi_chu: [],
             max_score:      [1,5,1,5,5,5,5,5,5,1,10,5,10,1,1,1,10,1,1,1,1,5,1,5,2,2,3,1,1],
             real_score:     [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
             temp_max_score: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
@@ -653,7 +684,42 @@ export default {
             return Math.round(this.getTotalRealScore / this.getTotalTempMaxScore * 100);
         },
     },
+    mounted(){
+        if(this.module.hasOwnProperty('id')){
+            axios.post("/data-kpi-quy-trinh", {
+                quy_trinh_id: this.quy_trinh.id,
+                du_an_id: this.de_tai.id,
+                module_id: this.module.id,
+                thoigian: this.thoigian,
+            })
+            .then(response => {
+                console.log(response.data)
+                this.renderData(response.data);
+                
+            })
+            .catch(error => {
+                console.log(error);
+            });
+        }
+    },
     methods: {
+        renderData(data){
+            for(let obj of data){
+                let index = 0;
+                while(true){
+                    if(document.getElementById(`document-name-${index}`).innerText == obj.ten_tai_lieu){
+                        //console.log(index)
+                        this.$set(this.links,index,obj.link);
+                        this.inputLink(index);
+                        this.$set(this.selections,index,obj.danh_gia);
+                        this.initSelect(document.getElementById(`select-${index}`),index)
+                        this.$set(this.ghi_chu,index,obj.ghi_chu);
+                        break;
+                    }
+                    index++;
+                }
+            }
+        },
         filterArray(array){
             return array.filter(element => {
                 return element != undefined && element != null && element != ""
@@ -678,6 +744,28 @@ export default {
                 this.$set(this.real_score,i,0)
                 DOM_select.classList.remove("bg-warning","bg-success","bg-danger");
             }
+        },
+        initSelect(dom,i){
+            dom.classList.add("text-dark");
+            dom.classList.remove("bg-warning","bg-success","bg-danger");
+            //Đánh giá đạt
+            if(this.selections[i] == 1){
+                dom.classList.add("bg-success");
+                this.$set(this.real_score,i,this.max_score[i])
+                this.$set(this.temp_max_score,i,this.max_score[i])
+            }
+            //Không áp dụng
+            else if(this.selections[i] == -1 || this.selections[i] == null){
+                dom.classList.add("bg-warning");
+                this.$set(this.temp_max_score,i,0)
+                this.$set(this.real_score,i,0)
+            }
+            //Chưa đánh giá || Đánh giá không đạt
+            else{
+                dom.classList.add("bg-danger");
+                this.$set(this.temp_max_score,i,this.max_score[i])
+                this.$set(this.real_score,i,0)
+            }    
         },
         changeSelect(event,i){
             event.target.classList.add("text-dark");
@@ -713,12 +801,15 @@ export default {
         },
         getDocuments(){
             let documents = [];
-            for (let i = 0; i < this.filterArray(this.links).length; i++) {
-                documents.push({
-                    ten: this.filterArray(this.document_names)[i],
-                    link: this.filterArray(this.links)[i],
-                    danh_gia: this.filterArray(this.selections)[i]
-                })
+            for (let i = 0; i < this.links.length; i++) {
+                if(this.links[i] != undefined){
+                    documents.push({
+                        ten: this.document_names[i],
+                        link: this.links[i],
+                        danh_gia: this.selections[i],
+                        ghi_chu: this.ghi_chu[i]
+                    })
+                }
             }
             return documents;
         },
@@ -732,6 +823,7 @@ export default {
                 });
             }
             else{     
+
                 axios.post("/kpi-quy-trinh", {
                     quy_trinh_id: this.quy_trinh.id,
                     du_an_id: this.de_tai.id,
@@ -741,6 +833,7 @@ export default {
                     tai_lieu_quy_trinh: this.getDocuments()
                 })
                 .then(response => {
+                    //console.log(response.data)
                     this.$bvToast.toast(response.data.data.ten_du_an, {
                         title: `Thêm thành công kpi quy trinh:${response.data.data.ten_quy_trinh}`,
                         variant: "success",
@@ -758,12 +851,17 @@ export default {
 </script>
 
 <style lang = "scss" scoped>
+    *{
+        text-align: center;
+        vertical-align: middle !important ;
+    }
     select{
         width: 145px;
-        margin: 0 auto;
     }
     input{
         width: 200px;
-        margin: 0 auto;
+    }
+    textarea{
+        width: 200px;
     }
 </style>

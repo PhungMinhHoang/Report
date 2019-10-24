@@ -67,13 +67,13 @@ export default {
     getResult(danh_gia) {
         console.log(danh_gia,this.badgeClass)
       switch (danh_gia) {
-        case -1:
+        case "-1":
           return `<span class="badge badge-warning text-dark">Không áp dụng</span>`;
           break;
-        case 0:
+        case "0":
           return `<span class="badge badge-danger text-dark">Không đạt</span>`;
           break;
-        case 1:
+        case "1":
           return `<span class="badge badge-success text-dark">Đạt</span>`;
           break;
 

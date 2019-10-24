@@ -69,9 +69,10 @@ class KPI_QuyTrinhController extends Controller
         //Cap nhat tai lieu
         $tai_lieu_quy_trinh = $request->tai_lieu_quy_trinh;
         foreach ($tai_lieu_quy_trinh as $tl) {
+            $ghi_chu = $tl['ghi_chu'] ?? "";
             TaiLieuQuyTrinh::updateOrCreate(
                 ['kpi_quytrinh_id' => $data->id, 'ten' => $tl['ten']],
-                ['link' => $tl['link'], 'danh_gia' => $tl['danh_gia'], 'ghi_chu' => $tl['ghi_chu']]
+                ['link' => $tl['link'], 'danh_gia' => $tl['danh_gia'], 'ghi_chu' => $ghi_chu]
             );
         }
 

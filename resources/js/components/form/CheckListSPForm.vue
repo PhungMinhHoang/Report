@@ -4,10 +4,10 @@
             <tr>
                 <th style="width:" >STT</th>
                 <th style="width:15%">Nội dung đánh giá</th>
-                <th style="width:15%">Nội dung hồ sơ tài liệu</th>
-                <th style="width:15%">Biểu mẫu yêu cầu</th>
-                <th style="width:10%">Cấp phê duyệt</th>
-                <th style="width:">Link lưu trữ chung</th>
+                <th style="width:20%">Nội dung hồ sơ tài liệu</th>
+                <th style="width:10%">Biểu mẫu yêu cầu</th>
+                <th style="width:5%">Cấp phê duyệt</th>
+                <th style="width:%">Link lưu trữ chung</th>
                 <th style="width:">Kết quả đánh giá</th>
                 <th style="width:">Điểm tối đa</th>
                 <th style="width:">Điểm thực tế</th>
@@ -640,6 +640,19 @@ export default {
             temp_max_score: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
         } 
     },
+    computed: {
+        getTotalRealScore(){
+            const reducer = (accumulator, currentValue) => accumulator + currentValue;
+            return this.real_score.reduce(reducer)
+        },
+        getTotalTempMaxScore(){
+            const reducer = (accumulator, currentValue) => accumulator + currentValue;
+            return this.temp_max_score.reduce(reducer)
+        },
+        getRate(){
+            return Math.round(this.getTotalRealScore / this.getTotalTempMaxScore * 100);
+        },
+    },
     mounted(){
         if(this.module.hasOwnProperty('id')){
             axios.post("/data-kpi-quy-trinh", {
@@ -658,26 +671,13 @@ export default {
             });
         }
     },
-    computed: {
-        getTotalRealScore(){
-            const reducer = (accumulator, currentValue) => accumulator + currentValue;
-            return this.real_score.reduce(reducer)
-        },
-        getTotalTempMaxScore(){
-            const reducer = (accumulator, currentValue) => accumulator + currentValue;
-            return this.temp_max_score.reduce(reducer)
-        },
-        getRate(){
-            return Math.round(this.getTotalRealScore / this.getTotalTempMaxScore * 100);
-        },
-    },
     methods: {
         renderData(data){
             for(let obj of data){
                 let index = 0;
                 while(true){
                     if(document.getElementById(`document-name-${index}`).innerText == obj.ten_tai_lieu){
-                        console.log(index)
+                        //console.log(index)
                         this.$set(this.links,index,obj.link);
                         this.inputLink(index);
                         this.$set(this.selections,index,obj.danh_gia);
@@ -770,13 +770,15 @@ export default {
         },
         getDocuments(){
             let documents = [];
-            for (let i = 0; i < this.filterArray(this.links).length; i++) {
-                documents.push({
-                    ten: this.filterArray(this.document_names)[i],
-                    link: this.filterArray(this.links)[i],
-                    danh_gia: this.filterArray(this.selections)[i],
-                    ghi_chu: this.filterArray(this.ghi_chu)[i]
-                })
+            for (let i = 0; i < this.links.length; i++) {
+                if(this.links[i] != undefined){
+                    documents.push({
+                        ten: this.document_names[i],
+                        link: this.links[i],
+                        danh_gia: this.selections[i],
+                        ghi_chu: this.ghi_chu[i]
+                    })
+                }
             }
             return documents;
         },
@@ -790,6 +792,7 @@ export default {
                 });
             }
             else{     
+
                 axios.post("/kpi-quy-trinh", {
                     quy_trinh_id: this.quy_trinh.id,
                     du_an_id: this.de_tai.id,
@@ -817,6 +820,10 @@ export default {
 </script>
 
 <style lang = "scss" scoped>
+    *{
+        text-align: center;
+        vertical-align: middle !important ;
+    }
     select{
         width: 145px;
     }
