@@ -23,10 +23,9 @@ class KPI_QuyTrinhController extends Controller
         $kpiQuyTrinh = KPI_QuyTrinh::where('du_an_id',$request->du_an_id)
                                 ->where('quy_trinh_id',$request->quy_trinh_id)
                                 ->where('module_id',$request->module_id)
-                                ->where('thoigian',date("Y-m", strtotime($request->thoigian)))
+                                ->latest()
                                 ->firstOrFail();
-                                //return $kpiQuyTrinh->id;
-            return TaiLieuQuyTrinhResource::collection(TaiLieuQuyTrinh::where('kpi_quytrinh_id', $kpiQuyTrinh->id)->get());
+        return TaiLieuQuyTrinhResource::collection(TaiLieuQuyTrinh::where('kpi_quytrinh_id', $kpiQuyTrinh->id)->get());
     }
     public function getModule()
     {
