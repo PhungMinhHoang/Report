@@ -11,6 +11,7 @@ import KPIQuyTrinh from "./views/KPIQuyTrinh.vue";
 //Cong cu
 import KPI_Veco from "./views/KPI_Veco.vue";
 import CheckList from "./views/CheckList.vue";
+import ImportExcel from "./views/ImportExcel.vue";
 
 export const routes = [
     {
@@ -56,7 +57,12 @@ export const routes = [
                 path: "check-list",
                 name: "Chấm điểm quy trình",
                 component: CheckList,
-            }
+            },
+            {
+                path: "import-excel",
+                name: "Import Excel",
+                component: ImportExcel,
+            },
         ],
         meta: {
             auth: true

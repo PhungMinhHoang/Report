@@ -70,7 +70,6 @@ export default {
     });
   },
   beforeRouteEnter(to, from, next) {
-    console.log(window)
     if (window.Vue.auth.user().roles[0].slug == 'admin') {
       next();
     }

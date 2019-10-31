@@ -48,6 +48,15 @@ export default {
         }
       );
     }
+    if (this.$auth.user().roles[0].slug == "admin" || this.$auth.user().roles[0].slug == "QA-admin") {
+      this.nav.push(
+        {
+          name: "Import Excel",
+          url: "/import-excel",
+          icon: "fas fa-upload"
+        }
+      );
+    }
 
     EventBus.$on("unauthorized", mes => {
       this.$bvToast.toast(mes, {

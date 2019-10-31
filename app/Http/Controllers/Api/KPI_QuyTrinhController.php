@@ -6,11 +6,14 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\KPI_QuyTrinhResource;
 use App\Http\Resources\TaiLieuQuyTrinhResource;
+use App\Models\DuAn;
 use App\Models\KPI_QuyTrinh;
 use App\Models\TaiLieuQuyTrinh;
 use App\Models\User;
 use App\Models\Module;
+use App\Models\QuyTrinh;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class KPI_QuyTrinhController extends Controller
 {
@@ -20,11 +23,11 @@ class KPI_QuyTrinhController extends Controller
     }
     public function findDataKpiQuyTrinh(Request $request)
     {
-        $kpiQuyTrinh = KPI_QuyTrinh::where('du_an_id',$request->du_an_id)
-                                ->where('quy_trinh_id',$request->quy_trinh_id)
-                                ->where('module_id',$request->module_id)
-                                ->latest()
-                                ->firstOrFail();
+        $kpiQuyTrinh = KPI_QuyTrinh::where('du_an_id', $request->du_an_id)
+            ->where('quy_trinh_id', $request->quy_trinh_id)
+            ->where('module_id', $request->module_id)
+            ->latest()
+            ->firstOrFail();
         return TaiLieuQuyTrinhResource::collection(TaiLieuQuyTrinh::where('kpi_quytrinh_id', $kpiQuyTrinh->id)->get());
     }
     public function getModule()
@@ -90,5 +93,42 @@ class KPI_QuyTrinhController extends Controller
         return response()->json(['success' => 'Thêm thành công', 'data' => new KPI_QuyTrinhResource($data)]);
     }
 
+    public function importKPIQuyTrinh(Request $request)
+    {
+        foreach ($request->data as $record) {
 
+            $ma_quy_trinh = $record['ma_quy_trinh'];
+            $ma_de_tai = $record['ma_de_tai'];
+            $thoigian = $record['thoigian'];
+            $diem = $record['diem'];
+
+            try {
+                $quy_trinh_id = QuyTrinh::where('ma_quy_trinh', $ma_quy_trinh)->firstOrFail()->id;
+            } catch (ModelNotFoundException $exception) {
+                return response()->json(['error' => "Không tồn tại mã quy trình: $ma_quy_trinh"]);
+            }
+            try {
+                $du_an_id = DuAn::where('ma_de_tai', $ma_de_tai)->firstOrFail()->id;
+            } catch (ModelNotFoundException $exception) {
+                return response()->json(['error' => "Không tồn tại mã đề tài: $ma_de_tai"]);
+            }
+
+            $data = KPI_QuyTrinh::updateOrCreate(
+                ['quy_trinh_id' => $quy_trinh_id, 'module_id' => 1, 'du_an_id' => $du_an_id, 'thoigian' => date("Y-m", strtotime($thoigian))],
+                ['diem' => $diem * 100]
+            );
+            //Cap nhat diem trung binh quy_trinh_id = 8
+            $average = KPI_QuyTrinh::where('du_an_id', $du_an_id)
+                ->where('thoigian', date("Y-m", strtotime($thoigian)))
+                ->where('quy_trinh_id', '<>', 8)
+                ->where('module_id', 1)
+                ->get()
+                ->avg('diem');
+            $average = KPI_QuyTrinh::updateOrCreate(
+                ['quy_trinh_id' => 8, 'module_id' => 1, 'du_an_id' => $du_an_id, 'thoigian' => date("Y-m", strtotime($record['thoigian']))],
+                ['diem' => round($average)]
+            );
+        }
+        return response()->json(['success' => 'Thêm thành công']);
+    }
 }
