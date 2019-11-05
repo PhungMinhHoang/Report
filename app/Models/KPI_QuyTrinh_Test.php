@@ -4,9 +4,9 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class KPI_QuyTrinh extends Model
+class KPI_QuyTrinh_Test extends Model
 {
-    protected $table = 'kpi_quytrinh';
+    protected $table = 'kpi_quytrinh_test';
 
     protected $fillable = ['quy_trinh_id', 'du_an_id', 'module_id', 'diem', 'thoigian'];
 
