@@ -10,7 +10,7 @@
         <table class="table table-bordered">
           <tr>
             <th scope="row">Tên Đề tài/Dự án</th>
-            <td>
+            <td style="width: 50%;">
               <select class="form-control" id="select_de_tai" v-model="de_tai">
                 <option :value="null" disabled>-- Chọn đề tài/dự án --</option>
                 <option :value="dt" v-for="(dt,index) in options_dt" :key="index">{{dt.ten_de_tai}}</option>
@@ -18,12 +18,25 @@
             </td>
             <th scope="row">Tên Module</th>
             <td style="display:inline-flex;width:100%">
-              <select class="form-control" id="select_module" v-model="module_select" v-if="changeFormModule == false" @change="module=module_select">
+              <select
+                class="form-control"
+                id="select_module"
+                v-model="module_select"
+                v-if="changeFormModule == false"
+                @change="module=module_select"
+              >
                 <option :value="md" v-for="(md,index) in option_md" :key="index">{{md.name}}</option>
               </select>
-              <input class="form-control" id="input_module" type="text" v-model="module_input.name" placeholder="Nhập tên module" v-else/>
+              <input
+                class="form-control"
+                id="input_module"
+                type="text"
+                v-model="module_input.name"
+                placeholder="Nhập tên module"
+                v-else
+              />
               <b-button @click="changeFormModule = !changeFormModule" variant="outline-primary">
-                  <i class="fas fa-sync-alt"></i>
+                <i class="fas fa-sync-alt"></i>
               </b-button>
             </td>
           </tr>
@@ -34,7 +47,12 @@
             </td>
             <th scope="row">Quy trình áp dụng</th>
             <td>
-              <select class="form-control select2-single" id="select_quy_trinh" v-model="quy_trinh" @change="showMessage()">
+              <select
+                class="form-control select2-single"
+                id="select_quy_trinh"
+                v-model="quy_trinh"
+                @change="showMessage()"
+              >
                 <option :value="null" disabled>-- Chọn quy trình --</option>
                 <option :value="qt" v-for="(qt,index) in options_qt" :key="index">{{qt.ten}}</option>
               </select>
@@ -47,42 +65,90 @@
     <div class="checklist">
       <b-card v-if="selectQT() == 'SP'">
         <b-card-body>
-          <CheckListSPForm :quy_trinh="quy_trinh" :de_tai="de_tai" :thoigian="thoigian" :module="module" :key="renderKey"></CheckListSPForm>
+          <CheckListSPForm
+            :quy_trinh="quy_trinh"
+            :de_tai="de_tai"
+            :thoigian="thoigian"
+            :module="module"
+            :key="renderKey"
+          ></CheckListSPForm>
         </b-card-body>
       </b-card>
       <b-card v-else-if="selectQT() == 'CK'">
         <b-card-body>
-          <CheckListCKForm :quy_trinh="quy_trinh" :de_tai="de_tai" :thoigian="thoigian" :module="module" :key="renderKey"></CheckListCKForm>
+          <CheckListCKForm
+            :quy_trinh="quy_trinh"
+            :de_tai="de_tai"
+            :thoigian="thoigian"
+            :module="module"
+            :key="renderKey"
+          ></CheckListCKForm>
         </b-card-body>
       </b-card>
       <b-card v-else-if="selectQT() == 'PC'">
         <b-card-body>
-          <CheckListPCForm :quy_trinh="quy_trinh" :de_tai="de_tai" :thoigian="thoigian" :module="module" :key="renderKey"></CheckListPCForm>
+          <CheckListPCForm
+            :quy_trinh="quy_trinh"
+            :de_tai="de_tai"
+            :thoigian="thoigian"
+            :module="module"
+            :key="renderKey"
+          ></CheckListPCForm>
         </b-card-body>
       </b-card>
       <b-card v-else-if="selectQT() == 'PCRG'">
         <b-card-body>
-          <CheckListPCRGForm :quy_trinh="quy_trinh" :de_tai="de_tai" :thoigian="thoigian" :module="module" :key="renderKey"></CheckListPCRGForm>
+          <CheckListPCRGForm
+            :quy_trinh="quy_trinh"
+            :de_tai="de_tai"
+            :thoigian="thoigian"
+            :module="module"
+            :key="renderKey"
+          ></CheckListPCRGForm>
         </b-card-body>
       </b-card>
       <b-card v-else-if="selectQT() == 'PM'">
         <b-card-body>
-          <CheckListPMForm :quy_trinh="quy_trinh" :de_tai="de_tai" :thoigian="thoigian" :module="module" :key="renderKey"></CheckListPMForm>
+          <CheckListPMForm
+            :quy_trinh="quy_trinh"
+            :de_tai="de_tai"
+            :thoigian="thoigian"
+            :module="module"
+            :key="renderKey"
+          ></CheckListPMForm>
         </b-card-body>
       </b-card>
       <b-card v-else-if="selectQT() == 'SXTN'">
         <b-card-body>
-          <CheckListSXTNForm :quy_trinh="quy_trinh" :de_tai="de_tai" :thoigian="thoigian" :module="module" :key="renderKey"></CheckListSXTNForm>
+          <CheckListSXTNForm
+            :quy_trinh="quy_trinh"
+            :de_tai="de_tai"
+            :thoigian="thoigian"
+            :module="module"
+            :key="renderKey"
+          ></CheckListSXTNForm>
         </b-card-body>
       </b-card>
       <b-card v-else-if="selectQT() == 'SXL'">
         <b-card-body>
-          <CheckListSXLForm :quy_trinh="quy_trinh" :de_tai="de_tai" :thoigian="thoigian" :module="module" :key="renderKey"></CheckListSXLForm>
+          <CheckListSXLForm
+            :quy_trinh="quy_trinh"
+            :de_tai="de_tai"
+            :thoigian="thoigian"
+            :module="module"
+            :key="renderKey"
+          ></CheckListSXLForm>
         </b-card-body>
       </b-card>
       <b-card v-else-if="selectQT() == 'SBH'">
         <b-card-body>
-          <CheckListSBHForm :quy_trinh="quy_trinh" :de_tai="de_tai" :thoigian="thoigian" :module="module" :key="renderKey"></CheckListSBHForm>
+          <CheckListSBHForm
+            :quy_trinh="quy_trinh"
+            :de_tai="de_tai"
+            :thoigian="thoigian"
+            :module="module"
+            :key="renderKey"
+          ></CheckListSBHForm>
         </b-card-body>
       </b-card>
     </div>
@@ -108,8 +174,7 @@ export default {
     CheckListPMForm,
     CheckListSXLForm,
     CheckListSXTNForm,
-    CheckListSBHForm,
-
+    CheckListSBHForm
   },
   data() {
     return {
@@ -124,37 +189,56 @@ export default {
       changeFormModule: false,
       de_tai: null,
       thoigian: new Date().toISOString().substring(0, 10),
+      isRendered: false,
       renderKey: 0
     };
   },
-  watch:{
-    de_tai(){
-      //render lại CheckListForm khi thay đổi lựa chọn đề tài
-      this.renderKey++;
-    },
-    module(){
-      //render lại CheckListForm khi thay đổi module
-      this.renderKey++;
-    },
-    changeFormModule(){
-      if(this.changeFormModule == true){
-         this.module_input.name = "";
-         this.module = this.module_input;
+  watch: {
+    de_tai() {
+      if (this.isRendered == true) {
+        this.quy_trinh = null;
+        this.isRendered = false;
+        //reset form module
+        this.changeFormModule = false;
+        this.module_select = this.option_md[0];
+        this.module = this.module_select;
       }
-      else {
+    },
+    quy_trinh() {
+      if (this.isRendered == true) {
+        //reset form module
+        this.changeFormModule = false;
+        this.module_select = this.option_md[0];
+        this.module = this.module_select;
+      }
+    },
+    module() {
+      if (this.isRendered == true) {
+        //render lại CheckListForm khi thay đổi module
+        this.renderKey++;
+      }
+    },
+    changeFormModule() {
+      if (this.changeFormModule == true) {
+        this.module_input.name = "";
+        this.module = this.module_input;
+      } else {
         this.module_select = this.option_md[0];
         this.module = this.module_select;
       }
     }
   },
   methods: {
-    selectQT(){
-      if(this.quy_trinh != null && this.de_tai!=null) return this.quy_trinh.ma_quy_trinh;
+    selectQT() {
+      if (this.quy_trinh != null && this.de_tai != null) {
+        this.isRendered = true;
+        return this.quy_trinh.ma_quy_trinh;
+      }
       return null;
     },
-    showMessage(){
-      if(this.de_tai==null){
-        this.$bvToast.toast('Vui lòng chọn: Đề tài', {
+    showMessage() {
+      if (this.de_tai == null) {
+        this.$bvToast.toast("Vui lòng chọn: Đề tài", {
           title: `Thông báo`,
           variant: "warning",
           toaster: "b-toaster-top-center",
@@ -173,7 +257,7 @@ export default {
     axios.get("/module").then(response => {
       this.option_md = response.data;
       this.module_select = response.data[0];
-      this.module_input = {name:""};
+      this.module_input = { name: "" };
       this.module = this.module_select;
     });
   }
@@ -181,7 +265,10 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-  th{
-    width: 10vw;
-  }
+table {
+  table-layout: fixed;
+}
+th {
+  width: 150px;
+}
 </style>
