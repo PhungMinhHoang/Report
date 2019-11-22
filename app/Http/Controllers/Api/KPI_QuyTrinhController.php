@@ -25,7 +25,7 @@ class KPI_QuyTrinhController extends Controller
     }
     public function findDataKpiQuyTrinh(Request $request)
     {
-        $kpiQuyTrinh = KPI_QuyTrinh::where('du_an_id', $request->du_an_id)
+        $kpiQuyTrinh = KPI_QuyTrinh_Test::where('du_an_id', $request->du_an_id)
             ->where('quy_trinh_id', $request->quy_trinh_id)
             ->where('module_id', $request->module_id)
             ->latest()
@@ -43,7 +43,7 @@ class KPI_QuyTrinhController extends Controller
         $user = User::find(Auth::user()->id);
 
         if ($user->hasRole('admin', 'QA-admin')) {
-            return KPI_QuyTrinhResource::collection(KPI_QuyTrinh::all()->sortByDesc('updated_at'));
+            return KPI_QuyTrinhResource::collection(KPI_QuyTrinh_Test::all()->sortByDesc('updated_at'));
         } else if ($user->hasRole('QA')) {
             return KPI_QuyTrinhResource::collection($user->kpi_quy_trinh->sortByDesc('updated_at'));
         }
@@ -52,19 +52,19 @@ class KPI_QuyTrinhController extends Controller
     public function store(Request $request)
     {
         $module = Module::firstOrCreate(['name' => $request->module]);
-        $data = KPI_QuyTrinh::updateOrCreate(
+        $data = KPI_QuyTrinh_Test::updateOrCreate(
             ['quy_trinh_id' => $request->quy_trinh_id, 'module_id' => $module->id, 'du_an_id' => $request->du_an_id, 'thoigian' => date("Y-m", strtotime($request->thoigian))],
             ['diem' => $request->diem]
         );
         //Cap nhat diem trung binh module tong the
         if ($module->id != 1) {
-            $average = KPI_QuyTrinh::where('du_an_id', $request->du_an_id)
+            $average = KPI_QuyTrinh_Test::where('du_an_id', $request->du_an_id)
                 ->where('thoigian', date("Y-m", strtotime($request->thoigian)))
                 ->where('quy_trinh_id', $request->quy_trinh_id)
                 ->where('module_id', '<>', 1)
                 ->get()
                 ->avg('diem');
-            $average = KPI_QuyTrinh::updateOrCreate(
+            $average = KPI_QuyTrinh_Test::updateOrCreate(
                 ['quy_trinh_id' => $request->quy_trinh_id, 'module_id' => 1, 'du_an_id' => $request->du_an_id, 'thoigian' => date("Y-m", strtotime($request->thoigian))],
                 ['diem' => round($average)]
             );
@@ -81,13 +81,13 @@ class KPI_QuyTrinhController extends Controller
         }
 
         //Cap nhat diem trung binh quy_trinh_id = 8
-        $average = KPI_QuyTrinh::where('du_an_id', $request->du_an_id)
+        $average = KPI_QuyTrinh_Test::where('du_an_id', $request->du_an_id)
             ->where('thoigian', date("Y-m", strtotime($request->thoigian)))
             ->where('quy_trinh_id', '<>', 8)
             ->where('module_id', 1)
             ->get()
             ->avg('diem');
-        $average = KPI_QuyTrinh::updateOrCreate(
+        $average = KPI_QuyTrinh_Test::updateOrCreate(
             ['quy_trinh_id' => 8, 'module_id' => 1, 'du_an_id' => $request->du_an_id, 'thoigian' => date("Y-m", strtotime($request->thoigian))],
             ['diem' => round($average)]
         );
@@ -120,16 +120,21 @@ class KPI_QuyTrinhController extends Controller
                 ['diem' => $diem]
             );
             //Cap nhat diem trung binh quy_trinh_id = 8
-            $average = KPI_QuyTrinh::where('du_an_id', $du_an_id)
-                ->where('thoigian', $thoigian)
-                ->where('quy_trinh_id', '<>', 8)
-                ->where('module_id', 1)
-                ->get()
-                ->avg('diem');
-            $average = KPI_QuyTrinh::updateOrCreate(
-                ['quy_trinh_id' => 8, 'module_id' => 1, 'du_an_id' => $du_an_id, 'thoigian' => $thoigian],
-                ['diem' => round($average)]
-            );
+			try {
+                KPI_QuyTrinh::where('du_an_id', $du_an_id)
+					->where('thoigian', $thoigian)
+					->where('quy_trinh_id', 8)
+					->where('module_id', 1)
+					->firstOrFail();
+            } catch (ModelNotFoundException $exception) {
+				$average = KPI_QuyTrinh_Test::where('du_an_id', $request->du_an_id)
+					->where('thoigian', date("Y-m", strtotime($request->thoigian)))
+					->where('quy_trinh_id', '<>', 8)
+					->where('module_id', 1)
+					->get()
+					->avg('diem');
+				KPI_QuyTrinh::create(['quy_trinh_id' => 8, 'module_id' => 1, 'du_an_id' => $du_an_id, 'thoigian' => $thoigian,'diem' => round($average)]);
+            }
         }
         //Pi2-28
         foreach ($request->Pi2 as $record) {

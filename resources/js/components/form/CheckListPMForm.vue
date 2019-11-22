@@ -1,5 +1,5 @@
 <template>
-    <b-form class="checklist" @submit.prevent="formSubmit">
+    <b-form class="checklist" @submit.prevent="formSubmit" id="checklist">
         <table class="table table-bordered">
             <tr>
                 <th style="width:" >STT</th>
@@ -597,8 +597,11 @@
 </template>
 
 <script>
+import XLSX from "xlsx";
+import { saveAs } from 'file-saver';
+
 export default {
-    name: 'ChecklistSX',
+    name: 'ChecklistPMForm',
     props:{
         quy_trinh: Object,
         de_tai: Object,
@@ -646,6 +649,69 @@ export default {
                 console.log(error);
             });
         }
+        EventBus.$on('export-excel',() => {
+            let wb = XLSX.utils.table_to_book(document.getElementById("checklist"), {
+                sheet: this.quy_trinh.ten
+            });
+            let dataSheet = wb.Sheets[this.quy_trinh.ten];
+            for (let index = 0; index < this.links.length; index++) {
+                if(!dataSheet.hasOwnProperty('F'+(index+2))) continue;
+                dataSheet['F'+(index+2)].t = 's';
+                dataSheet['F'+(index+2)].v = this.links[index];
+                dataSheet['J'+(index+2)].t = 's';
+                dataSheet['J'+(index+2)].v = this.ghi_chu[index];
+                switch (this.selections[index]) {
+                    case '-1':
+                        dataSheet['G'+(index+2)].v = 'Không áp dụng'
+                        break;
+                    case '0':
+                        dataSheet['G'+(index+2)].v = 'Không đạt'
+                        break;
+                    case '1':
+                        dataSheet['G'+(index+2)].v = 'Đạt'
+                        break;
+                    default:
+                        break;
+                }
+            }
+            //console.log(wb.Sheets[this.quy_trinh.ten])
+            let wbout = XLSX.write(wb, {bookType:'xlsx', bookSST:true, type: 'binary'});
+            function s2ab(s) {
+                let buf = new ArrayBuffer(s.length);
+                let view = new Uint8Array(buf);
+                for (let i = 0; i < s.length; i++) view[i] = s.charCodeAt(i) & 0xff;
+                return buf;
+            }
+            saveAs(
+              new Blob([s2ab(wbout)], { type: "application/octet-stream" }),
+              `${this.de_tai.ten_de_tai} - Quy trình ${this.quy_trinh.ten} - ${this.thoigian}.xlsx`
+            );
+        })
+        EventBus.$on('import-excel',(data)=>{
+            for (let index = 0; index < data.length - 2; index++) {
+                this.$set(this.links,index,data[index]['Link lưu trữ chung']);
+                this.inputLink(index);
+                let danh_gia = data[index]['Kết quả đánh giá'];
+                switch (danh_gia) {
+                    case 'Không áp dụng':
+                        this.$set(this.selections,index,'-1');
+                        break;
+                    case 'Không đạt':
+                        this.$set(this.selections,index,'0');
+                        break;
+                    case 'Đạt':
+                        this.$set(this.selections,index,'1');
+                        break;
+                    default:
+                        break;
+                }
+                this.initSelect(document.getElementById(`select-${index}`),index)
+                this.$set(this.ghi_chu,index,data[index]['Ghi chú']);
+            }
+        })
+    },
+    beforeDestroy () {
+        EventBus.$off('export-excel')
     },
     methods: {
         renderData(data){

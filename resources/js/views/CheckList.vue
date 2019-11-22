@@ -5,6 +5,31 @@
       <b-card-header>
         <i class="fas fa-clipboard-check fa-2x"></i>
         <h2>CheckList</h2>
+        <div class="card-header-actions">
+          <!-- Export -->
+          <b-button id="export-button" variant="success" @click="exportExcel()">
+            <b-tooltip target="export-button" variant="dark">
+              <strong>Xuất Excel</strong>
+            </b-tooltip>
+            <i class="fas fa-download fa-lg"></i>
+          </b-button>
+          <!-- Import -->
+          <b-button id="import-button" variant="success" @click="importExcel()">
+            <b-tooltip target="import-button" variant="dark">
+              <strong>Nhập Excel</strong>
+            </b-tooltip>
+            <i class="fas fa-upload fa-lg"></i>
+          </b-button>
+          <b-modal
+            id="import-excel-modal"
+            title="Import"
+            size="md"
+            v-model="importModal"
+            hide-footer
+          >
+            <ImportChecklistForm :quy_trinh="quy_trinh" :de_tai="de_tai" />
+          </b-modal>
+        </div>
       </b-card-header>
       <b-card-body>
         <table class="table table-bordered">
@@ -164,6 +189,8 @@ import CheckListPMForm from "../components/form/CheckListPMForm";
 import CheckListSXLForm from "../components/form/CheckListSXLForm";
 import CheckListSXTNForm from "../components/form/CheckListSXTNForm";
 import CheckListSBHForm from "../components/form/CheckListSBHForm";
+import ImportChecklistForm from "../components/form/ImportChecklistForm";
+
 export default {
   name: "CheckList",
   components: {
@@ -174,7 +201,8 @@ export default {
     CheckListPMForm,
     CheckListSXLForm,
     CheckListSXTNForm,
-    CheckListSBHForm
+    CheckListSBHForm,
+    ImportChecklistForm
   },
   data() {
     return {
@@ -190,7 +218,8 @@ export default {
       de_tai: null,
       thoigian: new Date().toISOString().substring(0, 10),
       isRendered: false,
-      renderKey: 0
+      renderKey: 0,
+      importModal: false
     };
   },
   watch: {
@@ -211,6 +240,7 @@ export default {
         this.module_select = this.option_md[0];
         this.module = this.module_select;
       }
+      this.renderKey++;
     },
     module() {
       if (this.isRendered == true) {
@@ -229,6 +259,30 @@ export default {
     }
   },
   methods: {
+    exportExcel() {
+      if (this.de_tai == null || this.quy_trinh == null) {
+        this.$bvToast.toast("Vui lòng chọn: Đề tài, Quy trình", {
+          title: `Thông báo`,
+          variant: "warning",
+          toaster: "b-toaster-top-center",
+          autoHideDelay: 5000
+        });
+      } else {
+        EventBus.$emit(`export-excel`);
+      }
+    },
+    importExcel() {
+      if (this.de_tai == null || this.quy_trinh == null) {
+        this.$bvToast.toast("Vui lòng chọn: Đề tài, Quy trình", {
+          title: `Thông báo`,
+          variant: "warning",
+          toaster: "b-toaster-top-center",
+          autoHideDelay: 5000
+        });
+      } else {
+        this.importModal = true;
+      }
+    },
     selectQT() {
       if (this.quy_trinh != null && this.de_tai != null) {
         this.isRendered = true;
@@ -259,6 +313,9 @@ export default {
       this.module_select = response.data[0];
       this.module_input = { name: "" };
       this.module = this.module_select;
+    });
+    EventBus.$on("import-excel", (data) => {
+        this.importModal = false;
     });
   }
 };
