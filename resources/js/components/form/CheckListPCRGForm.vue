@@ -75,9 +75,9 @@
                 <td><textarea class="form-control" v-model="ghi_chu[2]" placeholder="Thêm ghi chú mới" rows="1"></textarea></td>
             </tr>
             <tr>
-                <td rowspan="2">4</td>
-                <th rowspan="2">Thiết kế phần cứng</th>
-                <td rowspan="2" >
+                <td rowspan="3">4</td>
+                <th rowspan="3">Thiết kế phần cứng</th>
+                <td rowspan="3" >
                     - PCB 
                     <br/>- Gerber, NCDrill, X-Y place, Assembly Drawing 
                     <br/>- Tài liệu yêu cầu kỹ thuật gia công bo mạch 
@@ -85,9 +85,9 @@
                     <br/>- Tài liệu yêu cầu về cơ khí shield (nếu có)
                 </td>
                 <td id='document-name-3'>
-                    - HW - YeuCauGiaCongBoMach 
+                    - HW - ThietKePhanCungRutGon 
                 </td>
-                <td rowspan="2">-</td>
+                <td rowspan="3">-</td>
                 <td><input type="text" class="form-control" v-model="links[3]" @keyup="inputLink(3)" placeholder="Nhập link vào đây"></td>
                 <td>
                     <select disabled id="select-3" class="form-control" v-model="selections[3]" @change="changeSelect($event,3)" >
@@ -103,7 +103,7 @@
             </tr>
             <tr>
                 <td id='document-name-4'>
-                    - HW - YeuCauGiaCongBoMach 
+                    - HW - BOM (Và các file dữ liệu thiết kế)
                 </td>
                 <td><input type="text" class="form-control" v-model="links[4]" @keyup="inputLink(4)" placeholder="Nhập link vào đây"></td>
                 <td>
@@ -119,11 +119,9 @@
                 <td><textarea class="form-control" v-model="ghi_chu[4]" placeholder="Thêm ghi chú mới" rows="1"></textarea></td>
             </tr>
             <tr>
-                <td>5</td>
-                <th>Kiểm tra, phê duyệt thiết kế phần cứng</th>
-                <td id='document-name-5'>Checklist kiểm tra PCB</td>
-                <td>HW - ChecklistPCB</td>
-                <td>-</td>
+                <td id='document-name-5'>
+                    - HW - Hướng dẫn bring up bo mạch, kiểm tra và đo kiểm chỉ tiêu kỹ thuật mức mạch
+                </td>
                 <td><input type="text" class="form-control" v-model="links[5]" @keyup="inputLink(5)" placeholder="Nhập link vào đây"></td>
                 <td>
                     <select disabled id="select-5" class="form-control" v-model="selections[5]" @change="changeSelect($event,5)" >
@@ -138,10 +136,10 @@
                 <td><textarea class="form-control" v-model="ghi_chu[5]" placeholder="Thêm ghi chú mới" rows="1"></textarea></td>
             </tr>
             <tr>
-                <td>6</td>
-                <th>Chế tạo bộ mẫu</th>
-                <td id='document-name-6'>Bo mạch</td>
-                <td>-</td>
+                <td>5</td>
+                <th>Kiểm tra, phê duyệt thiết kế phần cứng</th>
+                <td id='document-name-6'>Checklist kiểm tra PCB</td>
+                <td>HW - ChecklistPCB</td>
                 <td>-</td>
                 <td><input type="text" class="form-control" v-model="links[6]" @keyup="inputLink(6)" placeholder="Nhập link vào đây"></td>
                 <td>
@@ -157,14 +155,10 @@
                 <td><textarea class="form-control" v-model="ghi_chu[6]" placeholder="Thêm ghi chú mới" rows="1"></textarea></td>
             </tr>
             <tr>
-                <td>7</td>
+                <td>6</td>
                 <th>Chế tạo bộ mẫu</th>
-                <td id='document-name-7'>
-                    Báo cáo bring-up, kiểm tra tính năng và chỉ tiêu kỹ thuật
-                </td>
-                <td>
-                    HW - BaoCaoKetQuaBringUpCTKT
-                </td>
+                <td id='document-name-7'>Bo mạch</td>
+                <td>-</td>
                 <td>-</td>
                 <td><input type="text" class="form-control" v-model="links[7]" @keyup="inputLink(7)" placeholder="Nhập link vào đây"></td>
                 <td>
@@ -180,12 +174,14 @@
                 <td><textarea class="form-control" v-model="ghi_chu[7]" placeholder="Thêm ghi chú mới" rows="1"></textarea></td>
             </tr>
             <tr>
-                <td>8</td>
-                <th>Ký duyệt Báo cáo bring-up, kiểm tra tính năng và chỉ tiêu kỹ thuật</th>
+                <td>7</td>
+                <th>Chế tạo bộ mẫu</th>
                 <td id='document-name-8'>
-                    Báo cáo bring-up, kiểm tra tính năng và chỉ tiêu kỹ thuật (ký duyệt)
+                    Báo cáo bring-up, kiểm tra tính năng và chỉ tiêu kỹ thuật
                 </td>
-                <td>-</td>
+                <td>
+                    HW - BaoCaoKetQuaBringUpCTKT
+                </td>
                 <td>-</td>
                 <td><input type="text" class="form-control" v-model="links[8]" @keyup="inputLink(8)" placeholder="Nhập link vào đây"></td>
                 <td>
@@ -201,10 +197,10 @@
                 <td><textarea class="form-control" v-model="ghi_chu[8]" placeholder="Thêm ghi chú mới" rows="1"></textarea></td>
             </tr>
             <tr>
-                <td>9</td>
-                <th>Phê duyệt Báo cáo bring-up, kiểm tra tính năng và chỉ tiêu kỹ thuật</th>
+                <td>8</td>
+                <th>Ký duyệt Báo cáo bring-up, kiểm tra tính năng và chỉ tiêu kỹ thuật</th>
                 <td id='document-name-9'>
-                    Báo cáo bring-up, kiểm tra tính năng và chỉ tiêu kỹ thuật (được phê duyệt)
+                    Báo cáo bring-up, kiểm tra tính năng và chỉ tiêu kỹ thuật (ký duyệt)
                 </td>
                 <td>-</td>
                 <td>-</td>
@@ -220,6 +216,27 @@
                 <td>{{temp_max_score[9]}}</td>
                 <td>{{real_score[9]}}</td>
                 <td><textarea class="form-control" v-model="ghi_chu[9]" placeholder="Thêm ghi chú mới" rows="1"></textarea></td>
+            </tr>
+            <tr>
+                <td>9</td>
+                <th>Phê duyệt Báo cáo bring-up, kiểm tra tính năng và chỉ tiêu kỹ thuật</th>
+                <td id='document-name-10'>
+                    Báo cáo bring-up, kiểm tra tính năng và chỉ tiêu kỹ thuật (được phê duyệt)
+                </td>
+                <td>-</td>
+                <td>-</td>
+                <td><input type="text" class="form-control" v-model="links[10]" @keyup="inputLink(10)" placeholder="Nhập link vào đây"></td>
+                <td>
+                    <select disabled id="select-10" class="form-control" v-model="selections[10]" @change="changeSelect($event,10)" >
+                        <option :value="undefined" disabled>--Lựa chọn--</option>
+                        <option value="-1">Không áp dụng</option>
+                        <option value="0">Không đạt</option>
+                        <option value="1">Đạt</option>
+                    </select>
+                </td>
+                <td>{{temp_max_score[10]}}</td>
+                <td>{{real_score[10]}}</td>
+                <td><textarea class="form-control" v-model="ghi_chu[10]" placeholder="Thêm ghi chú mới" rows="1"></textarea></td>
             </tr>
             
 
@@ -255,9 +272,9 @@ export default {
             links: [],
             selections: [],
             ghi_chu: [],
-            max_score:  [10,5,10,5,10,20,5,10,10],
-            real_score: [0,0,0,0,0,0,0,0,0],
-            temp_max_score: [0,0,0,0,0,0,0,0,0],
+            max_score:  [10,5,10,12,4,4,10,20,5,10,10],
+            real_score: [0,0,0,0,0,0,0,0,0,0],
+            temp_max_score: [0,0,0,0,0,0,0,0,0,0],
         } 
     },
     computed: {

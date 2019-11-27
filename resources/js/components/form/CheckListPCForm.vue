@@ -300,7 +300,7 @@
             </tr>
             <tr>
                 <td id='document-name-13'>
-                    - HW – YeuCauGiaCongBoMach 
+                    - HW - YeuCauCoKhiShield
                 </td>
                 <td><input type="text" class="form-control" v-model="links[13]" @keyup="inputLink(13)" placeholder="Nhập link vào đây"></td>
                 <td>
@@ -364,7 +364,7 @@
             </tr>
             <tr>
                 <td id='document-name-16'>
-                    - HW - HuongDanBringup_kiemtra 
+                    - HW - ThietKeChiTietBoMach 
                 </td>
                 <td><input type="text" class="form-control" v-model="links[16]" @keyup="inputLink(16)" placeholder="Nhập link vào đây"></td>
                 <td>

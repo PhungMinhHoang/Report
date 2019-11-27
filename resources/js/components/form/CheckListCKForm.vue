@@ -239,17 +239,17 @@
                 <td><textarea class="form-control" v-model="ghi_chu[11]" placeholder="Thêm ghi chú mới" rows="1"></textarea></td>
             </tr>
             <tr>
-                <td rowspan="4">7</td>
-                <th rowspan="4">Biên soạn/Phê duyệt hồ sơ công nghệ</th>
-                <td rowspan="4">Bộ hồ sơ công nghệ gồm:
+                <td rowspan="6">7</td>
+                <th rowspan="6">Biên soạn/Phê duyệt hồ sơ công nghệ</th>
+                <td rowspan="6">Bộ hồ sơ công nghệ gồm:
                     <br/>- Bản vẽ 2D
                     <br/>- BOM
                     <br/>- Tài liệu hướng dẫn gia công bề mặt, lắp ráp, đo kiểm chỉ tiêu bản vẽ và đo kiểm tính năng.
                 </td>
                 <td id='document-name-12'>
-                    - ME - Huong dan lap rap, do kiem chi tieu va kiem tra tinh nang
+                    - Bản vẽ 2D
                 </td>
-                <td rowspan="4">GĐ Trung tâm</td>
+                <td rowspan="6">GĐ Trung tâm</td>
                 <td><input type="text" class="form-control" v-model="links[12]" @keyup="inputLink(12)" placeholder="Nhập link vào đây"></td>
                 <td>
                     <select disabled id="select-12" class="form-control" v-model="selections[12]" @change="changeSelect($event,12)" >
@@ -265,7 +265,7 @@
             </tr>
             <tr>
                 <td id='document-name-13'>
-                    - ME - Huong dan gia cong be mat
+                    - BOM
                 </td>
                 <td><input type="text" class="form-control" v-model="links[13]" @keyup="inputLink(13)" placeholder="Nhập link vào đây"></td>
                 <td>
@@ -282,7 +282,7 @@
             </tr>
             <tr>
                 <td id='document-name-14'>
-                    - ME - Checklist theo chuan thiet ke
+                    - ME - Huong dan lap rap, do kiem chi tieu va kiem tra tinh nang
                 </td>
                 <td><input type="text" class="form-control" v-model="links[14]" @keyup="inputLink(14)" placeholder="Nhập link vào đây"></td>
                 <td>
@@ -299,7 +299,7 @@
             </tr>
             <tr>
                 <td id='document-name-15'>
-                    - ME - Phieu quyet dinh gia cong che tao
+                    - ME - Huong dan gia cong be mat
                 </td>
                 <td><input type="text" class="form-control" v-model="links[15]" @keyup="inputLink(15)" placeholder="Nhập link vào đây"></td>
                 <td>
@@ -315,14 +315,9 @@
                 <td><textarea class="form-control" v-model="ghi_chu[15]" placeholder="Thêm ghi chú mới" rows="1"></textarea></td>
             </tr>
             <tr>
-                <td>8</td>
-                <th>Triển khai gia công chế tạo</th>
                 <td id='document-name-16'>
-                    - Các chi tiết, linh kiện đã được gia công chế tạo, mua sắm
-                    <br/>- Phiếu đo kiểm chỉ tiêu bản vẽ cho các chi tiết
+                    - ME - Checklist theo chuan thiet ke
                 </td>
-                <td>-</td>
-                <td>-</td>
                 <td><input type="text" class="form-control" v-model="links[16]" @keyup="inputLink(16)" placeholder="Nhập link vào đây"></td>
                 <td>
                     <select disabled id="select-16" class="form-control" v-model="selections[16]" @change="changeSelect($event,16)" >
@@ -337,14 +332,9 @@
                 <td><textarea class="form-control" v-model="ghi_chu[16]" placeholder="Thêm ghi chú mới" rows="1"></textarea></td>
             </tr>
             <tr>
-                <td>9</td>
-                <th>Lắp ráp, hiệu chỉnh</th>
-                <td >
-                    - Sản phẩm sau khi lắp ráp
-                    <br/>- List lỗi trong quá trình lắp ráp và phương án khắc phục
+                <td id='document-name-17'>
+                    - ME - Phieu quyet dinh gia cong che tao
                 </td>
-                <td id='document-name-17'>ME - Bao cao loi va phuong an khac phuc</td>
-                <td>-</td>
                 <td><input type="text" class="form-control" v-model="links[17]" @keyup="inputLink(17)" placeholder="Nhập link vào đây"></td>
                 <td>
                     <select disabled id="select-17" class="form-control" v-model="selections[17]" @change="changeSelect($event,17)" >
@@ -359,11 +349,14 @@
                 <td><textarea class="form-control" v-model="ghi_chu[17]" placeholder="Thêm ghi chú mới" rows="1"></textarea></td>
             </tr>
             <tr>
-                <td>10</td>
-                <th>Báo cáo kiểm tra tính năng, đo kiểm chỉ tiêu kỹ thuật</th>
-                <td >Báo cáo kiểm tra tính năng, đo kiểm chỉ tiêu kỹ thuật</td>
-                <td id='document-name-18'>ME - Bao cao kiem tra tinh nang, do kiem CTKT</td>
-                <td>PM Đề tài</td>
+                <td>8</td>
+                <th>Triển khai gia công chế tạo</th>
+                <td id='document-name-18'>
+                    - Các chi tiết, linh kiện đã được gia công chế tạo, mua sắm
+                    <br/>- Phiếu đo kiểm chỉ tiêu bản vẽ cho các chi tiết
+                </td>
+                <td>-</td>
+                <td>-</td>
                 <td><input type="text" class="form-control" v-model="links[18]" @keyup="inputLink(18)" placeholder="Nhập link vào đây"></td>
                 <td>
                     <select disabled id="select-18" class="form-control" v-model="selections[18]" @change="changeSelect($event,18)" >
@@ -376,6 +369,47 @@
                 <td>{{temp_max_score[18]}}</td>
                 <td>{{real_score[18]}}</td>
                 <td><textarea class="form-control" v-model="ghi_chu[18]" placeholder="Thêm ghi chú mới" rows="1"></textarea></td>
+            </tr>
+            <tr>
+                <td>9</td>
+                <th>Lắp ráp, hiệu chỉnh</th>
+                <td >
+                    - Sản phẩm sau khi lắp ráp
+                    <br/>- List lỗi trong quá trình lắp ráp và phương án khắc phục
+                </td>
+                <td id='document-name-19'>ME - Bao cao loi va phuong an khac phuc</td>
+                <td>-</td>
+                <td><input type="text" class="form-control" v-model="links[19]" @keyup="inputLink(19)" placeholder="Nhập link vào đây"></td>
+                <td>
+                    <select disabled id="select-19" class="form-control" v-model="selections[19]" @change="changeSelect($event,19)" >
+                        <option :value="undefined" disabled>--Lựa chọn--</option>
+                        <option value="-1">Không áp dụng</option>
+                        <option value="0">Không đạt</option>
+                        <option value="1">Đạt</option>
+                    </select>
+                </td>
+                <td>{{temp_max_score[19]}}</td>
+                <td>{{real_score[19]}}</td>
+                <td><textarea class="form-control" v-model="ghi_chu[19]" placeholder="Thêm ghi chú mới" rows="1"></textarea></td>
+            </tr>
+            <tr>
+                <td>10</td>
+                <th>Báo cáo kiểm tra tính năng, đo kiểm chỉ tiêu kỹ thuật</th>
+                <td >Báo cáo kiểm tra tính năng, đo kiểm chỉ tiêu kỹ thuật</td>
+                <td id='document-name-20'>ME - Bao cao kiem tra tinh nang, do kiem CTKT</td>
+                <td>PM Đề tài</td>
+                <td><input type="text" class="form-control" v-model="links[20]" @keyup="inputLink(20)" placeholder="Nhập link vào đây"></td>
+                <td>
+                    <select disabled id="select-20" class="form-control" v-model="selections[20]" @change="changeSelect($event,20)" >
+                        <option :value="undefined" disabled>--Lựa chọn--</option>
+                        <option value="-1">Không áp dụng</option>
+                        <option value="0">Không đạt</option>
+                        <option value="1">Đạt</option>
+                    </select>
+                </td>
+                <td>{{temp_max_score[20]}}</td>
+                <td>{{real_score[20]}}</td>
+                <td><textarea class="form-control" v-model="ghi_chu[20]" placeholder="Thêm ghi chú mới" rows="1"></textarea></td>
             </tr>
             
             <tr>
@@ -410,9 +444,9 @@ export default {
             links: [],
             selections: [],
             ghi_chu: [],
-            max_score: [10,3,4,3,4,6,4,4,5,15,6,5,3,3,3,4,3,3,12],
-            real_score: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-            temp_max_score: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+            max_score: [10,3,4,3,4,6,4,4,5,15,6,5,3,2,2,2,2,2,3,3,12],
+            real_score: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+            temp_max_score: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
         } 
     },
     computed: {
