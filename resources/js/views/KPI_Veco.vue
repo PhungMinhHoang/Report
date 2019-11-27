@@ -56,6 +56,7 @@ export default {
         })
         .then(response => {
           this.data.shift();
+          this.id_don_vi = this.data[0].id
           this.chi_so = null;
           this.output = response.data.success;
         })
