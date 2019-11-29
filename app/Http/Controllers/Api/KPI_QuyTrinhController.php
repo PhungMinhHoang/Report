@@ -120,20 +120,23 @@ class KPI_QuyTrinhController extends Controller
                 ['diem' => $diem]
             );
             //Cap nhat diem trung binh quy_trinh_id = 8
-			try {
-                KPI_QuyTrinh::where('du_an_id', $du_an_id)
-					->where('thoigian', $thoigian)
-					->where('quy_trinh_id', 8)
-					->where('module_id', 1)
-					->firstOrFail();
-            } catch (ModelNotFoundException $exception) {
-				$average = KPI_QuyTrinh_Test::where('du_an_id', $request->du_an_id)
-					->where('thoigian', date("Y-m", strtotime($request->thoigian)))
-					->where('quy_trinh_id', '<>', 8)
-					->where('module_id', 1)
-					->get()
-					->avg('diem');
-				KPI_QuyTrinh::create(['quy_trinh_id' => 8, 'module_id' => 1, 'du_an_id' => $du_an_id, 'thoigian' => $thoigian,'diem' => round($average)]);
+            $count = KPI_QuyTrinh::where('du_an_id', $du_an_id)
+                ->where('thoigian', $thoigian)
+                ->where('quy_trinh_id', '<>', 8)
+                ->where('module_id', 1)
+                ->get()->count();
+
+            if ($count > 0) {
+                $average = KPI_QuyTrinh::where('du_an_id', $du_an_id)
+                    ->where('thoigian', $thoigian)
+                    ->where('quy_trinh_id', '<>', 8)
+                    ->where('module_id', 1)
+                    ->get()
+                    ->avg('diem');
+                $average = KPI_QuyTrinh::updateOrCreate(
+                    ['quy_trinh_id' => 8, 'module_id' => 1, 'du_an_id' => $du_an_id, 'thoigian' => $thoigian],
+                    ['diem' => round($average)]
+                );
             }
         }
         //Pi2-28
