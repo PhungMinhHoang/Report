@@ -16,6 +16,7 @@ use App\Models\Module;
 use App\Models\QuyTrinh;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Support\Collection;
 
 class KPI_QuyTrinhController extends Controller
 {
@@ -32,9 +33,21 @@ class KPI_QuyTrinhController extends Controller
             ->firstOrFail();
         return TaiLieuQuyTrinhResource::collection(TaiLieuQuyTrinh::where('kpi_quytrinh_id', $kpiQuyTrinh->id)->get());
     }
-    public function getModule()
+    public function getModule(Request $request)
     {
-        return response()->json(Module::all());
+        $kpiQuyTrinh = KPI_QuyTrinh_Test::where('du_an_id', $request->du_an_id)
+            ->where('quy_trinh_id', $request->quy_trinh_id)
+            ->get();
+        $modules = new Collection();
+        foreach ($kpiQuyTrinh as $kpi) {
+            if (!$modules->contains('id', $kpi->module->id) && $kpi->module->id != 1) {
+                $modules->push($kpi->module);
+            }
+        }
+        if ($modules->count() == 0) {
+            $modules[0] = Module::find(2);
+        }
+        return response()->json($modules);
     }
 
     public function index()

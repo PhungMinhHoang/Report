@@ -634,6 +634,7 @@ export default {
     },
     mounted(){
         if(this.module.hasOwnProperty('id')){
+            console.log("hello");
             axios.post("/data-kpi-quy-trinh", {
                 quy_trinh_id: this.quy_trinh.id,
                 du_an_id: this.de_tai.id,
@@ -641,7 +642,6 @@ export default {
                 thoigian: this.thoigian,
             })
             .then(response => {
-                console.log(response.data)
                 this.renderData(response.data);
                 
             })

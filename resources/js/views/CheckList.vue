@@ -88,7 +88,7 @@
     </b-card>
     <!-- Checklist -->
     <div class="checklist">
-      <b-card v-if="selectQT() == 'SP'">
+      <b-card v-if="selectQT() == 'SP' && module != null">
         <b-card-body>
           <CheckListSPForm
             :quy_trinh="quy_trinh"
@@ -99,7 +99,7 @@
           ></CheckListSPForm>
         </b-card-body>
       </b-card>
-      <b-card v-else-if="selectQT() == 'CK'">
+      <b-card v-else-if="selectQT() == 'CK' && module != null">
         <b-card-body>
           <CheckListCKForm
             :quy_trinh="quy_trinh"
@@ -110,7 +110,7 @@
           ></CheckListCKForm>
         </b-card-body>
       </b-card>
-      <b-card v-else-if="selectQT() == 'PC'">
+      <b-card v-else-if="selectQT() == 'PC' && module != null">
         <b-card-body>
           <CheckListPCForm
             :quy_trinh="quy_trinh"
@@ -121,7 +121,7 @@
           ></CheckListPCForm>
         </b-card-body>
       </b-card>
-      <b-card v-else-if="selectQT() == 'PCRG'">
+      <b-card v-else-if="selectQT() == 'PCRG' && module != null">
         <b-card-body>
           <CheckListPCRGForm
             :quy_trinh="quy_trinh"
@@ -132,7 +132,7 @@
           ></CheckListPCRGForm>
         </b-card-body>
       </b-card>
-      <b-card v-else-if="selectQT() == 'PM'">
+      <b-card v-else-if="selectQT() == 'PM' && module != null">
         <b-card-body>
           <CheckListPMForm
             :quy_trinh="quy_trinh"
@@ -143,7 +143,7 @@
           ></CheckListPMForm>
         </b-card-body>
       </b-card>
-      <b-card v-else-if="selectQT() == 'SXTN'">
+      <b-card v-else-if="selectQT() == 'SXTN' && module != null">
         <b-card-body>
           <CheckListSXTNForm
             :quy_trinh="quy_trinh"
@@ -154,7 +154,7 @@
           ></CheckListSXTNForm>
         </b-card-body>
       </b-card>
-      <b-card v-else-if="selectQT() == 'SXL'">
+      <b-card v-else-if="selectQT() == 'SXL' && module != null">
         <b-card-body>
           <CheckListSXLForm
             :quy_trinh="quy_trinh"
@@ -165,7 +165,7 @@
           ></CheckListSXLForm>
         </b-card-body>
       </b-card>
-      <b-card v-else-if="selectQT() == 'SBH'">
+      <b-card v-else-if="selectQT() == 'SBH' && module != null">
         <b-card-body>
           <CheckListSBHForm
             :quy_trinh="quy_trinh"
@@ -224,23 +224,22 @@ export default {
   },
   watch: {
     de_tai() {
+      this.changeFormModule = false;
+      this.module = null;
+      this.module_select = null;
+      this.option_md = [];
       if (this.isRendered == true) {
-        this.quy_trinh = null;
         this.isRendered = false;
-        //reset form module
-        this.changeFormModule = false;
-        this.module_select = this.option_md[0];
-        this.module = this.module_select;
+        this.quy_trinh = null;
+      } else if (this.quy_trinh != null) {
+        this.getModule();
       }
     },
     quy_trinh() {
-      if (this.isRendered == true) {
-        //reset form module
-        this.changeFormModule = false;
-        this.module_select = this.option_md[0];
-        this.module = this.module_select;
+      if (this.de_tai != null && this.quy_trinh != null) {
+        this.module = null;
+        this.getModule();
       }
-      this.renderKey++;
     },
     module() {
       if (this.isRendered == true) {
@@ -299,6 +298,20 @@ export default {
           autoHideDelay: 5000
         });
       }
+    },
+    getModule() {
+      axios
+        .post("/module", {
+          du_an_id: this.de_tai.id,
+          quy_trinh_id: this.quy_trinh.id
+        })
+        .then(response => {
+          this.changeFormModule = false;
+          this.option_md = response.data;
+          this.module_select = response.data[0];
+          this.module_input = { name: "" };
+          this.module = this.module_select;
+        });
     }
   },
   mounted() {
@@ -308,14 +321,8 @@ export default {
     axios.get("/du-an").then(response => {
       this.options_dt = response.data;
     });
-    axios.get("/module").then(response => {
-      this.option_md = response.data;
-      this.module_select = response.data[0];
-      this.module_input = { name: "" };
-      this.module = this.module_select;
-    });
-    EventBus.$on("import-excel", (data) => {
-        this.importModal = false;
+    EventBus.$on("import-excel", data => {
+      this.importModal = false;
     });
   }
 };

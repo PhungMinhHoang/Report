@@ -14,7 +14,7 @@ Route::group(['prefix' => '', 'namespace' => 'Api', 'as' => 'api.'], function ()
         Route::post('data-kpi-quy-trinh', 'KPI_QuyTrinhController@findDataKpiQuyTrinh');
         Route::post('import-kpi-quy-trinh', 'KPI_QuyTrinhController@importKPIQuyTrinh');
 
-        Route::get('module', 'KPI_QuyTrinhController@getModule');
+        Route::post('module', 'KPI_QuyTrinhController@getModule');
 
         Route::get('/QA', 'UserController@getDanhSachQA');
         Route::get('/don-vi-ap-dung-quy-trinh', 'DonViController@getDonViApDungQuyTrinh');
