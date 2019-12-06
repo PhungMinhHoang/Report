@@ -744,24 +744,26 @@ export default {
         })
         EventBus.$on('import-excel',(data)=>{
             for (let index = 0; index < data.length - 2; index++) {
-                this.$set(this.links,index,data[index]['Link lưu trữ chung']);
-                this.inputLink(index);
-                let danh_gia = data[index]['Kết quả đánh giá'];
-                switch (danh_gia) {
-                    case 'Không áp dụng':
-                        this.$set(this.selections,index,'-1');
-                        break;
-                    case 'Không đạt':
-                        this.$set(this.selections,index,'0');
-                        break;
-                    case 'Đạt':
-                        this.$set(this.selections,index,'1');
-                        break;
-                    default:
-                        break;
+                if(data[index]['Link lưu trữ chung'] != undefined && data[index]['Link lưu trữ chung'] != ""){
+                    this.$set(this.links,index,data[index]['Link lưu trữ chung']);
+                    this.inputLink(index);
+                    let danh_gia = data[index]['Kết quả đánh giá'];
+                    switch (danh_gia) {
+                        case 'Không áp dụng':
+                            this.$set(this.selections,index,'-1');
+                            break;
+                        case 'Không đạt':
+                            this.$set(this.selections,index,'0');
+                            break;
+                        case 'Đạt':
+                            this.$set(this.selections,index,'1');
+                            break;
+                        default:
+                            break;
+                    }
+                    this.initSelect(document.getElementById(`select-${index}`),index)
+                    this.$set(this.ghi_chu,index,data[index]['Ghi chú']);
                 }
-                this.initSelect(document.getElementById(`select-${index}`),index)
-                this.$set(this.ghi_chu,index,data[index]['Ghi chú']);
             }
         })
     },
@@ -821,13 +823,13 @@ export default {
                 this.$set(this.temp_max_score,i,this.max_score[i])
             }
             //Không áp dụng
-            else if(this.selections[i] == -1 || this.selections[i] == null){
+            else if(this.selections[i] == -1){
                 dom.classList.add("bg-warning");
                 this.$set(this.temp_max_score,i,0)
                 this.$set(this.real_score,i,0)
             }
             //Chưa đánh giá || Đánh giá không đạt
-            else{
+            else if(this.selections[i] == 0){
                 dom.classList.add("bg-danger");
                 this.$set(this.temp_max_score,i,this.max_score[i])
                 this.$set(this.real_score,i,0)
