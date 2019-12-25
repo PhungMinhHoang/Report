@@ -176,6 +176,17 @@
           ></CheckListSBHForm>
         </b-card-body>
       </b-card>
+      <b-card v-else-if="selectQT() == 'CHIP' && module != null">
+        <b-card-body>
+          <CheckListCHIPForm
+            :quy_trinh="quy_trinh"
+            :de_tai="de_tai"
+            :thoigian="thoigian"
+            :module="module"
+            :key="renderKey"
+          ></CheckListCHIPForm>
+        </b-card-body>
+      </b-card>
     </div>
   </div>
 </template>
@@ -189,6 +200,7 @@ import CheckListPMForm from "../components/form/CheckListPMForm";
 import CheckListSXLForm from "../components/form/CheckListSXLForm";
 import CheckListSXTNForm from "../components/form/CheckListSXTNForm";
 import CheckListSBHForm from "../components/form/CheckListSBHForm";
+import CheckListCHIPForm from "../components/form/CheckListCHIPForm";
 import ImportChecklistForm from "../components/form/ImportChecklistForm";
 
 export default {
@@ -202,6 +214,7 @@ export default {
     CheckListSXLForm,
     CheckListSXTNForm,
     CheckListSBHForm,
+    CheckListCHIPForm,
     ImportChecklistForm
   },
   data() {
