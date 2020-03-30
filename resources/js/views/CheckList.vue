@@ -187,6 +187,17 @@
           ></CheckListCHIPForm>
         </b-card-body>
       </b-card>
+      <b-card v-else-if="selectQT() == 'QLSTD' && module != null">
+        <b-card-body>
+          <CheckListQLSTDForm
+            :quy_trinh="quy_trinh"
+            :de_tai="de_tai"
+            :thoigian="thoigian"
+            :module="module"
+            :key="renderKey"
+          ></CheckListQLSTDForm>
+        </b-card-body>
+      </b-card>
     </div>
   </div>
 </template>
@@ -201,6 +212,7 @@ import CheckListSXLForm from "../components/form/CheckListSXLForm";
 import CheckListSXTNForm from "../components/form/CheckListSXTNForm";
 import CheckListSBHForm from "../components/form/CheckListSBHForm";
 import CheckListCHIPForm from "../components/form/CheckListCHIPForm";
+import CheckListQLSTDForm from "../components/form/CheckListQLSTDForm";
 import ImportChecklistForm from "../components/form/ImportChecklistForm";
 
 export default {
@@ -215,6 +227,7 @@ export default {
     CheckListSXTNForm,
     CheckListSBHForm,
     CheckListCHIPForm,
+    CheckListQLSTDForm,
     ImportChecklistForm
   },
   data() {
